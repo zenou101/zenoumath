@@ -896,7 +896,7 @@
     mountScroll();
     mountGamepad();
     registerWorker();
-    const isHome = /(^|\/)(index\.html)?(\?.*)?$/.test(location.pathname + location.search) || location.pathname.endsWith('/');
+    const isHome = location.pathname === '/' || location.pathname === '/index.html';
     if (isHome && !LS.get(K.tour, false) && !store.recent.length) setTimeout(tour, 900);
     loadCatalog().then(() => checkAchievements({ quiet: true }));
   }

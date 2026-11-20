@@ -11,7 +11,7 @@ html { color-scheme: dark; }
   margin: 0;
   background: var(--canvas);
   color: var(--text);
-  font: 15px/1.5 Inter, system-ui, sans-serif;
+  font: 15px/1.5 var(--za-font);
 }
 
 .arcade-discover *, .arcade-discover *::before, .arcade-discover *::after { box-sizing: border-box; }
@@ -45,9 +45,9 @@ body.arcade-discover::after { content: none; }
 .skip-link:focus { transform: none; }
 
 .arcade-discover .za-rail { background: var(--rail); border-color: var(--line); }
-.arcade-discover .za-brand { gap: 12px; font: 800 25px/.88 Inter, system-ui, sans-serif; letter-spacing: -.065em; }
+.arcade-discover .za-brand { gap: 11px; }
 .arcade-discover .za-brand b { width: 36px; height: 36px; margin: 0; font-size: 26px; transform: none; border-radius: 11px; }
-.arcade-discover .za-brand small { display: block; margin-top: 6px; color: var(--muted); font: 700 8px/1 system-ui, sans-serif; letter-spacing: .22em; }
+.arcade-discover .za-brand small { display: block; margin-top: 4px; color: var(--muted); font: 650 9px/1 var(--za-font); letter-spacing: .13em; }
 .arcade-discover .za-foot { justify-content: space-between; border-top: 1px solid var(--line); border-radius: 0; }
 .arcade-discover .za-group a[aria-current=page] {
   box-shadow: inset 2px 0 var(--accent);
@@ -99,8 +99,8 @@ body.arcade-discover::after { content: none; }
 .page-heading { margin-bottom: 24px; }
 .page-heading h1 {
   font-size: clamp(38px, 4.4vw, 62px);
-  font-weight: 850;
-  letter-spacing: -.075em;
+  font-weight: 750;
+  letter-spacing: -.045em;
   margin: 0;
   line-height: 1.06;
   overflow-wrap: anywhere;
@@ -139,7 +139,7 @@ body.arcade-discover .hero {
   border-radius: 5px;
   background: #1b111cca;
   color: var(--accent);
-  font: 750 10px/1.4 system-ui, sans-serif;
+  font: 750 10px/1.4 var(--za-font);
   letter-spacing: .13em;
   text-transform: uppercase;
 }
@@ -147,9 +147,9 @@ body.arcade-discover .hero {
 .hero h2 {
   margin: 12px 0 8px;
   font-size: clamp(35px, 4.4vw, 68px);
-  line-height: .98;
-  font-weight: 850;
-  letter-spacing: -.068em;
+  line-height: 1.04;
+  font-weight: 750;
+  letter-spacing: -.04em;
 }
 .hero-copy > p:not(.feature) { max-width: 34ch; margin: 13px 0 20px; color: #f0dfe8; font-size: 14px; }
 .arcade-discover .play {
@@ -212,7 +212,7 @@ body.arcade-discover .hero {
 
 .shelf { margin-top: 34px; }
 .heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; }
-.heading h2 { display: flex; align-items: center; gap: 9px; margin: 0; font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; letter-spacing: -.055em; }
+.heading h2 { display: flex; align-items: center; gap: 9px; margin: 0; font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; letter-spacing: -.035em; }
 .section-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: rgb(var(--accent-rgb) / .12); color: var(--accent); }
 .heading a { white-space: nowrap; font-size: 13px; font-weight: 650; }
 .heading a span, .heading a:hover { color: var(--accent); }
@@ -232,10 +232,13 @@ body.arcade-discover .card:hover, body.arcade-discover .card:focus-visible { bor
 body.arcade-discover .card:hover { transform: translateY(-3px); }
 .art { position: relative; aspect-ratio: 1.9; overflow: hidden; background: radial-gradient(ellipse at 25% 15%, #473148, #201a28 75%); }
 .art img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.fallback { display: grid; place-items: center; height: 100%; font-size: clamp(20px, 3vw, 44px); letter-spacing: -.07em; font-weight: 850; color: var(--accent); }
+.fallback { display: grid; place-items: center; height: 100%; font-size: clamp(20px, 3vw, 44px); letter-spacing: -.07em; font-weight: 750; color: var(--accent); }
+.cards { align-items: stretch; }
 .card-copy { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; }
 .card-copy div { min-width: 0; }
-.card h3, .card small { display: block; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card h3, .card small { display: block; margin: 0; }
+.card h3 { overflow-wrap: anywhere; }
+.card small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card h3 { font-size: 15px; }
 .card small { font-size: 12px; color: var(--muted); }
 .card-arrow { color: var(--muted); }
@@ -295,16 +298,17 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
   .toolbar { gap: 7px; }
   .search { flex: 1; width: auto; min-width: 0; padding: 0 8px; }
   .arcade-discover :is(.shuffle, .za-accent) { padding-inline: 8px; }
-  .arcade-discover .za-accent { max-width: 75px; }
+  .arcade-discover .za-accent { width: 92px; max-width: 100%; }
   body.arcade-discover .hero { min-height: 300px; border-radius: 15px; }
   .hero-image { object-position: 62% center; }
   .hero::after { background: linear-gradient(90deg, #160e19f5, #1c101a88 63%, #22141a33), linear-gradient(0deg, #130c16bf, transparent 28%); }
   .spotlight-menu { gap: 6px; }
   .spotlight-option { display: block; padding: 6px; }
   .spotlight-option img { aspect-ratio: 2; }
-  .spotlight-option strong { font-size: 11px; }
+  .spotlight-option strong { font-size: 12px; }
   .spotlight-option small { display: none; }
   .card-copy { padding-inline: 9px; }
+  .card h3 { font-size: 14px; line-height: 1.3; }
 }
 @media (prefers-reduced-motion: reduce) {
   .arcade-discover .card { transition: none; }
@@ -336,6 +340,6 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
   position: relative;
   color: #fff;
   text-shadow: 0 2px 12px #12152c;
-  font: italic 900 clamp(16px, 2.3vw, 35px)/1 system-ui, sans-serif;
+  font: italic 900 clamp(16px, 2.3vw, 35px)/1 var(--za-font);
   letter-spacing: -.06em;
 }

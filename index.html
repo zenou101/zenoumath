@@ -15,7 +15,7 @@
   <script>
     try {
       const agreement = JSON.parse(localStorage.getItem('zenoumath.consent'));
-      if (!agreement || agreement.v !== '2026-11-07') document.documentElement.classList.add('consent-pending');
+      if (!agreement || agreement.v !== '2026-11-20') document.documentElement.classList.add('consent-pending');
       const prefs = JSON.parse(localStorage.getItem('zenou_prefs'));
       if (prefs?.theme) document.documentElement.dataset.theme = prefs.theme;
       if (prefs?.hue != null && prefs.hueRgb && prefs.hue2Rgb) {
@@ -29,8 +29,11 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script src="/arcade.js?v=discover-3" defer></script>
+  <script src="/arcade.js?v=discover-4" defer></script>
   <script src="/js/arcade-accent.js" defer></script>
+  <script src="/js/atmosphere.js" defer></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
 </head>
 <body class="arcade-discover">
   <a class="skip-link" href="#main">Skip to content</a>

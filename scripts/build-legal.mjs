@@ -81,6 +81,8 @@ ${doc.toc.map(([id, label]) => `      <li><a href="#${id}">${label}</a></li>`).j
 <link rel="stylesheet" href="/css/plus.css">
 <link rel="stylesheet" href="/css/legal.css">
 <link rel="stylesheet" href="/css/consent.css">
+<link rel="stylesheet" href="/css/arcade-shell.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
 </head>
 <body>
 

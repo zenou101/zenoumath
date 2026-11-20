@@ -177,7 +177,7 @@ export const DOCS = [
     title: 'Privacy Policy | ZenouMath',
     desc: 'What ZenouMath collects, what it deliberately does not collect, which third parties can see your browser, and how to exercise your rights under the Privacy Act 1988 (Cth).',
     h1: 'Privacy Policy',
-    intro: 'ZenouMath has no accounts and no analytics. This page is the complete list of what is collected anyway, and by whom.',
+    intro: 'ZenouMath has no accounts. This page describes the data the site and its third-party services may receive.',
     toc: [
       ['responsible', 'Who is responsible'],
       ['not', 'What is not collected'],
@@ -200,8 +200,8 @@ export const DOCS = [
     <p>This is the shortest list to trust, so it comes first:</p>
     <ul>
       <li><strong>No accounts.</strong> No name, email address, password or profile.</li>
-      <li><strong>No advertising or analytics trackers.</strong> No Google Analytics, no Meta pixel, no session recording, no fingerprinting script.</li>
-      <li><strong>No first-party cookies.</strong> The site sets none of its own.</li>
+      <li><strong>No site analytics or session recording.</strong> ZenouMath uses Google AdSense for advertising services, as described below.</li>
+      <li><strong>No account or session cookies.</strong> Advertising services and embeds may use cookies or similar storage.</li>
       <li><strong>No server-side viewing history.</strong> What you watch, play or save is not recorded on the server.</li>
       <li><strong>No selling or renting of personal information.</strong> Ever, to anyone.</li>
     </ul>
@@ -219,7 +219,8 @@ export const DOCS = [
       <thead><tr><th>Key</th><th>Holds</th></tr></thead>
       <tbody>
         <tr><td><code>zenoumath.consent</code></td><td>The agreement version you accepted and the date you accepted it. Nothing else.</td></tr>
-        <tr><td><code>zenou_prefs</code></td><td>Appearance: theme, glow, radius, density, motion, background, accent hue.</td></tr>
+        <tr><td><code>zenou_prefs</code></td><td>Appearance: theme, glow, radius, density, motion, background, wallpaper effects and accent hue.</td></tr>
+        <tr><td><code>zenou_bgimg</code></td><td>The wallpaper image you select, resized and saved locally.</td></tr>
         <tr><td><code>zenou_lib</code> and related</td><td>Favourites, playlists, ratings, notes, recently opened items, hidden games.</td></tr>
         <tr><td>Doorway templates</td><td>Proxy address templates you add yourself. They stay local because public proxy instances are short-lived.</td></tr>
         <tr><td><code>__gsuite_theme_pref_v2</code></td><td>A cached copy of the doorway menu, so a dead mirror does not leave a blank door.</td></tr>
@@ -234,6 +235,7 @@ export const DOCS = [
       <tbody>
         <tr><td>TMDB (<code>image.tmdb.org</code>)</td><td>Any lecture page with artwork</td><td>Your IP and which images you loaded. Metadata text is proxied through our server; images are not.</td></tr>
         <tr><td>Google Fonts</td><td>Every page</td><td>Your IP and user-agent when the font file is requested.</td></tr>
+        <tr><td>Google AdSense</td><td>Pages that load the AdSense script</td><td>Google may receive browser and device information and use cookies or similar technologies to serve and measure ads. See <a href="https://policies.google.com/technologies/partner-sites">how Google uses information from partner sites</a>.</td></tr>
         <tr><td>YouTube</td><td>Media shelf playback</td><td>Full YouTube cookie and tracking behaviour, exactly as on youtube.com.</td></tr>
         <tr><td>Spotify, SoundCloud</td><td>Audio bench playback</td><td>Their own embed analytics and cookies.</td></tr>
         <tr><td>TikTok, Instagram, Discord</td><td>Only if you open one of those embeds</td><td>Their own tracking, subject to their policies.</td></tr>
@@ -245,7 +247,7 @@ export const DOCS = [
     <p>We cannot delete data held by those companies, and we cannot tell them to. Contact them directly, under their own policies.</p>
 
     <h2 id="cookies">6. Cookies</h2>
-    <p>The site sets no first-party cookies. Third-party embeds on a page — YouTube, Spotify, game builds — may set their own as soon as they load. If you want to block them, block third-party cookies in your browser, or use a content blocker; the site continues to work without them, though embeds may not.</p>
+    <p>Google AdSense and third-party embeds may use cookies or similar technologies. You can manage ad personalisation in <a href="https://myadcenter.google.com/">My Ad Center</a> and manage cookies in your browser. Blocking cookies can affect some embeds.</p>
 
     <h2 id="why">7. Why the little we hold is held</h2>
     <ul>

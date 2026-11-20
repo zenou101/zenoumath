@@ -1,14 +1,13 @@
 /* ZenouMath, atmosphere layer.
  * Builds one fixed stack behind the page (nebula, custom image, dim, grid)
  * and draws a canvas starfield / snowfall for the particle modes.
- * Driven by html[data-bg] and html[data-motion]; the saved custom image
- * arrives as --custom-bg. Pauses in background tabs, honours
+ * Reads the saved background, wallpaper effects, and motion preferences. Pauses in background tabs, honours
  * prefers-reduced-motion, and never blocks scrolling or clicks.
  */
 'use strict';
 
 (function () {
-  if (document.querySelector('.atmo')) return;
+  if (window.ZenouAtmo) return;
 
   const root = document.documentElement;
   const calmQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -49,11 +48,13 @@
   }
 
   function mode() {
-    const bg = root.dataset.bg || 'aurora';
+    const bg = root.dataset.bg;
+    const particles = bg === 'custom' && root.classList.contains('has-custom')
+      ? root.dataset.bgEffects : bg;
     const calm = root.dataset.motion === 'calm' || calmQuery.matches;
     return {
-      stars: bg === 'stars' || bg === 'night',
-      snow: bg === 'snow' || bg === 'night',
+      stars: particles === 'stars' || particles === 'night',
+      snow: particles === 'snow' || particles === 'night',
       calm,
     };
   }
@@ -153,7 +154,7 @@
 
   function start() {
     const { stars: s, snow: n } = mode();
-    if (!s && !n) { stop(); return; }
+    if (!ctx || document.hidden || (!s && !n)) return;
     if (running) return;
     running = true;
     last = performance.now();
@@ -167,18 +168,45 @@
     if (ctx) ctx.clearRect(0, 0, w, h);
   }
 
-  function refresh() {
-    readAccent();
-    build();
+  function refreshParticles() {
+    const { stars, snow } = mode();
+    root.toggleAttribute('data-bg-particles', stars || snow);
     stop();
-    start();
-    if (!mode().stars && !mode().snow) ctx.clearRect(0, 0, w, h);
+    if (ctx && (stars || snow)) {
+      build();
+      start();
+    }
+  }
+
+  function readPreferences() {
+    try {
+      return JSON.parse(localStorage.getItem('zenou_prefs')) || {};
+    } catch {
+      return {};
+    }
+  }
+
+  function applyPreferences(prefs = readPreferences()) {
+    let image = '';
+    try { image = localStorage.getItem('zenou_bgimg') || ''; } catch { /* Storage is optional. */ }
+    root.classList.toggle('has-custom', !!image);
+    if (image) root.style.setProperty('--custom-bg', `url("${image}")`);
+    else root.style.removeProperty('--custom-bg');
+
+    root.dataset.bg = prefs.bg || 'aurora';
+    root.dataset.bgEffects = prefs.bgEffects || 'none';
+    root.dataset.motion = prefs.motion || 'full';
+    const dim = Number(prefs.bgDim ?? 45);
+    root.style.setProperty('--bg-dim', Number.isFinite(dim) ? String(Math.min(85, Math.max(0, dim)) / 100) : '.45');
+
+    readAccent();
+    refreshParticles();
   }
 
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(refresh, 160);
+    resizeTimer = setTimeout(refreshParticles, 160);
   }, { passive: true });
 
   document.addEventListener('visibilitychange', () => {
@@ -186,15 +214,19 @@
     else start();
   });
 
-  new MutationObserver(refresh).observe(root, {
-    attributes: true,
-    attributeFilter: ['data-bg', 'data-motion', 'data-theme'],
+  window.addEventListener('storage', event => {
+    if (event.key === 'zenou_prefs' || event.key === 'zenou_bgimg' || event.key === null) applyPreferences();
   });
-  calmQuery.addEventListener('change', refresh);
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) applyPreferences();
+  });
 
-  window.ZenouAtmo = { refresh };
+  new MutationObserver(readAccent).observe(root, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+  calmQuery.addEventListener('change', refreshParticles);
 
-  readAccent();
-  build();
-  start();
+  window.ZenouAtmo = { applyPreferences };
+  applyPreferences();
 })();

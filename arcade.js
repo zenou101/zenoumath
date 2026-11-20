@@ -139,7 +139,7 @@ function card(game) {
   }
   link.querySelector('h3').textContent = game.t;
   link.querySelector('small').textContent = game.availability === 'unavailable' ? 'Build unavailable'
-    : game.availability === 'external' ? 'Opens on wasm.rip' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
+    : game.availability === 'external' ? 'Plays on source site' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
   return link;
 }
 
@@ -283,7 +283,7 @@ window.addEventListener('pageshow', event => {
 });
 
 renderCatalog();
-fetch('/catalog/games.json')
+fetch('/catalog/games.json?v=2026-11-20')
   .then(response => {
     if (!response.ok) throw new Error('Catalog request failed');
     return response.json();

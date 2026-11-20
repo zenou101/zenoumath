@@ -45,7 +45,7 @@ function showUnavailable(game) {
   if (source) {
     const link = $('#sourceGame');
     link.href = source.href;
-    link.textContent = 'Open ' + source.hostname;
+    link.textContent = 'Play ' + game.t + ' on ' + source.hostname.replace(/^www\./, '');
     link.hidden = false;
   }
 }
@@ -169,7 +169,7 @@ async function boot() {
   const id = p.get('id') || '';
   let GAMES;
   try {
-    const res = await fetch('/catalog/games.json?v=2026-10-31b');
+    const res = await fetch('/catalog/games.json?v=2026-11-20');
     if (!res.ok) throw new Error(res.status);
     GAMES = (await res.json()).games;
   } catch {
@@ -193,7 +193,7 @@ async function boot() {
   $('#playerView').hidden = false;
 
   $('#gTitle').textContent = g.t;
-  const source = g.availability === 'external' ? 'wasm.rip'
+  const source = g.availability === 'external' ? safePage(g.g)?.hostname.replace(/^www\./, '')
     : g.s === 'scratch' && g.a ? `Scratch · @${g.a}` : sources[g.p] || 'Publisher';
   $('#gMeta').textContent = g.p === 'pf' && g.a ? g.a : source;
   $('#gDesc').textContent = g.note || 'Controls depend on the game. Use fullscreen for more room.';

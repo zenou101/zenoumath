@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-11-07';
+  var VERSION = '2026-11-20';
   var KEY = 'zenoumath.consent';
   var EXEMPT =
     location.pathname.indexOf('/legal') === 0 ||
@@ -101,7 +101,6 @@
       '<li>It does not host video or audio files. Playback happens inside the third party’s own player, requested by your browser directly from them.</li>' +
       '<li>It does not sell, license or claim ownership of any content it links to.</li>' +
       '<li>It has no accounts, no sign-in and no server-side profile of you.</li>' +
-      '<li>It does not run advertising trackers or third-party analytics.</li>' +
       '</ul>' +
       '<h3>Your responsibilities</h3>' +
       '<ul>' +
@@ -110,7 +109,7 @@
       '<li>Remember that it is a study aid, not a substitute for your own school’s material, and not a citation source for assessed work.</li>' +
       '</ul>' +
       '<h3>What is stored</h3>' +
-      '<p>Your appearance settings, saved items and this acceptance are kept in your own browser’s <code>localStorage</code>. They are not uploaded. The only things that reach our server are ordinary request logs without cookies. See the <a href="/legal/privacy">Privacy Policy</a> for the full list.</p>' +
+      '<p>Your appearance settings, saved items and this acceptance are kept in your own browser’s <code>localStorage</code>. They are not uploaded. Google AdSense and third-party embeds may receive information from your browser and may use cookies. See the <a href="/legal/privacy">Privacy Policy</a> for the full list.</p>' +
       '<h3>Limits and risk</h3>' +
       '<p>The site is provided as-is. Third-party sites and embeds can go down, change or disappear without notice, and metadata can be wrong. To the extent the law allows, we exclude liability for indirect loss arising from your use of it. Nothing here removes rights you have under the Australian Consumer Law that cannot lawfully be excluded.</p>' +
       '<h3>The documents</h3>' +
@@ -199,7 +198,7 @@
         var left = el('div', { class: 'consent-left' });
         left.innerHTML =
           '<div><h2>You declined</h2>' +
-          '<p>No agreement, no site. Nothing was stored and nothing was sent. You can close this tab, or reload and accept if you change your mind.</p>' +
+          '<p>Your acceptance was not recorded. You can close this tab, or reload and accept if you change your mind.</p>' +
           '<button type="button" class="consent-btn" id="consentReload">Reload the page</button></div>';
         document.body.innerHTML = '';
         document.body.appendChild(left);

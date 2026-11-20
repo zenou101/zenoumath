@@ -40,7 +40,7 @@
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
     ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
   ];
-  const DEFAULTS = { theme: 'sunset', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'sunset', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
 
@@ -57,14 +57,6 @@
   function writePrefs(p) { store.set(PREF_KEY, p); }
 
   function readBgImage() { try { return localStorage.getItem(BG_KEY) || ''; } catch { return ''; } }
-  function applyBgImage() {
-    const r = document.documentElement;
-    const v = readBgImage();
-    r.classList.toggle('has-custom', !!v);
-    if (v) r.style.setProperty('--custom-bg', `url("${v}")`);
-    else r.style.removeProperty('--custom-bg');
-    return v;
-  }
 
   /* hue -> rgb triple, so the glow layers and canvas keep working */
   function hslTriple(h, s, l) {
@@ -98,11 +90,7 @@
     r.dataset.glow = p.glow;
     r.dataset.radius = p.radius;
     r.dataset.density = p.density;
-    r.dataset.bg = p.bg;
-    r.dataset.motion = p.motion;
-    const dim = Number.isFinite(+p.bgDim) ? Math.min(85, Math.max(0, +p.bgDim)) : DEFAULTS.bgDim;
-    r.style.setProperty('--bg-dim', String(dim / 100));
-    applyBgImage();
+    window.ZenouAtmo?.applyPreferences(p);
   }
   function setPref(key, value) {
     const p = readPrefs();
@@ -166,7 +154,6 @@
     applyPrefs(prefs);
     const mask = store.get('zenou_mask', {});
     applyTabMask(mask.title, mask.icon, mask.iconData);
-    if (window.ZenouAtmo) window.ZenouAtmo.refresh();
   };
 
   /* ---------- custom background image ---------- */
@@ -253,14 +240,23 @@
                 <button id="seBgClear" class="btn btn-ghost" type="button">Remove image</button>
               </div>
             </div>
-            <small id="seBgNote">Photos and wallpapers work. The image is resized and stored in this browser only, pick “Custom image” above to show it.</small>
+            <small id="seBgNote" role="status">Wallpaper is saved in this browser and shared across arcade pages.</small>
           </div>
           <label class="settings-field" for="seDim">
             <span>Image dim <output id="seDimOut">45%</output></span>
             <input id="seDim" type="range" min="0" max="85" step="5" value="45">
-            <small>Raise the dim when the picture fights the text.</small>
+            <small>Raise the dim to make text easier to read.</small>
           </label>
-
+          <div class="settings-field">
+            <span id="seBgEffectsLabel">Wallpaper effects</span>
+            <div class="seg" id="seBgEffects" role="group" aria-labelledby="seBgEffectsLabel">
+              <button type="button" data-val="none">None</button>
+              <button type="button" data-val="stars">Stars</button>
+              <button type="button" data-val="snow">Snow</button>
+              <button type="button" data-val="night">Stars + snow</button>
+            </div>
+            <small>Effects appear over your wallpaper when “Custom image” is selected.</small>
+          </div>
         </section>
 
         <section class="settings-section">
@@ -332,16 +328,23 @@
     const bgNote = $('#seBgNote', root);
     const dimInput = $('#seDim', root);
     const dimOut = $('#seDimOut', root);
+    const effects = Array.from($('#seBgEffects', root).querySelectorAll('button'));
     titleInput.value = mask.title || '';
 
     const paintBg = () => {
       const v = readBgImage();
       bgThumb.style.backgroundImage = v ? `url("${v}")` : '';
       bgThumb.classList.toggle('has-image', !!v);
-      dimInput.value = String(readPrefs().bgDim);
-      dimOut.textContent = readPrefs().bgDim + '%';
+      const { bgDim, bgEffects } = readPrefs();
+      dimInput.value = String(bgDim);
+      dimOut.textContent = bgDim + '%';
+      effects.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.val === bgEffects)));
     };
     paintBg();
+    effects.forEach(button => button.addEventListener('click', () => {
+      setPref('bgEffects', button.dataset.val);
+      paintBg();
+    }));
 
     bgFile.addEventListener('change', async () => {
       const f = bgFile.files && bgFile.files[0];
@@ -351,7 +354,6 @@
         const data = await shrinkImage(f);
         try { localStorage.setItem(BG_KEY, data); }
         catch { throw new Error('That image is too large for this browser’s storage. Try a smaller file.'); }
-        applyBgImage();
         setPref('bg', 'custom');
         paintBg();
         paintBgSeg();
@@ -365,7 +367,7 @@
 
     $('#seBgClear', root).addEventListener('click', () => {
       try { localStorage.removeItem(BG_KEY); } catch { /* ignore */ }
-      applyBgImage();
+      window.ZenouAtmo?.applyPreferences();
       paintBg();
       bgNote.textContent = 'Image removed.';
     });
@@ -744,7 +746,7 @@
 
     /* segmented preference groups */
     const paintBgSeg = () => paintPrefGroup('bg');
-    const paintPrefGroup = (key, options) => {
+    const paintPrefGroup = key => {
       const current = readPrefs()[key];
       const seg = prefsWrap.querySelector(`[data-seg="${key}"]`);
       if (!seg) return;
@@ -766,9 +768,12 @@
         b.textContent = text;
         b.setAttribute('aria-pressed', readPrefs()[key] === val ? 'true' : 'false');
         b.addEventListener('click', () => {
+          if (key === 'bg' && val === 'custom' && !readBgImage()) {
+            bgFile.click();
+            return;
+          }
           setPref(key, val);
-          paintPrefGroup(key, options);
-          if (key === 'bg' && val === 'custom' && !readBgImage()) bgFile.click();
+          paintPrefGroup(key);
         });
         seg.append(b);
       });
@@ -827,7 +832,7 @@
       try { store.del('zenou_view'); } catch { /* ignore */ }
       try { localStorage.removeItem(BG_KEY); } catch { /* ignore */ }
       const r = document.documentElement;
-      ['theme', 'glow', 'radius', 'density', 'bg', 'motion'].forEach(k => delete r.dataset[k]);
+      ['theme', 'glow', 'radius', 'density', 'bg', 'bgEffects', 'motion'].forEach(k => delete r.dataset[k]);
       r.style.removeProperty('--bg-dim');
       r.style.removeProperty('--custom-bg');
       r.classList.remove('has-custom');
