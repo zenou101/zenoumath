@@ -283,7 +283,7 @@ window.addEventListener('pageshow', event => {
 });
 
 renderCatalog();
-fetch('/catalog/games.json?v=2026-11-20')
+fetch('/catalog/games.json?v=polytrack-embed')
   .then(response => {
     if (!response.ok) throw new Error('Catalog request failed');
     return response.json();

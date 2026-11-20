@@ -143,7 +143,7 @@ const CATEGORY_META = [
 ];
 const CAT_NAMES = new Map(CATEGORY_META);
 const CAT_ORDER = CATEGORY_META.map(c => c[0]);
-const SOURCE_BADGES = { 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher' };
+const SOURCE_BADGES = { 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher', external: 'External host' };
 
 const RAILS = [
   { title: 'Instant start, no pre-roll', filter: g => g.p !== 'pg', max: 24 },

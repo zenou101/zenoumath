@@ -19,6 +19,7 @@ function touchRecent(id) {
 const sources = {
   lo: 'Arcade browser launcher',
   pf: 'Publisher',
+  external: 'External host',
   pg: 'CrazyGames',
   sc: 'Scratch',
   hm: 'HoodaMath',
@@ -169,7 +170,7 @@ async function boot() {
   const id = p.get('id') || '';
   let GAMES;
   try {
-    const res = await fetch('/catalog/games.json?v=2026-11-20');
+    const res = await fetch('/catalog/games.json?v=polytrack-embed');
     if (!res.ok) throw new Error(res.status);
     GAMES = (await res.json()).games;
   } catch {
