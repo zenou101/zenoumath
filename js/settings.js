@@ -40,7 +40,7 @@
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
     ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
   ];
-  const DEFAULTS = { theme: 'white', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'sunset', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
 

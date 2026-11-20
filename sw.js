@@ -13,7 +13,7 @@
  * redirect stubs: they shadowed their own directory index on GitHub Pages,
  * so any cached copy of one has to go.
  */
-const CACHE_VERSION = 'zenou-arcade-v6';
+const CACHE_VERSION = 'zenou-arcade-v7';
 const SHELL = [
   '/',
   '/css/style.css',
@@ -38,7 +38,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k.startsWith('zenou-arcade-') && k !== CACHE_VERSION).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -61,11 +61,15 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then(c => c.put(req, copy)).catch(() => {});
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_VERSION).then(c => c.put(req, copy)).catch(() => {});
+          }
           return res;
         })
-        .catch(() => caches.match(req).then(hit => hit || caches.match('/')))
+        .catch(async () => await caches.match(req)
+          || (req.mode === 'navigate' && await caches.match('/'))
+          || Response.error())
     );
     return;
   }

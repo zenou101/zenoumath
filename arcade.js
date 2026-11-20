@@ -50,15 +50,15 @@ const slides = [
     cover: 'terraria-header',
   },
   {
-    id: 'lo-clustertruck',
-    title: 'Clustertruck',
-    subtitle: 'Platformer',
-    description: 'Leap between speeding trucks before the convoy crashes.',
-    image: 'cluster-header',
-    cover: 'cluster-header',
+    id: 'lo-2048',
+    title: '2048',
+    subtitle: 'Puzzle',
+    description: 'Slide matching tiles together and build your way to 2048.',
+    image: '/assets/thumbs/2048.svg',
+    cover: '/assets/thumbs/2048.svg',
   },
 ];
-const picks = ['lo-geometry-dash', 'lo-among-us', 'lo-terraria', 'lo-crossy-road'];
+const picks = ['polytrack', 'lo-geometry-dash', 'lo-terraria', 'lo-crossy-road'];
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 const pageSize = 32;
 let activeSlide = 0;
@@ -75,6 +75,10 @@ function titleCase(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+function artwork(path) {
+  return path.startsWith('/') ? path : '/art/' + path + '.jpg';
+}
+
 function showSlide(index) {
   activeSlide = (index + slides.length) % slides.length;
   const slide = slides[activeSlide];
@@ -83,7 +87,8 @@ function showSlide(index) {
     : [slide.title]));
   $('heroText').textContent = slide.description;
   $('heroPlay').href = gameUrl(slide);
-  $('hero-image').src = '/art/' + slide.image + '.jpg';
+  $('hero-image').src = artwork(slide.image);
+  $('hero').classList.toggle('hero-tile', slide.id === 'lo-2048');
   $('slide-count').textContent = [activeSlide + 1, slides.length]
     .map(value => String(value).padStart(2, '0')).join(' / ');
   Array.from($('spotlight-menu').children).forEach((button, position) => {
@@ -96,7 +101,7 @@ slides.forEach((slide, index) => {
   button.type = 'button';
   button.className = 'spotlight-option';
   button.innerHTML = '<img alt="" width="144" height="96"><span><strong></strong><small></small></span>' + icon('right');
-  button.querySelector('img').src = '/art/' + slide.cover + '.jpg';
+  button.querySelector('img').src = artwork(slide.cover);
   button.querySelector('strong').textContent = slide.title;
   button.querySelector('small').textContent = slide.subtitle;
   button.addEventListener('click', () => showSlide(index));
@@ -116,6 +121,10 @@ function card(game) {
   const image = link.querySelector('img');
   const fallback = link.querySelector('.fallback');
   fallback.textContent = game.t.slice(0, 2).toUpperCase();
+  if (game.id === 'polytrack') {
+    link.classList.add('polytrack-card');
+    fallback.textContent = 'POLYTRACK';
+  }
   const showFallback = () => {
     image.hidden = true;
     fallback.hidden = false;
@@ -129,7 +138,8 @@ function card(game) {
     showFallback();
   }
   link.querySelector('h3').textContent = game.t;
-  link.querySelector('small').textContent = (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
+  link.querySelector('small').textContent = game.availability === 'unavailable' ? 'Build unavailable'
+    : game.availability === 'external' ? 'Opens on wasm.rip' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
   return link;
 }
 
@@ -243,7 +253,7 @@ $('clear').addEventListener('click', () => {
 });
 $('more').addEventListener('click', () => showMore()?.focus());
 $('shuffle').addEventListener('click', () => {
-  const pool = matched.length ? matched : games;
+  const pool = (matched.length ? matched : games).filter(game => !game.availability);
   if (pool.length) location.assign(gameUrl(pool[Math.floor(Math.random() * pool.length)]));
 });
 window.addEventListener('popstate', renderCatalog);
@@ -267,6 +277,10 @@ function renderShelves() {
   $('recent-grid').replaceChildren(...recent.map(card));
   $('recent').hidden = recent.length === 0;
 }
+
+window.addEventListener('pageshow', event => {
+  if (event.persisted && loadState === 'ready') renderShelves();
+});
 
 renderCatalog();
 fetch('/catalog/games.json')

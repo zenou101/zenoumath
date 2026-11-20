@@ -7,22 +7,162 @@ const store = {
   get(k, f) { try { return JSON.parse(localStorage.getItem(k)) ?? f; } catch { return f; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* ignore */ } },
 };
-const favs = new Set(store.get('zenou_fav', []));
+const savedFavorites = store.get('zenou_fav', []);
+const favs = new Set(Array.isArray(savedFavorites) ? savedFavorites : []);
 function touchRecent(id) {
-  const r = store.get('zenou_recent', []).filter(x => x && x.id !== id);
+  const savedRecent = store.get('zenou_recent', []);
+  const r = Array.isArray(savedRecent) ? savedRecent.filter(x => x && x.id !== id) : [];
   r.unshift({ id, ts: Date.now() });
   store.set('zenou_recent', r.slice(0, 60));
 }
 
-const PLAY_MODE = {
-  lo: { source: 'this site (open source)', how: 'Runs entirely from this website\'s own hosting, no third-party portals, no pre-game ads.' },
-  pf: { source: 'the game’s own publisher', how: 'Embedded directly from the publisher’s own service, the same build CrazyGames frames.' },
-  pg: { source: 'CrazyGames', how: 'Embedded from the official build CrazyGames uses, their game-file host or the publisher’s own server, with the publisher’s pre-game screen when one exists.' },
-  sc: { source: 'Scratch', how: 'Runs in the official Scratch player. Credit stays with the project’s creator.' },
-  hm: { source: 'HoodaMath', how: 'Plays from HoodaMath’s own game build, no portal shell and no pre-game gate.' },
-  gamedistribution: { source: 'GameDistribution', how: 'Embedded from the publisher’s official GameDistribution build.' },
+const sources = {
+  lo: 'Arcade browser launcher',
+  pf: 'Publisher',
+  pg: 'CrazyGames',
+  sc: 'Scratch',
+  hm: 'HoodaMath',
+  gamedistribution: 'GameDistribution',
 };
-const MODE_FALLBACK = { source: 'the publisher', how: '' };
+
+function safePage(value) {
+  if (!value) return null;
+  try {
+    const url = new URL(value, location.href);
+    return url.protocol === 'https:' || url.origin === location.origin ? url : null;
+  } catch {
+    return null;
+  }
+}
+
+function showUnavailable(game) {
+  const external = game.availability === 'external';
+  $('#playerStage').hidden = true;
+  $('#errorPanel').hidden = false;
+  $('#errorTitle').textContent = external ? 'Play on the source site' : 'Browser build unavailable';
+  $('#errorMessage').textContent = game.dep || 'The game URL is missing.';
+  const source = external && safePage(game.g);
+  if (source) {
+    const link = $('#sourceGame');
+    link.href = source.href;
+    link.textContent = 'Open ' + source.hostname;
+    link.hidden = false;
+  }
+}
+
+function setupFrame(game, url) {
+  const frameWrap = $('#frameWrap');
+  frameWrap.classList.toggle('frame-tall', game.id === 'lo-2048');
+  const loading = $('#loading');
+  const status = $('#stageStatus');
+  const loadMessage = loading.querySelector('p');
+  const full = $('#fsBtn');
+  const sound = $('#sndBtn');
+  let frame = $('#gameFrame');
+  let muted = store.get('zenou_mute', false);
+  let audioClass;
+  let slowTimer;
+  let errorTimer;
+  const clearTimers = () => {
+    clearTimeout(slowTimer);
+    clearTimeout(errorTimer);
+  };
+
+  function applyMute() {
+    if (url.origin !== location.origin) return;
+    try {
+      frame.contentDocument?.querySelectorAll('audio,video').forEach(element => { element.muted = muted; });
+      const gameWindow = frame.contentWindow;
+      if (!gameWindow.AudioContext) return;
+      audioClass ||= gameWindow.AudioContext;
+      for (const key of Object.getOwnPropertyNames(gameWindow)) {
+        let value;
+        try { value = gameWindow[key]; } catch { continue; }
+        if (value instanceof audioClass) {
+          (muted ? value.suspend() : value.resume()).catch(() => {});
+        }
+      }
+      if (!gameWindow.__zenouAudioTrapped) {
+        gameWindow.AudioContext = class extends audioClass {
+          constructor(...args) {
+            super(...args);
+            if (muted) this.suspend().catch(() => {});
+          }
+        };
+        gameWindow.__zenouAudioTrapped = true;
+      }
+    } catch { /* The game may navigate to another origin. */ }
+  }
+
+  function fail(message) {
+    clearTimers();
+    loading.hidden = true;
+    frame.hidden = true;
+    status.textContent = message;
+    frameWrap.classList.add('frame-failed');
+    full.disabled = true;
+  }
+
+  function load() {
+    clearTimers();
+    status.textContent = '';
+    frameWrap.classList.remove('frame-failed');
+    loading.hidden = false;
+    full.disabled = false;
+    loadMessage.textContent = game.mb > 12 ? `Loading a large game (~${game.mb} MB)…` : 'Opening game…';
+    const next = frame.cloneNode(false);
+    next.title = game.t;
+    next.hidden = false;
+    next.addEventListener('load', () => {
+      clearTimers();
+      loading.hidden = true;
+      if (url.origin === location.origin && next.contentDocument?.body?.dataset.gameLoadError) {
+        fail('The browser build couldn’t start. Reload or open the source.');
+        return;
+      }
+      status.textContent = 'Trouble playing? Reload the game or open it in a new tab.';
+      applyMute();
+    });
+    next.addEventListener('error', () => fail('Could not open the game. Try reloading.'));
+    next.src = url.href;
+    frame.replaceWith(next);
+    frame = next;
+    audioClass = null;
+    slowTimer = setTimeout(() => { loadMessage.textContent = 'Still opening the game…'; }, 8000);
+    errorTimer = setTimeout(() => fail('The game page took too long to open. Try reloading.'), 45000);
+  }
+
+  const open = $('#openGame');
+  open.href = safePage(game.g)?.href || url.href;
+  open.hidden = false;
+  if (url.origin === location.origin) {
+    sound.hidden = false;
+    sound.setAttribute('aria-pressed', String(muted));
+    sound.addEventListener('click', () => {
+      muted = !muted;
+      store.set('zenou_mute', muted);
+      sound.setAttribute('aria-pressed', String(muted));
+      applyMute();
+    });
+  }
+
+  window.addEventListener('message', event => {
+    if (event.origin === location.origin && event.source === frame.contentWindow
+      && event.data?.type === 'zenou:game-load-error') fail('The browser build couldn’t start. Reload or open the source.');
+  });
+
+  full.addEventListener('click', async () => {
+    if (!frameWrap.requestFullscreen) return;
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await frameWrap.requestFullscreen();
+    } catch {
+      status.textContent = 'Fullscreen is unavailable in this browser.';
+    }
+  });
+  $('#retryBtn').addEventListener('click', load);
+  load();
+}
 
 async function boot() {
   const p = new URLSearchParams(location.search);
@@ -45,51 +185,29 @@ async function boot() {
   document.title = window.zenouMaskedTitle
     ? window.zenouMaskedTitle(`${g.t} · Zenou Arcade`)
     : `${g.t} · Zenou Arcade`;
-  touchRecent(g.id);
-  if (g.wrap || g.direct) { location.replace(g.wrap ? g.u : g.direct); return; }
+  if (!g.availability) touchRecent(g.id);
+  if (g.wrap || g.direct) {
+    const target = safePage(g.wrap ? g.u : g.direct);
+    if (target) { location.replace(target.href); return; }
+  }
   $('#playerView').hidden = false;
 
-  // header info
   $('#gTitle').textContent = g.t;
-  const mode = PLAY_MODE[g.p] || MODE_FALLBACK;
-  const meta = [];
-  if (g.s === 'scratch' && g.a) meta.push(`Scratch project by @${g.a}`);
-  else if (g.s === 'scratch') meta.push('Scratch community project');
-  else if (g.s === 'selfhosted') meta.push('Open source · hosted in this repository');
-  else if (g.s === 'hoodamath') meta.push('HoodaMath build · plays in this page');
-  else meta.push(`Published on ${mode.source}`);
-  if (g.pc) meta.push(`${g.pc.toLocaleString()} plays`);
-  $('#gMeta').textContent = meta.join(' · ');
-
-  // category chips (link home)
-  const tags = $('#gCats');
-  tags.innerHTML = '';
-  (g.cs || []).slice(0, 6).forEach(c => {
-    const s = document.createElement('span');
-    s.textContent = c.replace(/-/g, ' ');
-    tags.append(s);
-  });
-
-  $('#gSource').textContent = g.s === 'scratch'
-    ? `Original project & rights: @${g.a || 'Scratch creator'}`
-    : g.s === 'selfhosted'
-      ? 'Original author keeps copyright · MIT licence permits this copy'
-      : `Rights stay with the publisher · listed from ${mode.source}`;
-
-  // publisher gate hint for CrazyGames file-host embeds
-    if (g.p === 'pg') {
+  const source = g.availability === 'external' ? 'wasm.rip'
+    : g.s === 'scratch' && g.a ? `Scratch · @${g.a}` : sources[g.p] || 'Publisher';
+  $('#gMeta').textContent = g.p === 'pf' && g.a ? g.a : source;
+  $('#gDesc').textContent = g.note || 'Controls depend on the game. Use fullscreen for more room.';
+  if (g.dep && !g.availability) {
     $('#embedNote').hidden = false;
-    $('#embedNote').textContent = 'A short pre-game ad may play first, heavy titles can take a minute. If a publisher hard-locks its title, pick another game from “More like this” below.';
-  } else if (g.p === 'pf') {
-    $('#embedNote').hidden = false;
-    $('#embedNote').textContent = 'Loads straight from the developer\'s own hosting, no portal shell.';
-  } else if (g.p === 'lo') {
-    $('#embedNote').hidden = false;
-    $('#embedNote').textContent = 'Fully hosted in this repository (MIT-licensed), no third-party sites, no ads, no pre-game screen.';
-  } else if (g.p === 'hm') {
-    $('#embedNote').hidden = false;
-    $('#embedNote').textContent = 'Runs from HoodaMath’s own game build, no portal shell and no pre-game gate.';
+    $('#embedNote').textContent = g.dep;
   }
+  for (const category of (g.cs || []).slice(0, 6)) {
+    const link = document.createElement('a');
+    link.href = '/?c=' + encodeURIComponent(category);
+    link.textContent = category.replace(/-/g, ' ');
+    $('#gCats').append(link);
+  }
+  $('#gSource').textContent = 'Game rights remain with its creators.';
 
   // copy a shareable link
   const shareBtn = $('#shareBtn');
@@ -120,109 +238,17 @@ async function boot() {
     setFav(on);
   });
 
-  // visualization of the game itself
-  {
-    const frame = $('#gameFrame');
-    const loading = $('#loading');
-    const loadMsg = loading.querySelector('p');
-    const startCopy = {
-      sc: 'Starting the Scratch player…',
-      hm: 'Loading the game build…',
-      lo: 'Starting the game from this site…',
-      pf: 'Loading the publisher’s build…',
-      pg: 'Starting the game…',
-    };
-    if (g.mb && g.mb > 12) loadMsg.textContent = `Large game (~${g.mb} MB), first load can take up to a minute…`;
-    else if (startCopy[g.p]) loadMsg.textContent = startCopy[g.p];
-    let loaded = false;
-    const failTimer = setTimeout(() => {
-      if (!loaded) loadMsg.textContent = 'Still loading, big builds take a moment on a slow connection…';
-    }, 8000);
-    const errorTimer = setTimeout(() => {
-      if (!loaded) showFail(g);
-    }, 45000);
-    frame.addEventListener('load', () => {
-      loaded = true;
-      clearTimeout(failTimer);
-      clearTimeout(errorTimer);
-      loading.classList.add('done');
-    });
-    frame.src = g.u;
-    frame.hidden = false;
-
-    // adjustable sound for same-origin (locally hosted) games
-    const sndBtn = $('#sndBtn');
-    if (g.p === 'lo') {
-      let muted = store.get('zenou_mute', false);
-      const applyMute = () => {
-        try {
-          const d = frame.contentDocument;
-          d.querySelectorAll('audio,video').forEach(el => {
-            el.muted = muted;
-            try { el.volume = muted ? 0 : el.volume || 1; } catch { /* */ }
-          });
-          const w = frame.contentWindow;
-          for (const k of Object.getOwnPropertyNames(w)) {
-            let v; try { v = w[k]; } catch { continue; }
-            if (w.AudioContext && v instanceof w.AudioContext) {
-              if (muted) v.suspend?.(); else v.resume?.();
-            }
-          }
-          // games that build their audio engine after START need a trap too
-          if (!w.__zenouAudioTrapped && w.AudioContext) {
-            const Orig = w.AudioContext;
-            try {
-              w.AudioContext = class extends Orig {
-                constructor(...a) {
-                  super(...a);
-                  if (muted) this.suspend?.();
-                }
-              };
-              w.__zenouAudioTrapped = true;
-            } catch { /* keep original */ }
-          }
-        } catch { /* cross-origin, browser blocks access */ }
-      };
-      const paint = () => sndBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
-      sndBtn.hidden = false;
-      paint();
-      frame.addEventListener('load', () => { applyMute(); setTimeout(applyMute, 1500); });
-      sndBtn.addEventListener('click', () => {
-        muted = !muted;
-        store.set('zenou_mute', muted);
-        paint();
-        applyMute();
-      });
-    }
-
-    $('#fsBtn').addEventListener('click', () => {
-      const el = $('.frame-wrap');
-      if (document.fullscreenElement) document.exitFullscreen();
-      else el.requestFullscreen?.();
-    });
-  }
+  const url = safePage(g.u);
+  if (g.availability || !url) showUnavailable(g);
+  else setupFrame(g, url);
 
   // related games (same primary category)
   const pool = GAMES.filter(x =>
-    x.id !== g.id
+    x.id !== g.id && !x.availability
     && (!g.cs || x.cs?.some(c => g.cs.includes(c)))
-  ).slice(0, 24);
+  ).slice(0, 12);
   const rg = $('#relatedGrid');
   pool.forEach(x => rg.append(relatedCard(x)));
-
-  $('#backBtn').addEventListener('click', () => {
-    if (history.length > 1) history.back(); else location.href = '/';
-  });
-
-  /* Space toggles fullscreen unless the user is typing somewhere */
-  document.addEventListener('keydown', (e) => {
-    if (e.code !== 'Space' || e.metaKey || e.ctrlKey || e.altKey) return;
-    const t = e.target;
-    if (t && t.matches && t.matches('input, textarea, select, [contenteditable], button, a')) return;
-    e.preventDefault();
-    if (document.fullscreenElement) document.exitFullscreen();
-    else $('.frame-wrap')?.requestFullscreen?.();
-  });
 
   setupTools(g);
 }
@@ -237,43 +263,43 @@ function setupTools(g) {
   if (!host) return;
   host.hidden = false;
 
-  /* local playtime, flushed on hide/unload so a quick tab close still counts */
-  const playtime = Z ? Z.store.playtime : store.get('zenou_playtime', {});
-  const started = Date.now();
-  let banked = 0;
-  const flush = () => {
-    const now = Date.now();
-    const add = now - started - banked;
-    if (add < 1000) return;
-    banked += add;
-    playtime[g.id] = (playtime[g.id] || 0) + add;
-    if (Z) { Z.store.playtime = playtime; Z.store.savePlaytime(); }
-    else store.set('zenou_playtime', playtime);
-  };
-  document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
-  window.addEventListener('pagehide', flush);
+  if (!g.availability) {
+    /* local playtime, flushed on hide/unload so a quick tab close still counts */
+    const playtime = Z ? Z.store.playtime : store.get('zenou_playtime', {});
+    const started = Date.now();
+    let banked = 0;
+    const flush = () => {
+      const now = Date.now();
+      const add = now - started - banked;
+      if (add < 1000) return;
+      banked += add;
+      playtime[g.id] = (playtime[g.id] || 0) + add;
+      if (Z) { Z.store.playtime = playtime; Z.store.savePlaytime(); }
+      else store.set('zenou_playtime', playtime);
+    };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+    window.addEventListener('pagehide', flush);
 
-  const timer = $('#sessionTimer');
-  let tick = 0;
-  const paintTimer = () => {
-    const secs = Math.floor((Date.now() - started) / 1000);
-    timer.textContent = `Session ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
-  };
-  paintTimer();
-  tick = setInterval(paintTimer, 1000);
-  window.addEventListener('pagehide', () => clearInterval(tick));
+    const timer = $('#sessionTimer');
+    let tick = 0;
+    const paintTimer = () => {
+      const secs = Math.floor((Date.now() - started) / 1000);
+      timer.textContent = `Session ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    };
+    paintTimer();
+    tick = setInterval(paintTimer, 1000);
+    window.addEventListener('pagehide', () => clearInterval(tick));
 
-  /* award xp + streak once per visit */
-  if (Z) {
-    Z.markDay();
-    Z.addXp(5);
-    setTimeout(() => Z.checkAchievements(), 1200);
+    /* award xp + streak once per visit */
+    if (Z) {
+      Z.markDay();
+      Z.addXp(5);
+      setTimeout(() => Z.checkAchievements(), 1200);
+    }
+
+  } else {
+    $('#sessionTimer').hidden = true;
   }
-
-  /* ad-free badge */
-  const adFree = g.p !== 'pg';
-  const badge = $('#adFreeBadge');
-  if (badge && adFree) badge.hidden = false;
 
   /* rating */
   const ratingHost = $('#ratingHost');
@@ -308,38 +334,13 @@ function setupTools(g) {
   /* playlist + restart + report */
   $('#playlistBtn')?.addEventListener('click', () => { if (Z) Z.playlistPicker(g.id, g.t); });
 
-  $('#restartBtn')?.addEventListener('click', () => {
-    const frame = $('#gameFrame');
-    if (!frame || frame.hidden) { location.reload(); return; }
-    const src = frame.src;
-    frame.src = 'about:blank';
-    setTimeout(() => { frame.src = src; }, 120);
-    if (Z) Z.toast('Restarted', g.t);
-  });
-
   $('#reportBtn')?.addEventListener('click', () => {
     if (!Z) return;
     Z.store.reported = Z.store.reported.filter(r => r.id !== g.id);
     Z.store.reported.unshift({ id: g.id, t: g.t, ts: Date.now() });
     Z.LS.set('zenou_reported', Z.store.reported.slice(0, 100));
-    Z.toast('Report saved', 'The list lives in My Library → Data. Thanks, it gets checked.');
+    Z.toast('Issue saved in this browser', 'Find it in My Library → Data.');
   });
-}
-
-function showFail(g) {
-  $('#loading').classList.add('done');
-  $('#errorPanel').hidden = false;
-  const btn = $('#retryBtn');
-  if (btn && !btn.dataset.bound) {
-    btn.dataset.bound = '1';
-    btn.addEventListener('click', () => {
-      $('#errorPanel').hidden = true;
-      $('#loading').classList.remove('done');
-      const frame = $('#gameFrame');
-      frame.src = 'about:blank';
-      setTimeout(() => { frame.src = g.u; }, 120);
-    });
-  }
 }
 
 function relatedCard(g) {
@@ -369,4 +370,5 @@ function relatedCard(g) {
   return a;
 }
 
-boot();
+if (window.ZenouConsent?.accepted()) boot();
+else document.addEventListener('zenoumath:consent', boot, { once: true });

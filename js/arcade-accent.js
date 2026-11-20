@@ -1,11 +1,12 @@
 (() => {
   const picker = document.querySelector('.za-accent');
+  if (!picker) return;
   const root = document.documentElement;
   if (root.style.getPropertyValue('--accent')) {
     picker.add(new Option('Custom', 'custom'));
     picker.value = 'custom';
   } else {
-    picker.value = root.dataset.theme || 'white';
+    picker.value = root.dataset.theme || 'sunset';
   }
   picker.addEventListener('change', () => {
     const theme = picker.value;

@@ -417,7 +417,11 @@
   };
 
   function select(tab) {
-    $$('.lib-tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+    $$('.lib-tab').forEach(button => {
+      const selected = button.dataset.tab === tab;
+      button.setAttribute('aria-selected', String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
     $$('.lib-panel').forEach(p => { p.hidden = p.id !== `panel-${tab}`; });
     const fn = RENDERERS[tab];
     if (fn) fn();
@@ -435,7 +439,28 @@
     } catch {
       GAMES = [];
     }
-    $$('.lib-tab').forEach(b => b.addEventListener('click', () => select(b.dataset.tab)));
+    const tabs = $$('.lib-tab');
+    tabs.forEach((button, index) => {
+      const panel = document.getElementById('panel-' + button.dataset.tab);
+      button.id = 'tab-' + button.dataset.tab;
+      button.setAttribute('aria-controls', panel.id);
+      panel.setAttribute('aria-labelledby', button.id);
+      panel.tabIndex = 0;
+      button.addEventListener('click', () => select(button.dataset.tab));
+      button.addEventListener('keydown', event => {
+        const destinations = {
+          ArrowLeft: (index + tabs.length - 1) % tabs.length,
+          ArrowRight: (index + 1) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        const next = tabs[destinations[event.key]];
+        if (!next) return;
+        event.preventDefault();
+        select(next.dataset.tab);
+        next.focus();
+      });
+    });
     const start = (location.hash || '').replace('#', '');
     select(RENDERERS[start] ? start : 'overview');
   }
