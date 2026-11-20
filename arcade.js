@@ -1,21 +1,292 @@
-const $=id=>document.getElementById(id);
-const paths={discover:'M12 2 3 7v10l9 5 9-5V7z M3 7l9 5 9-5 M12 12v10',games:'M7 6h10q3 0 4 4l1 7q0 4-4 2l-3-3H9l-3 3q-4 2-4-2l1-7q1-4 4-4z M6 11h5 M8.5 8.5v5 M16 10h.1 M18 13h.1',library:'M4 4v16 M8 4v16 M12 5v15 M16 5l5 14',web:'M12 2a10 10 0 1 0 .01 0 M2 12h20 M12 2q-8 10 0 20q8-10 0-20',movies:'M3 5h18v15H3z M3 10h18 M7 5l3 5 M13 5l3 5',music:'M9 17V6l11-3v12 M9 17q0 4-4 4t0-5q2-1 4 1 M20 15q0 4-4 4t0-5q2-1 4 1',ai:'M12 2l2.5 7 7.5 3-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-3z',social:'M3 4h18v13H9l-6 4z',bolt:'M14 2 4 14h7l-1 8L21 9h-8z',search:'M10 3a7 7 0 1 0 .01 0 M15 15l6 6',shuffle:'M3 6h3c5 0 7 12 12 12h3 M17 14l4 4-4 4 M3 18h3q2 0 4-4 M13 9q3-3 5-3h3 M17 2l4 4-4 4',genre:'M4 7l5-4h10l2 3v9l-8 7-9-9z M16 7h.01'};
-function icon(k){return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="'+paths[k]+'"/></svg>'}
-document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
-const tags=['Action','Racing','Sports','Puzzle','Adventure','Arcade'];
-const covers={'lo-among-us':'among','lo-geometry-dash':'geometry','lo-terraria':'terraria','lo-clustertruck':'cluster','lo-granny':'granny','lo-hollow-knight-silksong':'silksong'};
-const slides=[['lo-hollow-knight-silksong','Hollow Knight','Silksong','Explore a haunted kingdom of silk and song.','silksong-library_hero'],['lo-terraria','Terraria','','Dig, fight and build your way through a pixel world.','terraria-library_hero'],['lo-clustertruck','Clustertruck','','Leap between speeding trucks before the convoy crashes.','cluster-header']];
-const picks=['lo-geometry-dash','lo-among-us','lo-terraria','lo-crossy-road'];
-let active=0,games=[],matched=[],shown=0;
-function url(g){return g.direct||'/play/?id='+encodeURIComponent(g.id)}
-function slide(n){active=(n+slides.length)%slides.length;const [id,a,b,desc,img]=slides[active];$('heroTitle').replaceChildren(a,...(b?[document.createElement('br'),b]:[]));$('heroText').textContent=desc;$('heroPlay').href='/play/?id='+id;$('hero').style.backgroundImage='url(/art/'+img+'.jpg)';Array.from($('pager').children).forEach((el,i)=>el.classList.toggle('on',i===active))}
-slides.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Spotlight '+s[1]+' '+s[2]);b.onclick=()=>slide(i);$('pager').append(b)});
-$('next').onclick=()=>slide(active+1);$('prev').onclick=()=>slide(active-1);slide(0);
-function card(g){const a=document.createElement('a');a.href=url(g);a.className='card';a.innerHTML='<div class="art"><span class="fallback" aria-hidden="true"></span><img alt="" loading="lazy"></div><div class="card-copy"><h3></h3><small></small></div>';const img=a.querySelector('img'),fallback=a.querySelector('.fallback');fallback.textContent=g.t.slice(0,2).toUpperCase();fallback.hidden=true;img.onerror=()=>{img.hidden=true;fallback.hidden=false};if(g.img||covers[g.id])img.src=covers[g.id]?'/art/'+covers[g.id]+'-header.jpg':g.img;else img.onerror();a.querySelector('h3').textContent=g.t;a.querySelector('small').textContent=(g.cs||[]).slice(0,2).map(t=>t.charAt(0).toUpperCase()+t.slice(1)).join(' · ');return a}
-function more(){const batch=matched.slice(shown,shown+32);$('grid').append(...batch.map(card));shown+=batch.length;$('more').hidden=shown>=matched.length}
-function update(){const p=new URLSearchParams(location.search),q=(p.get('q')||'').trim().toLowerCase(),c=p.get('c')||'',browse=!!(q||c||p.has('all'));$('query').value=p.get('q')||'';$('spot').hidden=browse;const label=q?'Search results':c?c[0].toUpperCase()+c.slice(1):browse?'All games':'Discover';$('place').textContent=label;$('sectionName').textContent=browse?label:'Browse games';$('filters').replaceChildren();['All',...tags,...(c&&!tags.some(t=>t.toLowerCase()===c)?[label]:[])].forEach(t=>{const b=document.createElement('button');b.textContent=t;b.classList.toggle('on',t.toLowerCase()===c||(!c&&t==='All'));b.onclick=()=>go(t==='All'?'?all=1':'?c='+encodeURIComponent(t.toLowerCase()));$('filters').append(b)});document.querySelectorAll('.za-group a').forEach(a=>{if(a.pathname==='/'&&a.search===location.search)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});matched=games.filter(g=>(!q||[g.t,...(g.cs||[])].join(' ').toLowerCase().includes(q))&&(!c||(g.cs||[]).includes(c)));$('count').textContent=matched.length.toLocaleString()+' games';$('grid').replaceChildren();shown=0;more();$('empty').hidden=matched.length>0}
-function go(search){history.pushState({},'','/'+search);update();window.scrollTo(0,0)}
-$('query').oninput=e=>{const val=e.target.value;history.replaceState({},'','/'+(val?'?q='+encodeURIComponent(val):''));update()};
-$('all').onclick=()=>go('?all=1');$('more').onclick=more;window.onpopstate=update;
-document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==$('query')){e.preventDefault();$('query').focus()}});
-fetch('/catalog/games.json').then(r=>r.json()).then(data=>{games=data.games;$('pickGrid').append(...picks.map(id=>card(games.find(g=>g.id===id))));$('shuffle').onclick=()=>location.assign(url(games[Math.floor(Math.random()*games.length)]));update()}).catch(()=>{$('empty').hidden=false;$('empty').textContent='The catalog could not load. Refresh to try again.'});
+'use strict';
+
+const $ = id => document.getElementById(id);
+
+const paths = {
+  bolt: 'M14 2 4 14h7l-1 8L21 9h-8z',
+  search: 'M10 3a7 7 0 1 0 .01 0 M15 15l6 6',
+  shuffle: 'M3 6h3c5 0 7 12 12 12h3 M17 14l4 4-4 4 M3 18h3q2 0 4-4 M13 9q3-3 5-3h3 M17 2l4 4-4 4',
+  spark: 'M12 2l2.5 7 7.5 3-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-3z',
+  play: 'M8 5v14l11-7z',
+  left: 'm14 6-6 6 6 6',
+  right: 'm10 6 6 6-6 6',
+  upRight: 'M6 18 18 6M8 6h10v10',
+  down: 'M12 5v14m-6-6 6 6 6-6',
+};
+
+function icon(name) {
+  return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="' + paths[name] + '"/></svg>';
+}
+
+document.querySelectorAll('[data-icon]').forEach(element => {
+  element.innerHTML = icon(element.dataset.icon);
+});
+
+const genres = ['Action', 'Racing', 'Sports', 'Puzzle', 'Adventure', 'Arcade'];
+const covers = {
+  'lo-among-us': 'among',
+  'lo-geometry-dash': 'geometry',
+  'lo-terraria': 'terraria',
+  'lo-clustertruck': 'cluster',
+  'lo-granny': 'granny',
+  'lo-hollow-knight-silksong': 'silksong',
+};
+const slides = [
+  {
+    id: 'lo-hollow-knight-silksong',
+    title: 'Hollow Knight: Silksong',
+    subtitle: 'Metroidvania',
+    lines: ['Hollow Knight:', 'Silksong'],
+    description: 'Explore a haunted kingdom of silk and song.',
+    image: 'silksong-library_hero',
+    cover: 'silksong-header',
+  },
+  {
+    id: 'lo-terraria',
+    title: 'Terraria',
+    subtitle: 'Sandbox',
+    description: 'Dig, fight and build your way through a pixel world.',
+    image: 'terraria-library_hero',
+    cover: 'terraria-header',
+  },
+  {
+    id: 'lo-clustertruck',
+    title: 'Clustertruck',
+    subtitle: 'Platformer',
+    description: 'Leap between speeding trucks before the convoy crashes.',
+    image: 'cluster-header',
+    cover: 'cluster-header',
+  },
+];
+const picks = ['lo-geometry-dash', 'lo-among-us', 'lo-terraria', 'lo-crossy-road'];
+const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+const pageSize = 32;
+let activeSlide = 0;
+let games = [];
+let matched = [];
+let shown = 0;
+let loadState = 'loading';
+
+function gameUrl(game) {
+  return game.direct || '/play/?id=' + encodeURIComponent(game.id);
+}
+
+function titleCase(value) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function showSlide(index) {
+  activeSlide = (index + slides.length) % slides.length;
+  const slide = slides[activeSlide];
+  $('heroTitle').replaceChildren(...(slide.lines
+    ? [slide.lines[0], document.createElement('br'), slide.lines[1]]
+    : [slide.title]));
+  $('heroText').textContent = slide.description;
+  $('heroPlay').href = gameUrl(slide);
+  $('hero-image').src = '/art/' + slide.image + '.jpg';
+  $('slide-count').textContent = [activeSlide + 1, slides.length]
+    .map(value => String(value).padStart(2, '0')).join(' / ');
+  Array.from($('spotlight-menu').children).forEach((button, position) => {
+    button.setAttribute('aria-pressed', String(position === activeSlide));
+  });
+}
+
+slides.forEach((slide, index) => {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'spotlight-option';
+  button.innerHTML = '<img alt="" width="144" height="96"><span><strong></strong><small></small></span>' + icon('right');
+  button.querySelector('img').src = '/art/' + slide.cover + '.jpg';
+  button.querySelector('strong').textContent = slide.title;
+  button.querySelector('small').textContent = slide.subtitle;
+  button.addEventListener('click', () => showSlide(index));
+  $('spotlight-menu').append(button);
+});
+$('next').addEventListener('click', () => showSlide(activeSlide + 1));
+$('prev').addEventListener('click', () => showSlide(activeSlide - 1));
+showSlide(0);
+
+function card(game) {
+  const link = document.createElement('a');
+  link.href = gameUrl(game);
+  link.className = 'card';
+  link.innerHTML = '<div class="art"><span class="fallback" aria-hidden="true" hidden></span><img alt="" loading="lazy"></div>'
+    + '<div class="card-copy"><div><h3></h3><small></small></div><span class="card-arrow">' + icon('upRight') + '</span></div>';
+
+  const image = link.querySelector('img');
+  const fallback = link.querySelector('.fallback');
+  fallback.textContent = game.t.slice(0, 2).toUpperCase();
+  const showFallback = () => {
+    image.hidden = true;
+    fallback.hidden = false;
+  };
+  const cover = covers[game.id];
+  const source = cover ? '/art/' + cover + '-header.jpg' : game.img;
+  if (source) {
+    image.addEventListener('error', showFallback, { once: true });
+    image.src = source;
+  } else {
+    showFallback();
+  }
+  link.querySelector('h3').textContent = game.t;
+  link.querySelector('small').textContent = (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
+  return link;
+}
+
+function showMore() {
+  const batch = matched.slice(shown, shown + pageSize);
+  const cards = batch.map(card);
+  $('grid').append(...cards);
+  shown += cards.length;
+  $('more').hidden = shown >= matched.length;
+  return cards[0];
+}
+
+function updateUrl(changes, { replace = false, scroll = false } = {}) {
+  const params = new URLSearchParams(location.search);
+  for (const [key, value] of Object.entries(changes)) {
+    if (value) params.set(key, value);
+    else params.delete(key);
+  }
+  const query = params.toString();
+  const target = '/' + (query ? '?' + query : '');
+  if (target !== location.pathname + location.search + location.hash) {
+    if (replace) history.replaceState(history.state, '', target);
+    else history.pushState(null, '', target);
+  }
+  renderCatalog();
+  if (scroll) window.scrollTo(0, 0);
+}
+
+function renderCatalog() {
+  const params = new URLSearchParams(location.search);
+  const input = params.get('q') || '';
+  const query = input.trim().toLowerCase();
+  const words = query ? query.split(/\s+/) : [];
+  const genre = params.get('c') || '';
+  const sort = params.get('sort') || '';
+  const browsing = !!(query || genre || params.has('all'));
+  const pageTitle = query ? 'Search results' : genre ? titleCase(genre) : browsing ? 'All games' : 'Discover';
+
+  if ($('query').value !== input) $('query').value = input;
+  $('sort').value = ['az', 'za'].includes(sort) ? sort : '';
+  $('spot').hidden = browsing;
+  $('place').textContent = pageTitle;
+  $('page-title').textContent = pageTitle;
+  $('page-deck').textContent = query ? 'Matching games for “' + input.trim() + '”.'
+    : genre ? 'Explore ' + genre + ' games.'
+      : browsing ? 'Explore the full browser game catalog.' : 'Find your next favorite browser game.';
+  $('sectionName').textContent = browsing ? 'Game catalog' : 'Browse games';
+
+  const labels = ['All', ...genres];
+  if (genre && !labels.some(label => label.toLowerCase() === genre)) labels.push(titleCase(genre));
+  const filters = $('filters');
+  const rebuildFilters = labels.join('|') !== filters.dataset.labels;
+  if (rebuildFilters) {
+    filters.dataset.labels = labels.join('|');
+    filters.replaceChildren(...labels.map((label, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = label;
+      button.dataset.genre = index ? label.toLowerCase() : '';
+      button.addEventListener('click', () => {
+        updateUrl({ all: '1', c: button.dataset.genre });
+        $('catalog').scrollIntoView({ block: 'nearest' });
+      });
+      return button;
+    }));
+  }
+  Array.from(filters.children).forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.genre === genre));
+  });
+  document.querySelectorAll('.za-group a').forEach(link => {
+    if (link.pathname !== '/') return;
+    const route = new URLSearchParams(link.search);
+    const current = !query && (route.has('c') ? route.get('c') === genre
+      : route.has('all') ? browsing && !genre : !browsing);
+    if (current) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+
+  matched = games.filter(game => {
+    const categories = game.cs || [];
+    return (!genre || categories.includes(genre))
+      && words.every(word => game.searchText.includes(word));
+  });
+  if (sort === 'az') matched.sort((a, b) => collator.compare(a.t, b.t));
+  if (sort === 'za') matched.sort((a, b) => collator.compare(b.t, a.t));
+
+  $('count').textContent = loadState === 'loading' ? 'Loading games…'
+    : loadState === 'error' ? '' : matched.length.toLocaleString() + (matched.length === 1 ? ' game' : ' games');
+  $('grid').replaceChildren();
+  shown = 0;
+  showMore();
+  $('empty').hidden = loadState === 'loading' || matched.length > 0;
+  $('empty-message').textContent = loadState === 'error'
+    ? 'The catalog could not load. Refresh the page to try again.'
+    : 'No games match your filters.';
+  $('clear').hidden = loadState === 'error';
+}
+
+$('query').addEventListener('input', event => {
+  const replace = !!history.state?.typing;
+  updateUrl({ q: event.target.value }, { replace });
+  history.replaceState({ typing: true }, '');
+});
+$('query').addEventListener('blur', () => {
+  if (history.state?.typing) history.replaceState(null, '');
+});
+$('sort').addEventListener('change', event => updateUrl({ sort: event.target.value }));
+$('clear').addEventListener('click', () => {
+  updateUrl({ q: '', c: '', sort: '', all: '1' }, { scroll: true });
+  $('query').focus();
+});
+$('more').addEventListener('click', () => showMore()?.focus());
+$('shuffle').addEventListener('click', () => {
+  const pool = matched.length ? matched : games;
+  if (pool.length) location.assign(gameUrl(pool[Math.floor(Math.random() * pool.length)]));
+});
+window.addEventListener('popstate', renderCatalog);
+document.addEventListener('keydown', event => {
+  if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey
+    || event.target.closest('input, textarea, select, [contenteditable]')
+    || document.getElementById('consentGate')) return;
+  event.preventDefault();
+  $('query').focus();
+});
+
+function renderShelves() {
+  const byId = new Map(games.map(game => [game.id, game]));
+  $('pickGrid').replaceChildren(...picks.map(id => byId.get(id)).filter(Boolean).map(card));
+  let recentIds = [];
+  try {
+    const records = JSON.parse(localStorage.getItem('zenou_recent'));
+    if (Array.isArray(records)) recentIds = [...new Set(records.map(record => record?.id))];
+  } catch { /* Storage can be unavailable. */ }
+  const recent = recentIds.map(id => byId.get(id)).filter(Boolean).slice(0, 4);
+  $('recent-grid').replaceChildren(...recent.map(card));
+  $('recent').hidden = recent.length === 0;
+}
+
+renderCatalog();
+fetch('/catalog/games.json')
+  .then(response => {
+    if (!response.ok) throw new Error('Catalog request failed');
+    return response.json();
+  })
+  .then(data => {
+    games = data.games.map(game => ({
+      ...game,
+      searchText: [game.t, ...(game.cs || [])].join(' ').toLowerCase(),
+    }));
+    loadState = 'ready';
+    $('shuffle').disabled = !games.length;
+    renderShelves();
+    renderCatalog();
+  })
+  .catch(() => {
+    games = [];
+    loadState = 'error';
+    $('shuffle').disabled = true;
+    renderCatalog();
+  });
