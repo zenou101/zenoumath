@@ -329,6 +329,7 @@
     const tabs = Array.from(root.querySelectorAll('.settings-tabs [role="tab"]'));
     const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
     const content = $('.settings-content', root);
+    const pendingPreviews = [];
     const selectTab = (selected) => {
       for (const tab of tabs) {
         const active = tab === selected;
@@ -336,6 +337,9 @@
         tab.tabIndex = active ? 0 : -1;
       }
       for (const panel of panels) panel.hidden = panel.id !== selected.getAttribute('aria-controls');
+      if (selected.getAttribute('aria-controls') === 'settingsWallpaper') {
+        for (const [preview, src] of pendingPreviews.splice(0)) preview.src = src;
+      }
       content.scrollTop = 0;
     };
     tabs.forEach((tab, index) => {
@@ -384,16 +388,18 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.val = preset.id;
+      button.hidden = true;
       button.setAttribute('aria-pressed', String(readPrefs().bg === preset.id));
       const preview = document.createElement('img');
       preview.alt = '';
       preview.addEventListener('load', () => {
-        presetGroup.append(button);
+        button.hidden = false;
         presetField.hidden = false;
         paintBg();
       }, { once: true });
-      preview.src = preset.src;
       button.append(preview, preset.name);
+      presetGroup.append(button);
+      pendingPreviews.push([preview, preset.src]);
       button.addEventListener('click', () => {
         setPref('bg', preset.id);
         paintBgSeg();

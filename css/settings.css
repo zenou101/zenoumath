@@ -526,15 +526,14 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
 .hue-field > span { display: flex; justify-content: space-between; gap: 8px; }
 
 .wallpaper-presets {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
 }
 .wallpaper-presets button {
   display: grid;
   gap: 7px;
-  width: 150px;
-  max-width: 100%;
+  min-width: 0;
   padding: 6px 6px 8px;
   border: 1px solid var(--line, var(--za-line));
   border-radius: 9px;

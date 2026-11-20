@@ -11,6 +11,10 @@
 
   const wallpaperPresets = [
     { id: 'purple-eye', name: 'Purple Eye', src: '/assets/wallpapers/purple-eye.png' },
+    { id: 'red-silhouette', name: 'Red Silhouette', src: '/assets/wallpapers/red-silhouette.png' },
+    { id: 'liquid-chrome', name: 'Liquid Chrome', src: '/assets/wallpapers/liquid-chrome.png' },
+    { id: 'light-and-shadow', name: 'Light and Shadow', src: '/assets/wallpapers/light-and-shadow.png' },
+    { id: 'hooded-shadow', name: 'Hooded Shadow', src: '/assets/wallpapers/hooded-shadow.png' },
   ];
   const root = document.documentElement;
   const calmQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
