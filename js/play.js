@@ -184,8 +184,8 @@ async function boot() {
   }
 
   document.title = window.zenouMaskedTitle
-    ? window.zenouMaskedTitle(`${g.t} · Zenou Arcade`)
-    : `${g.t} · Zenou Arcade`;
+    ? window.zenouMaskedTitle(`${g.t} · ZenouMath`)
+    : `${g.t} · ZenouMath`;
   if (!g.availability) touchRecent(g.id);
   if (g.wrap || g.direct) {
     const target = safePage(g.wrap ? g.u : g.direct);

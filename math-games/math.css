@@ -1,7 +1,90 @@
-.math-intro{display:grid;grid-template-columns:1fr minmax(235px,310px);align-items:center;gap:22px;padding:clamp(18px,3vw,44px);border:1px solid #3b3b42;border-radius:16px;background-color:#19191e;background-image:linear-gradient(90deg,#19191ef5,#19191e22),linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:auto,24px 24px,24px 24px}
-.math-intro h1{font-size:clamp(38px,5.5vw,80px);line-height:1.08;letter-spacing:-.04em;margin:0 0 14px}.math-intro p{font-size:16px;line-height:1.6;color:#c3c2cb;max-width:39ch;margin:0 0 24px}.calc{padding:14px;border:1px solid #46464d;border-radius:12px;background:#202026}.calc h2{font-size:15px;margin:0 0 10px}.calc input,.calc output{display:block;width:100%;background:#121215;color:white;border:0;text-align:right;padding:5px 9px}.calc input{border-radius:6px 6px 0 0;font:24px monospace}.calc output{font:12px monospace;min-height:24px;border-radius:0 0 6px 6px;color:var(--accent)}.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}.keys button{background:#303037;border:1px solid #404047;border-radius:5px;padding:5px;min-height:32px}.keys button:hover{border-color:var(--accent)}.keys button:last-child,.filters button[aria-pressed=true]{color:#111;background:var(--accent);border-color:var(--accent)}#total{color:#aaa;font-size:13px}#mathCards .art{position:relative;display:grid;place-items:center;background:repeating-linear-gradient(45deg,#20232a 0 8px,#242830 8px 16px)}#mathCards .art span{font:800 38px monospace;color:#c8cbd0}#mathCards img{position:absolute;inset:0}#games{scroll-margin-top:16px}@media(max-width:660px){.math-intro{grid-template-columns:1fr}.calc{max-width:400px;width:100%}.math-intro p{font-size:14px}}
+[data-arcade-page="math-games"] .math-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(224px, 320px);
+  align-items: center;
+  gap: clamp(18px, 3vw, 40px);
+  margin-bottom: 30px;
+}
+
+.math-intro .btn { margin-top: 18px; }
+
+.calc {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+}
+.calc h2 { margin-bottom: 10px; font-size: 16px; }
+.calc input, .calc output {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-monospace, monospace;
+  text-align: right;
+}
+.calc input { border-radius: 8px 8px 0 0; font-size: 22px; }
+.calc output {
+  min-height: 30px;
+  border-radius: 0 0 8px 8px;
+  color: var(--accent);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+.keys button {
+  min-height: 38px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  cursor: pointer;
+}
+.keys button:hover { border-color: var(--accent); }
+
+#games { scroll-margin-top: 16px; }
+.math-library-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-bottom: 12px;
+}
+.math-library-heading h2 { margin: 0; }
+#total { color: var(--muted); font-size: 13px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters .chip { border-radius: 8px; min-height: 36px; }
+
+.keys button:last-child, .filters .chip[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.calc :focus-visible, .filters :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+#mathCards .art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 32px;
+}
+#mathCards img { position: absolute; inset: 0; }
 
 @media (max-width: 660px) {
-  #games .filters { flex-wrap: wrap; }
-  .keys button { min-height: 38px; }
+  [data-arcade-page="math-games"] .math-intro { grid-template-columns: minmax(0, 1fr); }
 }

@@ -850,6 +850,7 @@
      ================================================================ */
   function mountKeys() {
     document.addEventListener('keydown', (e) => {
+      if (e.defaultPrevented || document.querySelector('.settings-overlay[open]')) return;
       const t = e.target;
       const typing = t && t.matches && t.matches('input, textarea, select, [contenteditable]');
 

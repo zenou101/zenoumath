@@ -194,12 +194,12 @@
     const prefs = readPrefs();
     const mask = store.get('zenou_mask', {});
 
-    const root = document.createElement('div');
+    const root = document.createElement('dialog');
     root.className = 'settings-overlay';
-    root.hidden = true;
+    root.setAttribute('aria-labelledby', 'settingsTitle');
     root.innerHTML = `
-      <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <button class="settings-close btn btn-ghost" type="button" aria-label="Close settings">✕</button>
+      <div class="settings-panel">
+        <button class="settings-close btn btn-ghost" type="button" aria-label="Close settings" autofocus>✕</button>
         <h2 id="settingsTitle">Settings</h2>
         <p class="settings-note">Appearance applies instantly. Everything is saved in this browser only, nothing is uploaded.</p>
 
@@ -285,16 +285,16 @@
 
         <section class="settings-section">
           <h3>App &amp; shortcuts</h3>
-          <div class="settings-field">
+          <div class="settings-field" data-shared-settings>
             <span>Install as an app</span>
             <button id="seInstall" class="btn btn-ghost" type="button">Install Zenou</button>
             <small>Adds a home-screen icon and opens without browser chrome. Available in Chrome, Edge and most Android browsers.</small>
           </div>
-          <div class="settings-field">
+          <div class="settings-field" data-shared-settings>
             <span>Keyboard</span>
             <button id="seKeys" class="btn btn-ghost" type="button">Show all shortcuts</button>
           </div>
-          <div class="settings-field">
+          <div class="settings-field" data-shared-settings>
             <span>Shortcut keys</span>
             <div id="seKeymap" class="keymap"></div>
             <small>Click Change, then press any key. Defaults use digits and punctuation, so typing a letter in a game never opens a page.</small>
@@ -737,11 +737,13 @@
     });
 
     /* app + shortcuts */
+    if (!window.Zenou) root.querySelectorAll('[data-shared-settings]').forEach(field => { field.hidden = true; });
     $('#seInstall', root).addEventListener('click', () => {
       if (window.Zenou) window.Zenou.install();
     });
     $('#seKeys', root).addEventListener('click', () => {
-      if (window.Zenou) window.Zenou.shortcutSheet();
+      close();
+      window.Zenou?.shortcutSheet();
     });
 
     /* segmented preference groups */
@@ -843,40 +845,90 @@
       location.reload();
     });
 
+    $('.settings-close', root).addEventListener('click', close);
+    root.addEventListener('click', event => { if (event.target === root) close(); });
+    root.addEventListener('close', () => {
+      endCapture();
+      webCaptureCancel?.();
+      root.remove();
+      document.getElementById('settingsBtn')?.focus();
+    });
+
     document.body.append(root);
     return root;
   }
 
   function close() {
-    const o = document.querySelector('.settings-overlay');
-    if (o) { o.hidden = true; o.classList.remove('open'); }
+    document.querySelector('.settings-overlay[open]')?.close();
   }
+
   function open() {
-    let o = document.querySelector('.settings-overlay');
-    if (!o) o = buildPanel();
-    o.hidden = false;
-    requestAnimationFrame(() => o.classList.add('open'));
-    const closeBtn = $('.settings-close', o);
-    if (closeBtn && !closeBtn.dataset.bound) {
-      closeBtn.dataset.bound = '1';
-      closeBtn.addEventListener('click', close);
-      o.addEventListener('click', (e) => { if (e.target === o) close(); });
+    if (document.querySelector('.settings-overlay, #consentGate')) return;
+    buildPanel().showModal();
+  }
+
+  function mountSidebarToggle(rail, row, settings) {
+    const navigation = rail.querySelector('.za-scroll');
+    if (!navigation) return;
+    navigation.id ||= 'arcade-navigation';
+    const footer = rail.querySelector('.za-foot');
+    const root = document.documentElement;
+    const key = 'zenou_sidebar_collapsed';
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'sidebar-toggle';
+    toggle.setAttribute('aria-controls', navigation.id);
+    toggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 5v14"/></svg>';
+    row.insertBefore(toggle, settings);
+
+    function render(collapsed) {
+      root.toggleAttribute('data-sidebar-collapsed', collapsed);
+      navigation.hidden = collapsed;
+      if (footer) footer.hidden = collapsed;
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      const label = collapsed ? 'Open sidebar' : 'Close sidebar';
+      toggle.setAttribute('aria-label', label);
+      toggle.title = label;
     }
+
+    toggle.addEventListener('click', () => {
+      const collapsed = !navigation.hidden;
+      render(collapsed);
+      store.set(key, collapsed);
+    });
+
+    render(store.get(key, false) === true);
+    window.addEventListener('pageshow', event => {
+      if (event.persisted) render(store.get(key, navigation.hidden) === true);
+    });
   }
 
   function injectButton() {
-    const hosts = ['body > header.topbar', 'body > header'];
-    let bar = null;
-    for (const sel of hosts) { bar = document.querySelector(sel); if (bar) break; }
-    if (!bar) return;
+    if (document.getElementById('settingsBtn')) return;
+    const brand = document.querySelector('.za-rail > .za-brand');
+    const bar = document.querySelector('body > header, body > main > header');
+    if (!brand && !bar) return;
+
     const b = document.createElement('button');
-    b.className = 'btn btn-ghost settings-btn';
+    b.className = 'settings-btn';
     b.type = 'button';
     b.id = 'settingsBtn';
-    b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7zm7.4-2.8.1-.7-.1-.7 1.9-1.5-1.7-3-2.2.9a7.6 7.6 0 0 0-1.2-.7L15.9 5h-3.8l-.3 2.2c-.4.2-.8.4-1.2.7l-2.2-.9-1.7 3 1.9 1.5a8 8 0 0 0 0 1.4L6.7 14.4l1.7 3 2.2-.9c.4.3.8.5 1.2.7l.3 2.2h3.8l.3-2.2c.4-.2.8-.4 1.2-.7l2.2.9 1.7-3-1.9-1.7z"/></svg><span>Settings</span>';
+    b.title = 'Settings';
+    b.setAttribute('aria-label', 'Settings');
+    b.setAttribute('aria-haspopup', 'dialog');
+    b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7zm7.4-2.8.1-.7-.1-.7 1.9-1.5-1.7-3-2.2.9a7.6 7.6 0 0 0-1.2-.7L15.9 5h-3.8l-.3 2.2c-.4.2-.8.4-1.2.7l-2.2-.9-1.7 3 1.9 1.5a8 8 0 0 0 0 1.4L6.7 14.4l1.7 3 2.2-.9c.4.3.8.5 1.2.7l.3 2.2h3.8l.3-2.2c.4-.2.8-.4 1.2-.7l2.2.9 1.7-3-1.9-1.7z"/></svg>';
     b.addEventListener('click', open);
-    const anchor = document.querySelector('#randomBtn') || document.querySelector('.play-topbar #backBtn') || bar.lastElementChild;
-    if (anchor) anchor.insertAdjacentElement('afterend', b); else bar.append(b);
+    if (brand) {
+      const row = document.createElement('div');
+      row.className = 'za-brand-row';
+      const rail = brand.parentElement;
+      brand.replaceWith(row);
+      row.append(brand, b);
+      mountSidebarToggle(rail, row, b);
+    } else {
+      bar.append(b);
+    }
   }
 
   /* ---------- direct key shortcuts (Web shortcuts) ---------- */
@@ -887,7 +939,7 @@
     if (!e.key || e.key.length !== 1 || e.key === ' ') return null;
     const target = e.target;
     if (target && target.matches && target.matches('input, textarea, select, [contenteditable]')) return null;
-    if (document.querySelector('.settings-overlay:not([hidden]), .sheet-overlay, .web-pin-overlay')) return null;
+    if (document.querySelector('.settings-overlay[open], .sheet-overlay, .web-pin-overlay')) return null;
     let list;
     try { list = JSON.parse(localStorage.getItem(WEB_TAB_KEY) || '[]'); } catch { return null; }
     if (!Array.isArray(list)) return null;

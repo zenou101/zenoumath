@@ -260,7 +260,7 @@ window.addEventListener('popstate', renderCatalog);
 document.addEventListener('keydown', event => {
   if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey
     || event.target.closest('input, textarea, select, [contenteditable]')
-    || document.getElementById('consentGate')) return;
+    || document.querySelector('#consentGate, .settings-overlay[open]')) return;
   event.preventDefault();
   $('query').focus();
 });

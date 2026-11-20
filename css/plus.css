@@ -490,16 +490,6 @@ html[data-view="list"] .card .card-rating { left: auto; right: 12px; bottom: 10p
 .sw-mint   { background: linear-gradient(135deg, #5eead4, #22d3ee); }
 .sw-gold   { background: linear-gradient(135deg, #facc15, #f59e0b); }
 
-/* hue slider inside settings */
-.hue-field { display: grid; gap: 8px; }
-.hue-field input[type="range"] { width: 100%; }
-.hue-swatch {
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #ff4d4d, #ffb84d, #e5ff4d, #4dff88, #4dd2ff, #7a4dff, #ff4dbe, #ff4d4d);
-  border: 1px solid var(--line);
-}
-
 /* external-only badge reads as a different kind of card */
 .card-src[data-src="external"] {
   background: rgba(6, 8, 14, .82);

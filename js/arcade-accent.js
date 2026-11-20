@@ -2,12 +2,18 @@
   const picker = document.querySelector('.za-accent');
   if (!picker) return;
   const root = document.documentElement;
-  if (root.style.getPropertyValue('--accent')) {
-    picker.add(new Option('Custom', 'custom'));
-    picker.value = 'custom';
-  } else {
-    picker.value = root.dataset.theme || 'sunset';
-  }
+  const syncPicker = () => {
+    const custom = picker.querySelector('[value="custom"]');
+    if (root.style.getPropertyValue('--accent')) {
+      if (!custom) picker.add(new Option('Custom', 'custom'));
+      picker.value = 'custom';
+    } else {
+      custom?.remove();
+      picker.value = root.dataset.theme || 'sunset';
+    }
+  };
+  syncPicker();
+  new MutationObserver(syncPicker).observe(root, { attributes: true, attributeFilter: ['data-theme', 'style'] });
   picker.addEventListener('change', () => {
     const theme = picker.value;
     root.dataset.theme = theme;
