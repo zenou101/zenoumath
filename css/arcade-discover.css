@@ -8,6 +8,9 @@ html { color-scheme: dark; }
   --text: #faf7f4;
   --muted: #b5aebc;
   --za-gap: clamp(20px, 3.2vw, 54px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
   margin: 0;
   background: var(--canvas);
   color: var(--text);
@@ -53,7 +56,7 @@ body.arcade-discover::after { content: none; }
   box-shadow: inset 2px 0 var(--accent);
   background: color-mix(in srgb, var(--accent) 11%, var(--rail));
 }
-.arcade-discover main { margin-left: var(--za-rail); min-width: 0; }
+.arcade-discover main { display: flex; flex: 1; flex-direction: column; margin-left: var(--za-rail); min-width: 0; }
 .toolbar {
   min-height: 72px;
   display: flex;
@@ -95,7 +98,7 @@ body.arcade-discover::after { content: none; }
 .shuffle { white-space: nowrap; }
 .shuffle svg { margin-right: 4px; color: var(--accent); }
 
-.content { max-width: 1536px; margin: auto; padding: 30px var(--za-gap) 48px; }
+.content { flex: 1; width: 100%; max-width: 1536px; margin: 0 auto; padding: 30px var(--za-gap) 48px; }
 .page-heading { margin-bottom: 24px; }
 .page-heading h1 {
   font-size: clamp(38px, 4.4vw, 62px);

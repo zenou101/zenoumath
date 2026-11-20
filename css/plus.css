@@ -484,12 +484,6 @@ html[data-view="list"] .card .card-rating { left: auto; right: 12px; bottom: 10p
 [data-theme="mint"]   { --accent: #5eead4; --accent-2: #22d3ee; --accent-rgb: 94 234 212;  --accent-2-rgb: 34 211 238;  --accent-ink: #031513; }
 [data-theme="gold"]   { --accent: #facc15; --accent-2: #f59e0b; --accent-rgb: 250 204 21;  --accent-2-rgb: 245 158 11;  --accent-ink: #1a1402; }
 
-.sw-ocean  { background: linear-gradient(135deg, #38bdf8, #6366f1); }
-.sw-sunset { background: linear-gradient(135deg, #fb923c, #f43f5e); }
-.sw-rose   { background: linear-gradient(135deg, #f472b6, #c084fc); }
-.sw-mint   { background: linear-gradient(135deg, #5eead4, #22d3ee); }
-.sw-gold   { background: linear-gradient(135deg, #facc15, #f59e0b); }
-
 /* external-only badge reads as a different kind of card */
 .card-src[data-src="external"] {
   background: rgba(6, 8, 14, .82);

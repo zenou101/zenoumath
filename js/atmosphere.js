@@ -9,6 +9,9 @@
 (function () {
   if (window.ZenouAtmo) return;
 
+  const wallpaperPresets = [
+    { id: 'purple-eye', name: 'Purple Eye', src: '/assets/wallpapers/purple-eye.png' },
+  ];
   const root = document.documentElement;
   const calmQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -38,7 +41,7 @@
   let raf = 0;
   let last = 0;
   let running = false;
-  let accent = '255 79 176';
+  let accent = '255 255 255';
 
   const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -187,13 +190,16 @@
   }
 
   function applyPreferences(prefs = readPreferences()) {
-    let image = '';
-    try { image = localStorage.getItem('zenou_bgimg') || ''; } catch { /* Storage is optional. */ }
+    const preset = wallpaperPresets.find(wallpaper => wallpaper.id === prefs.bg);
+    let image = preset?.src || '';
+    if (prefs.bg === 'custom') {
+      try { image = localStorage.getItem('zenou_bgimg') || ''; } catch { /* Storage is optional. */ }
+    }
     root.classList.toggle('has-custom', !!image);
     if (image) root.style.setProperty('--custom-bg', `url("${image}")`);
     else root.style.removeProperty('--custom-bg');
 
-    root.dataset.bg = prefs.bg || 'aurora';
+    root.dataset.bg = preset ? 'custom' : prefs.bg || 'aurora';
     root.dataset.bgEffects = prefs.bgEffects || 'none';
     root.dataset.motion = prefs.motion || 'full';
     const dim = Number(prefs.bgDim ?? 45);
@@ -227,6 +233,6 @@
   });
   calmQuery.addEventListener('change', refreshParticles);
 
-  window.ZenouAtmo = { applyPreferences };
+  window.ZenouAtmo = { applyPreferences, wallpaperPresets };
   applyPreferences();
 })();

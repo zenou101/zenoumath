@@ -22,11 +22,11 @@
   --muted: #99a2b4;
   --muted-2: #6b7385;
 
-  --accent: #ff4fb0;
-  --accent-2: #8b5cf6;
-  --accent-rgb: 255 79 176;
-  --accent-2-rgb: 139 92 246;
-  --accent-ink: #12030c;
+  --accent: #fff;
+  --accent-2: #dedee3;
+  --accent-rgb: 255 255 255;
+  --accent-2-rgb: 222 222 227;
+  --accent-ink: #111114;
 
   --success: #34d399;
   --danger: #ff5c7a;
@@ -1415,6 +1415,7 @@ main {
   transform: translateY(130%);
   transition: transform .32s var(--ease);
 }
+.player-bar:not(.on) { visibility: hidden; }
 .player-bar.on { transform: none; }
 .player-bar::before {
   content: "";
@@ -1457,7 +1458,7 @@ main {
   .pb-info { width: 104px; }
   .pb-vol { display: none; }
 }
-body.has-player { padding-bottom: 80px; }
+body:has(.player-bar.on) { padding-bottom: var(--music-player-height, 0px); }
 
 /* ================================================================
    responsive

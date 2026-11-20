@@ -9,7 +9,7 @@
       picker.value = 'custom';
     } else {
       custom?.remove();
-      picker.value = root.dataset.theme || 'sunset';
+      picker.value = root.dataset.theme || 'white';
     }
   };
   syncPicker();

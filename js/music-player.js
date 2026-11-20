@@ -43,10 +43,9 @@ function AudioPlayer(hostSel) {
       <button type="button" class="next" aria-label="Next">⏭</button>
       <a class="pb-open" target="_blank" rel="noopener" aria-label="Open at source">↗</a>
     </div>
-    <button type="button" class="pb-hide" aria-label="Show/hide player">▾</button>`;
+    <button type="button" class="pb-hide" aria-label="Collapse music player" aria-expanded="true">▾</button>`;
   host.append(bar);
-  document.body.classList.add('has-player');
-  /* an idle player shows a slim strip, not a 168px hole with an empty embed */
+  /* Keep the embed out of the layout until a track is started. */
   if (!Queue.list[Queue.pos]) bar.classList.add('empty');
 
   const $ = (s) => bar.querySelector(s);
@@ -65,17 +64,35 @@ function AudioPlayer(hostSel) {
     .player-bar.empty { min-height: 0; padding-top: 12px; padding-bottom: 12px; }
     .player-bar.empty .pb-embed { display: none; }
     .player-bar.folded .pb-embed, .player-bar.folded .pb-info { display: none; }
-    .player-bar.folded { transform: translateY(112px); }
+    .player-bar.folded { min-height: 0; }
     @media (max-width: 780px) {
-      .pb-embed { flex: 1; min-width: 220px; height: 88px; }
-      .player-bar { align-items: stretch; }
-      .player-bar.folded { transform: translateY(48px); }
+      .pb-embed { flex: 1; min-width: 0; height: 88px; }
+      .player-bar { min-height: 0; }
     }
-    @media (max-width: 640px) { .pb-info { display: none; } .pb-hide { display: none; } }
+    @media (max-width: 640px) {
+      .player-bar { flex-wrap: wrap; gap: 8px; }
+      .pb-embed { flex: 1 0 100%; }
+      .pb-info { display: none; }
+      .pb-hide { margin-left: auto; }
+    }
   `;
   document.head.append(barCSS);
 
-  hide.addEventListener('click', () => bar.classList.toggle('folded'));
+  function updatePageInset() {
+    document.body.style.setProperty('--music-player-height', `${bar.offsetHeight}px`);
+  }
+
+  function setFolded(folded) {
+    bar.classList.toggle('folded', folded);
+    hide.setAttribute('aria-expanded', String(!folded));
+    hide.setAttribute('aria-label', folded ? 'Expand music player' : 'Collapse music player');
+    hide.textContent = folded ? '▴' : '▾';
+    updatePageInset();
+  }
+
+  const playerResize = new ResizeObserver(updatePageInset);
+  playerResize.observe(bar);
+  hide.addEventListener('click', () => setFolded(!bar.classList.contains('folded')));
 
   function playNow(track) {
     if (!track || !track.url) return false;
@@ -92,7 +109,7 @@ function AudioPlayer(hostSel) {
     document.querySelectorAll('.player-bar').forEach(b => b.classList.remove('sc-mode'));
     bar.classList.remove('empty');
     bar.classList.add('on');
-    bar.classList.remove('folded');
+    setFolded(false);
     return true;
   }
 
@@ -102,7 +119,7 @@ function AudioPlayer(hostSel) {
 
   nextB.addEventListener('click', () => { if (Queue.list.length) playNow(Queue.next(1)); });
   prevB.addEventListener('click', () => { if (Queue.list.length) playNow(Queue.next(-1)); });
-  bar.addEventListener('click', e => { if (e.target === bar) bar.classList.add('folded'); });
+  bar.addEventListener('click', e => { if (e.target === bar) setFolded(true); });
 
   /* resume queue UI (don't autoplay, browser policy + no surprise audio) */
   if (Queue.list[Queue.pos]) {

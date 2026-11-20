@@ -40,7 +40,7 @@
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
     ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
   ];
-  const DEFAULTS = { theme: 'sunset', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'white', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
 
@@ -199,12 +199,21 @@
     root.setAttribute('aria-labelledby', 'settingsTitle');
     root.innerHTML = `
       <div class="settings-panel">
-        <button class="settings-close btn btn-ghost" type="button" aria-label="Close settings" autofocus>✕</button>
-        <h2 id="settingsTitle">Settings</h2>
-        <p class="settings-note">Appearance applies instantly. Everything is saved in this browser only, nothing is uploaded.</p>
+        <header class="settings-header">
+          <h2 id="settingsTitle">Settings</h2>
+          <button class="settings-close btn btn-ghost" type="button" aria-label="Close settings" autofocus>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </header>
+        <div class="settings-tabs" role="tablist" aria-label="Settings sections">
+          <button type="button" role="tab" id="settingsTabAppearance" aria-controls="settingsAppearance" aria-selected="true">Appearance</button>
+          <button type="button" role="tab" id="settingsTabWallpaper" aria-controls="settingsWallpaper" aria-selected="false" tabindex="-1">Wallpaper</button>
+          <button type="button" role="tab" id="settingsTabBrowser" aria-controls="settingsBrowser" aria-selected="false" tabindex="-1">Browser tab</button>
+          <button type="button" role="tab" id="settingsTabShortcuts" aria-controls="settingsShortcuts" aria-selected="false" tabindex="-1">Shortcuts</button>
+        </div>
 
-        <section class="settings-section">
-          <h3>Look &amp; feel</h3>
+        <div class="settings-content">
+        <section class="settings-section" role="tabpanel" id="settingsAppearance" aria-labelledby="settingsTabAppearance">
           <div class="settings-field">
             <span>Accent</span>
             <div id="seThemes" class="theme-chips"></div>
@@ -212,40 +221,34 @@
           <div id="sePrefs"></div>
 
           <div class="settings-field hue-field">
-            <span>Custom accent hue <output id="seHueOut">off</output></span>
-            <div class="hue-swatch" aria-hidden="true"></div>
+            <span><label for="seHue">Custom accent hue</label> <output id="seHueOut">off</output></span>
             <input id="seHue" type="range" min="0" max="360" step="2" value="320">
-            <small>Overrides the presets with your own colour. Drag to 0 and press Reset accent to go back.</small>
             <button id="seHueClear" class="btn btn-ghost" type="button">Use preset colours</button>
           </div>
 
-          <div class="settings-preview" aria-hidden="true">
-            <span class="preview-chip">Sample collection</span>
-            <button class="preview-btn" type="button" tabindex="-1">Play now</button>
-            <div class="preview-card">
-              <span class="preview-thumb"></span>
-              <span class="preview-name">Game title</span>
-            </div>
-          </div>
         </section>
 
-        <section class="settings-section">
-          <h3>Background image</h3>
+        <section class="settings-section" role="tabpanel" id="settingsWallpaper" aria-labelledby="settingsTabWallpaper" hidden>
+          <div id="seBackgroundStyle"></div>
+          <div class="settings-field" id="seWallpaperPresets" hidden>
+            <span id="seWallpaperPresetsLabel">Preset wallpapers</span>
+            <div class="wallpaper-presets" role="group" aria-labelledby="seWallpaperPresetsLabel"></div>
+          </div>
           <div class="settings-field">
-            <span>Custom background image</span>
+            <span>Custom wallpaper</span>
             <div class="bg-row">
               <div id="seBgThumb" class="bg-thumb" aria-hidden="true"></div>
               <div class="bg-actions">
-                <input id="seBgFile" type="file" accept="image/*">
-                <button id="seBgClear" class="btn btn-ghost" type="button">Remove image</button>
+                <input id="seBgFile" class="settings-file" type="file" accept="image/*">
+                <label class="btn btn-ghost" for="seBgFile">Upload wallpaper</label>
+                <button id="seBgClear" class="btn btn-ghost" type="button">Remove upload</button>
               </div>
             </div>
-            <small id="seBgNote" role="status">Wallpaper is saved in this browser and shared across arcade pages.</small>
+            <small id="seBgNote" role="status"></small>
           </div>
           <label class="settings-field" for="seDim">
             <span>Image dim <output id="seDimOut">45%</output></span>
             <input id="seDim" type="range" min="0" max="85" step="5" value="45">
-            <small>Raise the dim to make text easier to read.</small>
           </label>
           <div class="settings-field">
             <span id="seBgEffectsLabel">Wallpaper effects</span>
@@ -255,15 +258,13 @@
               <button type="button" data-val="snow">Snow</button>
               <button type="button" data-val="night">Stars + snow</button>
             </div>
-            <small>Effects appear over your wallpaper when “Custom image” is selected.</small>
           </div>
         </section>
 
-        <section class="settings-section">
-          <h3>Tab disguise</h3>
+        <section class="settings-section" role="tabpanel" id="settingsBrowser" aria-labelledby="settingsTabBrowser" hidden>
           <label class="settings-field">
             <span>Tab title</span>
-            <input id="seTitle" type="text" placeholder="Example: Google Docs" value="">
+            <input id="seTitle" type="text" placeholder="ZenouMath" value="">
           </label>
           <div class="settings-field">
             <span>Preset tab icons</span>
@@ -271,20 +272,21 @@
           </div>
           <label class="settings-field">
             <span>Custom tab icon</span>
-            <input id="seIconFile" type="file" accept="image/*">
-            <small>Click a preset to change the tab icon immediately. Custom uploads are saved when you press Done.</small>
+            <input id="seIconFile" type="file" accept="image/*" aria-label="Upload custom tab icon" aria-describedby="seIconHint">
+            <small id="seIconHint">Icon uploads are saved when you press Done.</small>
           </label>
         </section>
 
-        <section class="settings-section" id="seWebSection">
+        <section class="settings-section" role="tabpanel" id="settingsShortcuts" aria-labelledby="settingsTabShortcuts" hidden>
+        <div class="settings-shortcut-group">
           <h3>Web shortcuts</h3>
-          <p class="settings-note" style="margin:0">Add one shortcut at a time, up to 12. Give it a key and an exact URL. Pressing that key anywhere in Zenou, outside a text field, turns this tab into that website at once; Open shortcut does the same. It never loads in the Web stage, and a bound shortcut must be removed before its address can change.</p>
+          <p class="settings-note">Assign keys to open up to 12 websites. Shortcuts are paused while you type.</p>
           <div id="seTabs" class="tab-binder"></div>
           <p id="seTabsNote" class="settings-note" role="status" aria-live="polite" style="margin:0"></p>
-        </section>
+        </div>
 
-        <section class="settings-section">
-          <h3>App &amp; shortcuts</h3>
+        <div class="settings-shortcut-group">
+          <h3>Arcade shortcuts</h3>
           <div class="settings-field" data-shared-settings>
             <span>Install as an app</span>
             <button id="seInstall" class="btn btn-ghost" type="button">Install Zenou</button>
@@ -310,36 +312,94 @@
               <a class="btn btn-ghost" href="/library#data">Backup</a>
             </div>
           </div>
+        </div>
         </section>
+        </div>
 
-        <div class="settings-actions">
+        <footer class="settings-actions">
           <button id="seReset" class="btn btn-ghost" type="button">Reset all</button>
           <button id="seSave" class="btn btn-solid" type="button">Done</button>
-        </div>
+        </footer>
       </div>`;
 
     const titleInput = $('#seTitle', root);
     const themeWrap = $('#seThemes', root);
     const prefsWrap = $('#sePrefs', root);
+    const backgroundStyle = $('#seBackgroundStyle', root);
+    const tabs = Array.from(root.querySelectorAll('.settings-tabs [role="tab"]'));
+    const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
+    const content = $('.settings-content', root);
+    const selectTab = (selected) => {
+      for (const tab of tabs) {
+        const active = tab === selected;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      }
+      for (const panel of panels) panel.hidden = panel.id !== selected.getAttribute('aria-controls');
+      content.scrollTop = 0;
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', event => {
+        const destinations = {
+          ArrowLeft: (index + tabs.length - 1) % tabs.length,
+          ArrowRight: (index + 1) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        const next = tabs[destinations[event.key]];
+        if (!next) return;
+        event.preventDefault();
+        selectTab(next);
+        next.focus();
+      });
+    });
     const iconRow = $('#seIcons', root);
     const fileInput = $('#seIconFile', root);
     const bgFile = $('#seBgFile', root);
     const bgThumb = $('#seBgThumb', root);
     const bgNote = $('#seBgNote', root);
+    const bgClear = $('#seBgClear', root);
     const dimInput = $('#seDim', root);
     const dimOut = $('#seDimOut', root);
     const effects = Array.from($('#seBgEffects', root).querySelectorAll('button'));
+    const presetField = $('#seWallpaperPresets', root);
+    const presetGroup = $('.wallpaper-presets', root);
     titleInput.value = mask.title || '';
 
     const paintBg = () => {
       const v = readBgImage();
       bgThumb.style.backgroundImage = v ? `url("${v}")` : '';
       bgThumb.classList.toggle('has-image', !!v);
-      const { bgDim, bgEffects } = readPrefs();
+      bgClear.hidden = !v;
+      const { bg, bgDim, bgEffects } = readPrefs();
+      for (const button of presetGroup.children) {
+        button.setAttribute('aria-pressed', String(button.dataset.val === bg));
+      }
       dimInput.value = String(bgDim);
       dimOut.textContent = bgDim + '%';
       effects.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.val === bgEffects)));
     };
+    for (const preset of window.ZenouAtmo?.wallpaperPresets || []) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.val = preset.id;
+      button.setAttribute('aria-pressed', String(readPrefs().bg === preset.id));
+      const preview = document.createElement('img');
+      preview.alt = '';
+      preview.addEventListener('load', () => {
+        presetGroup.append(button);
+        presetField.hidden = false;
+        paintBg();
+      }, { once: true });
+      preview.src = preset.src;
+      button.append(preview, preset.name);
+      button.addEventListener('click', () => {
+        setPref('bg', preset.id);
+        paintBgSeg();
+        paintBg();
+      });
+    }
     paintBg();
     effects.forEach(button => button.addEventListener('click', () => {
       setPref('bgEffects', button.dataset.val);
@@ -365,7 +425,7 @@
       }
     });
 
-    $('#seBgClear', root).addEventListener('click', () => {
+    bgClear.addEventListener('click', () => {
       try { localStorage.removeItem(BG_KEY); } catch { /* ignore */ }
       window.ZenouAtmo?.applyPreferences();
       paintBg();
@@ -750,7 +810,7 @@
     const paintBgSeg = () => paintPrefGroup('bg');
     const paintPrefGroup = key => {
       const current = readPrefs()[key];
-      const seg = prefsWrap.querySelector(`[data-seg="${key}"]`);
+      const seg = root.querySelector(`[data-seg="${key}"]`);
       if (!seg) return;
       seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.val === current ? 'true' : 'false'));
     };
@@ -776,11 +836,12 @@
           }
           setPref(key, val);
           paintPrefGroup(key);
+          if (key === 'bg') paintBg();
         });
         seg.append(b);
       });
       field.append(span, seg);
-      prefsWrap.append(field);
+      (key === 'bg' ? backgroundStyle : prefsWrap).append(field);
     });
 
     /* icon presets */

@@ -75,6 +75,14 @@ body[data-arcade-page]:has(>.za-rail)::after { content: none; }
 [data-arcade-page=library] .xp-card + .stat-grid { margin-top: 12px; }
 [data-arcade-page=browse] .lp-hero { overflow: hidden; }
 [data-arcade-page=browse] .catalogue-head { background: var(--bg-soft); }
+body[data-arcade-page]:has(> .za-footer, > .sitefoot) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+body[data-arcade-page]:has(> .za-footer, > .sitefoot) > main {
+  flex: 1 0 auto;
+}
 [data-arcade-page] .za-footer { background: var(--bg-soft); }
 
 [data-arcade-page=play] .za-player-title {
