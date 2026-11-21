@@ -1,6 +1,6 @@
 // Browser configuration. Supabase publishable keys are intended for public clients.
 export const supabaseUrl = 'https://vwtrfagrwpgzlwoghoaa.supabase.co';
-const publishableKey = 'sb_publishable_U_XclcLxh4ppJ5hgd3ByQA_YN8uCf1s';
+export const publishableKey = 'sb_publishable_U_XclcLxh4ppJ5hgd3ByQA_YN8uCf1s';
 const sdkUrl = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm';
 
 let clientPromise;

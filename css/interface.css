@@ -1,0 +1,115 @@
+/* Shared application components and layout. */
+:root {
+ --za-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+ --za-rail: 236px;
+ --za-gap: clamp(20px, 3vw, 44px);
+ --za-canvas: #101214; --za-panel: #191c20; --za-nav: #14171a;
+ --za-ambient: #101214; --za-line: #30343b;
+ --za-frost: #191c20; --za-frost-fill: #191c20;
+ --za-frost-field: #22262c; --za-frost-edge: none;
+ --za-frost-shadow: 0 4px 20px rgb(0 0 0 / .12);
+}
+html:has(.za-rail) { --bg: #101214; --surface: #191c20; --surface-solid: #191c20; --line: #30343b; --line-strong: #4b5260; --text: #f3f4f6; --muted: #adb5c2; --muted-2: #9ba5b5; --font-body: var(--za-font); --font-display: var(--za-font); background: #101214; }
+body:has(>.za-rail) { color: #f3f4f6; font: 14px/1.6 var(--za-font); min-width: 0; }
+body:has(>.za-rail)::after { display: none; }
+body:has(>.za-rail) *, body:has(>.za-rail) *::before, body:has(>.za-rail) *::after { box-sizing: border-box; }
+.za-rail { inset: 0 auto 0 0; width: var(--za-rail); border-radius: 0; border: 0; border-right: 1px solid var(--line); box-shadow: none; backdrop-filter: none; background: #14171a; }
+.za-brand-row { display: grid; grid-template-columns: 1fr 32px 32px; gap: 6px; padding: 22px 16px; }
+.za-rail .za-brand-row .za-brand { height: auto; padding: 0; font-size: 17px; gap: 8px; }
+.za-rail .za-brand-row .za-mark { display: block; width: 29px; height: 29px; margin: 0; }
+.za-brand sup, .za-brand small { display: none; }
+.za-brand-row :is(.settings-btn,.sidebar-toggle) { width: 32px; height: 32px; border-radius: 8px; background: transparent; border-color: transparent; color: #b8c0cd; }
+.za-scroll { padding: 0 12px 20px; scrollbar-width: thin; }
+.za-group small { margin: 24px 12px 8px; font-size: 10px; letter-spacing: .12em; color: #8993a3; }
+.za-group nav { gap: 3px; }
+.za-group a { min-height: 40px; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 550; gap: 11px; color: #adb5c2; }
+.za-group a[aria-current=page], .za-group a[data-current] { color: #fff; background: #2a3039; box-shadow: inset 2px 0 #b8c9e8; }
+.za-foot { margin: auto 12px 14px; border-top: 1px solid var(--line); justify-content: flex-start; }
+body[data-arcade-page] > :is(.topbar,.bar,.min-bar), .arcade-discover .toolbar { min-height: 72px; margin: 0; border-radius: 0; padding: 14px var(--za-gap); border: 0; border-bottom: 1px solid var(--line); background: #14171ae8; backdrop-filter: blur(12px); box-shadow: none; }
+body[data-arcade-page] > main:not(.min-stage,.stage) { padding: 32px var(--za-gap) 56px; max-width: 1600px; }
+body[data-arcade-page] :is(.page-head,.ai-hero,.web-hero,.social-hero,.movies-hero,.dw-head) { display: block; padding: 0 0 28px; border: 0; border-radius: 0; box-shadow: none; background: transparent; margin: 0; }
+body:has(>.za-rail) :is(h1,h2,h3) { font-family: var(--za-font); color: var(--text); }
+body[data-arcade-page] :is(.page-title,.page-head h1,.ai-hero h1,.web-hero h1,.social-hero h1,.movies-hero h1) { font-size: clamp(28px,3vw,40px); font-weight: 700; letter-spacing: -.035em; line-height: 1.2; margin: 0 0 12px; }
+body[data-arcade-page] :is(.page-sub,.ai-deck,.web-deck,.social-deck) { margin: 0; font-size: 14px; line-height: 1.7; max-width: 70ch; }
+body:has(>.za-rail) :is(.btn,.ai-mini,.shuffle) { min-height: 40px; border-radius: 8px; font: 600 13px/1.2 var(--za-font); padding: 10px 16px; box-shadow: none; }
+body:has(>.za-rail) :is(.btn-solid,.ai-mini-solid) { background: #edf2fa; color: #14171a; border: 1px solid #edf2fa; }
+body:has(>.za-rail) .btn-ghost { color: #e2e7ef; background: #22262c; border: 1px solid #3c424c; }
+body:has(>.za-rail) :is(input:not([type=range],[type=checkbox],[type=file]),textarea,select) { font: inherit; min-width: 0; color: #f3f4f6; }
+body:has(>.za-rail) :is(input,textarea,button,a,select):focus-visible { outline: 2px solid #b8c9e8; outline-offset: 3px; }
+body:has(>.za-rail) :is(.card,.ai-card,.stat-card,.play-side-card,.xp-card,.game-info,.reader,.ai-console,.catalogue-head,.calc) { border-radius: 12px; background: #191c20; border: 1px solid #30343b; box-shadow: none; }
+body:has(>.za-rail) .card { overflow: hidden; }
+body:has(>.za-rail) .card-plaque { background: #242a33; }
+body:has(>.za-rail) .section-title { font-size: 21px; letter-spacing: -.025em; }
+body:has(>.za-rail) .section-title::before { display: none; }
+body:has(>.za-rail) .lib-tabs { background: #191c20; border-radius: 10px; padding: 6px; gap: 4px; margin-bottom: 24px; }
+body:has(>.za-rail) .lib-tab { border-radius: 6px; padding: 9px 12px; font: 550 13px var(--za-font); }
+body:has(>.za-rail) .lib-tab[aria-selected=true] { color: #fff; background: #343b47; }
+.za-footer { margin-top: auto; padding: 24px var(--za-gap); background: #14171a; gap: 20px; font-size: 12px; }
+.za-footer nav { row-gap: 12px; }
+.settings-panel { background: #191c20; border-radius: 18px; backdrop-filter: none; border-color: #3c424c; }
+.settings-header, .settings-tabs, .settings-actions { background: #191c20; }
+.settings-tabs { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.settings-overlay[open] { z-index: 1000; }
+.settings-btn svg { transform-origin: center; }
+.account-layout { display: grid; grid-template-columns: 1fr minmax(320px,440px); align-items: center; gap: clamp(40px,6vw,100px); min-height: min(72vh,780px); max-width: 1100px; margin: auto; }
+.account-intro h1 { font-size: clamp(36px,4vw,58px); letter-spacing: -.055em; line-height: 1.1; margin: 20px 0; }
+.account-intro > p:not(.eyebrow) { color: var(--muted); max-width: 36ch; font-size: 16px; line-height: 1.8; }
+.eyebrow { color: #b8c9e8; font-size: 11px; font-weight: 650; letter-spacing: .14em; }
+.account-back { display: inline-flex; gap: 20px; align-items: center; margin-top: 28px; color: #e2e7ef; text-decoration: none; }
+.account-card { border: 1px solid #343b47; padding: 32px; border-radius: 18px; background: #191c20; box-shadow: 0 24px 60px #0002; }
+.account-card-head { margin-bottom: 28px; }
+.account-mark { display: grid; place-items: center; width: 40px; height: 40px; background: #edf2fa; border-radius: 11px; font-size: 25px; font-weight: 800; color: #14171a; margin-bottom: 24px; }
+.account-card h2 { font-size: 23px; letter-spacing: -.03em; margin: 0 0 8px; }
+.account-card-head p, .account-status { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.form-field { display: block; font-size: 13px; font-weight: 600; margin: 0 0 22px; }
+#accountForm .form-field input { display: block; width: 100%; height: 46px; padding: 12px 14px; margin: 9px 0 8px; background: #111417; border: 1px solid #414853; border-radius: 8px; }
+.form-field small { display: block; font-size: 11px; font-weight: 400; color: #a6afbd; }
+.account-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+.account-status:empty { display: none; }
+.account-status { margin: 18px 0 0; overflow-wrap: anywhere; }
+[data-sidebar-collapsed] .za-rail { width: 58px; }
+@media (max-width:1090px) and (min-width:781px) { :root { --za-rail: 212px; } .za-rail .za-brand-row .za-mark { display: none; } }
+@media (max-width:780px) {
+ :root { --za-gap: 20px; }
+ .za-rail { position: relative; width: 100%; inset: auto; margin: 0; border: 0; border-bottom: 1px solid var(--line); }
+ .za-brand-row { padding: 16px 20px; grid-template-columns: 1fr 36px 36px; }
+ .za-scroll { padding: 0 12px 12px; max-height: 45vh; overflow: auto; }
+ .za-group nav { display: flex; flex-wrap: wrap; gap: 4px; }
+ .za-group a { min-height: 38px; font-size: 12px; padding: 9px; }
+ .za-group + .za-group { padding-top: 8px; margin-top: 8px; }
+ .za-group:last-child, .za-foot, .za-group small { display: none; }
+ body[data-arcade-page] > main:not(.min-stage,.stage) { padding: 24px 20px 40px; }
+ .account-layout { grid-template-columns: minmax(0,1fr); gap: 30px; min-height: auto; max-width: 480px; }
+ .account-intro h1 { font-size: 36px; }
+ .account-intro h1 br { display: none; }
+ .account-intro > p:not(.eyebrow) { font-size: 14px; }
+ .account-back { margin-top: 8px; }
+ .account-card { padding: 24px; }
+ [data-sidebar-collapsed] .za-rail { width: 100%; }
+ .za-footer { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: no-preference) {
+ .za-rail { transition: width .28s ease, box-shadow .25s; }
+ .za-scroll:not([hidden]) .za-group a { animation: nav-arrive .3s ease both; }
+ .za-group a:nth-child(2) { animation-delay: .025s; } .za-group a:nth-child(3) { animation-delay: .05s; } .za-group a:nth-child(4) { animation-delay: .075s; } .za-group a:nth-child(5) { animation-delay: .1s; }
+ .za-group a:hover { transform: translateX(2px); background: #242a33; }
+ .za-group a svg { transition: transform .22s ease; } .za-group a:hover svg { transform: translateY(-1px); }
+ .account-card { animation: nav-arrive .4s ease both; }
+}
+@keyframes nav-arrive { from { opacity: .2; translate: -6px 0; } to { opacity: 1; translate: 0 0; } }
+body:has(>.za-rail) :is(.page-title,.section-title,h1,h2) { text-shadow: none; }
+@media(min-width:781px) {
+ [data-sidebar-collapsed] .za-brand-row { display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 10px; }
+}
+html:has(.za-rail) { --surface-2: #242a32; --panel-2: #242a32; }
+body[data-arcade-page] .page-head.math-intro { display: grid; grid-template-columns: minmax(0,1fr) minmax(240px,320px); align-items: center; gap: 36px; padding-bottom: 32px; }
+body:has(>.za-rail) .keys button { background: #242a32; color: #f3f4f6; }
+body:has(>.za-rail) .keys button:last-child { background: #edf2fa; color: #14171a; }
+@media(max-width:780px) { body[data-arcade-page] .page-head.math-intro { grid-template-columns: minmax(0,1fr); gap: 24px; } }
+@media(prefers-reduced-motion:no-preference) {
+ body[data-arcade-page] { transition: padding-left .28s ease; }
+ .arcade-discover main { transition: margin-left .28s ease; }
+}
+html[data-motion=calm] body:has(>.za-rail) *,
+html[data-motion=calm] body:has(>.za-rail) *::before,
+html[data-motion=calm] body:has(>.za-rail) *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }

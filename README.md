@@ -236,18 +236,24 @@ npm run dev               # same, with --watch
 
 No install step: there are no runtime dependencies. `node >= 20` for the server.
 
-## Accounts and library sync
+## Username accounts and library sync
 
-Run `supabase/migrations/20261121_library.sql` in the Supabase SQL editor.
-The table uses Row Level Security so each authenticated user can read and write
-only their own rows. Enable email authentication and add
-`https://zenoumath.space/account/` to Authentication → URL Configuration → Redirect URLs.
-Use the same route on your local origin when testing locally.
+Install `supabase/migrations/20261122_username_auth.sql` in the project's SQL editor.
+It is safe to rerun. This adds private account, session and library tables and
+public RPC functions with tightly scoped permissions. Native email authentication
+is replaced in the application by username/password RPC calls. Passwords are
+bcrypt-hashed server-side. Random 256-bit session tokens expire after 30 days,
+are stored hashed in the database, and are revoked on logout. The browser stores
+the opaque token locally. Five failed attempts lock a username for 15 minutes.
 
-The Account link in the sidebar offers email/password registration and sign-in.
-Email confirmation follows the project's Supabase settings. Favorites, recent games,
-playlists, notes, ratings, playtime, hidden games, achievements, XP and activity days
-sync while signed in. The first empty account imports this device's guest library.
-Signing out restores the guest library. Pending edits are kept on the device for
-retry. Changes to different fields merge. Concurrent edits to the same field use
-the last successful save.
+Open `/account/` to create an account or sign in. Username availability and
+uniqueness are checked server-side. The existing native Supabase Auth tables and
+email-account library records are retained by the migration. Signed-in legacy sessions can transfer their cloud library when registering a username. Existing local backups and per-account browser
+caches are retained. Export your previous library before switching account systems
+if you want to import it into a new username account.
+
+Favorites, recent games, playlists, notes, ratings, playtime, hidden games,
+achievements, XP and activity days sync while signed in. An empty account imports
+the guest library. Sign-out restores the guest library. Pending edits remain on
+the device for retry. Changes to different fields merge. Concurrent edits to the
+same field use the last successful save.

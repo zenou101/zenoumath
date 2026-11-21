@@ -1,10 +1,9 @@
-import { getSupabaseClient } from './supabase.js';
+import { getUsernameClient } from './username-auth.js';
 
 const keys = ['zenou_fav', 'zenou_recent', 'zenou_ratings', 'zenou_notes', 'zenou_playtime', 'zenou_hidden', 'zenou_playlists', 'zenou_xp', 'zenou_ach', 'zenou_days'];
 const ownerKey = 'zenou_cloud_owner';
 let client;
 let user;
-let sessionId;
 let baseline = {};
 let busy = false;
 let status = 'Connecting…';
@@ -37,8 +36,7 @@ export async function saveLibrary() {
     localStorage.setItem(cacheKey(user.id), JSON.stringify({ baseline, current }));
     if (!dirty.length) return;
     report('Saving library…');
-    const { error } = await client.from('user_library').upsert(dirty.map(key => ({ user_id: user.id, key, value: current[key], updated_at: new Date().toISOString() })), { onConflict: 'user_id,key' });
-    if (error) throw error;
+    await client.writeLibrary(Object.fromEntries(dirty.map(key => [key, current[key]])));
     for (const key of dirty) baseline[key] = current[key];
     localStorage.setItem(cacheKey(user.id), JSON.stringify({ baseline, current: snapshot() }));
     report('Library synced');
@@ -49,7 +47,6 @@ export async function saveLibrary() {
 
 async function initialize(session) {
   user = null;
-  sessionId = session?.user?.id;
   if (!session?.user) {
     if (localStorage.getItem(ownerKey)) {
       const previous = localStorage.getItem(ownerKey);
@@ -69,19 +66,19 @@ async function initialize(session) {
   const cached = read(cacheKey(id));
   const current = owner === id ? snapshot() : cached?.current;
   report('Loading your library…');
-  const { data, error } = await client.from('user_library').select('key,value').eq('user_id', id);
-  if (error) {
-    report('Cloud sync needs the database setup or a working connection. Retry from your account page.');
+  let remote;
+  try { remote = await client.readLibrary(); }
+  catch {
+    report('Cloud sync is unavailable. Check your connection or account setup and retry.');
     return;
   }
-  const remote = Object.fromEntries(data.filter(row => keys.includes(row.key)).map(row => [row.key, row.value]));
   baseline = { ...remote };
   let merged = { ...remote };
   if (cached && current) {
     for (const key of keys) {
       if (JSON.stringify(current[key]) !== JSON.stringify(cached.baseline[key])) merged[key] = current[key];
     }
-  } else if (!data.length) merged = current || read('zenou_guest_library') || {};
+  } else if (!Object.keys(remote).length) merged = current || read('zenou_guest_library') || {};
   const changed = apply(merged);
   localStorage.setItem(ownerKey, id);
   localStorage.setItem(cacheKey(id), JSON.stringify({ baseline, current: snapshot() }));
@@ -93,14 +90,10 @@ async function initialize(session) {
 
 export const ready = (async () => {
   try {
-    client = await getSupabaseClient();
+    client = await getUsernameClient();
     const { data, error } = await client.auth.getSession();
     if (error) throw error;
     await initialize(data.session);
-    client.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.id !== sessionId) location.reload();
-      if (event === 'SIGNED_OUT') setTimeout(() => initialize(null), 0);
-    });
     setInterval(saveLibrary, 2500);
     window.addEventListener('online', saveLibrary);
     document.addEventListener('visibilitychange', () => {

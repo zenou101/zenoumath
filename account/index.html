@@ -28,10 +28,11 @@
 <link rel="stylesheet" href="/css/consent.css">
 <link rel="stylesheet" href="/css/arcade-shell.css"><link rel="stylesheet" href="/css/accent.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/interface.css">
 </head>
 <body data-arcade-page="account">
 <aside class="za-rail" aria-label="Arcade navigation">
-    <a class="za-brand" href="/" aria-label="Zenou home"><img class="za-mark" src="/assets/favicon.svg" alt="" width="36" height="36"><span>Zenou<small>ARCADE</small></span></a>
+    <a class="za-brand" href="/" aria-label="ZenouMath home"><img class="za-mark" src="/assets/favicon.svg" alt="" width="29" height="29"><span>ZenouMath</span></a>
     <div class="za-scroll">
       <div class="za-group">
         <small>ARCADE</small>
@@ -70,18 +71,19 @@
 <header class="topbar">
   <div class="za-crumb"><a href="/">Arcade</a><i>/</i><strong>Account</strong></div>
 </header>
-<main id="main">
-<header class="page-head"><h1>Your account</h1><p class="page-sub">Save your library and recently played games across devices.</p></header>
-<section class="play-side-card" style="max-width:480px;margin:auto">
+<main id="main" class="account-main">
+<section class="account-layout">
+<div class="account-intro"><p class="eyebrow">YOUR SPACE</p><h1>Pick up where <br>you left off.</h1><p>Your favorites, playlists and recently played games, together on every device.</p><a class="account-back" href="/?all=1">Explore the games <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#external"/></svg></a></div>
+<section class="account-card" aria-labelledby="accountHeading">
+<div class="account-card-head"><span class="account-mark" aria-hidden="true">Z</span><h2 id="accountHeading">Welcome to ZenouMath</h2><p>Create an account or sign in to your library.</p></div>
 <form id="accountForm" method="post">
-<label class="settings-field">Email<input id="accountEmail" type="email" autocomplete="email" required></label>
-<label class="settings-field">Password<input id="accountPassword" type="password" autocomplete="current-password" minlength="8" required></label>
-<div class="player-actions"><button class="btn btn-solid" type="submit" disabled>Sign in</button><button class="btn btn-ghost" type="button" id="accountCreate" disabled>Create account</button></div>
+<label class="form-field" for="accountUsername">Username<input id="accountUsername" name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" required aria-describedby="usernameHint"><small id="usernameHint">3–24 letters, numbers or underscores.</small></label>
+<label class="form-field" for="accountPassword">Password<input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="10" required aria-describedby="passwordHint"><small id="passwordHint">At least 10 characters. Usernames are case-insensitive.</small></label>
+<div class="account-actions"><button class="btn btn-solid" type="submit" disabled>Sign in</button><button class="btn btn-ghost" type="button" id="accountCreate" disabled>Create account</button></div>
 </form>
-<div id="accountSignedIn" hidden><p id="accountIdentity"></p><div class="player-actions"><button class="btn btn-solid" id="accountSync" type="button">Sync library</button><button class="btn btn-ghost" id="accountSignOut" type="button">Sign out</button></div></div>
-<p id="accountMessage" role="status" aria-live="polite"></p><p data-cloud-status role="status"></p>
-</section>
-</main>
+<div id="accountSignedIn" hidden><p id="accountIdentity"></p><div class="account-actions"><button class="btn btn-solid" id="accountSync" type="button">Sync library</button><button class="btn btn-ghost" id="accountSignOut" type="button">Sign out</button></div></div>
+<p id="accountMessage" class="account-status" role="status" aria-live="polite"></p><p class="account-status" data-cloud-status role="status"></p>
+</section></section></main>
 <footer class="za-footer"><a href="/">Zenou Arcade</a><nav aria-label="Site information"><a href="/doorway/">Doorways</a><a href="/sources/">Movie sources</a><a href="/legal/">Legal centre</a><a href="/legal/privacy/">Privacy</a><a href="/legal/contact/">Contact</a><a href="/legal/" data-consent-review>Use agreement</a></nav></footer>
 <script src="/js/atmosphere.js" defer></script>
 <script src="/js/settings.js" defer></script>

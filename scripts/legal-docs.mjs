@@ -144,7 +144,7 @@ export const DOCS = [
     <p>We do not own, license, host, verify the legality of, or take responsibility for third-party content. Availability is checked when a source is listed and re-checked periodically, but a source that answered last week may be gone today. A source is never shown on the assumption that it works.</p>
 
     <h2 id="accounts">6. Accounts</h2>
-    <p>Accounts use Supabase email and password authentication. Signing in syncs your game library and activity across devices. Guest data, appearance settings and the acceptance record are stored on your device. Keep your password private.</p>
+    <p>Accounts use username and password authentication. Signing in syncs your game library and activity across devices. Guest data, appearance settings and the acceptance record are stored on your device. Keep your password private.</p>
 
     <h2 id="availability">7. Availability and changes</h2>
     <p>The site is provided free of charge and as-is. We may change it, restrict a part of it, or withdraw it entirely at any time, and we do not guarantee uninterrupted or error-free operation. We may suspend access for anyone who breaches these terms.</p>
@@ -199,9 +199,9 @@ export const DOCS = [
     <h2 id="not">2. What is not collected</h2>
     <p>This is the shortest list to trust, so it comes first:</p>
     <ul>
-      <li><strong>Optional accounts.</strong> Supabase handles email and password authentication. Signed-in accounts store their game library and activity in Supabase.</li>
+      <li><strong>Optional accounts.</strong> Username and password authentication runs in Supabase database functions. Signed-in accounts store their game library and activity in Supabase.</li>
       <li><strong>No site analytics or session recording.</strong> ZenouMath uses Google AdSense for advertising services, as described below.</li>
-      <li><strong>Session storage.</strong> Supabase authentication tokens are stored in your browser to keep you signed in. Advertising services and embeds may use cookies or similar storage.</li>
+      <li><strong>Session storage.</strong> Opaque account session tokens are stored in your browser to keep you signed in. Advertising services and embeds may use cookies or similar storage.</li>
       <li><strong>Library sync.</strong> Signed-in accounts upload favorites, recent games, ratings, notes, playlists, playtime, hidden games, achievements, XP and activity days.</li>
       <li><strong>No selling or renting of personal information.</strong> Ever, to anyone.</li>
     </ul>
