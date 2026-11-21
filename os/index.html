@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-os-theme="christmas">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The optional ZenouOS desktop with Zteam, wallpapers and browser apps.">
+  <meta name="theme-color" content="#101a19">
+  <link rel="canonical" href="https://zenoumath.space/os/">
+  <link rel="icon" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/consent.css">
+  <link rel="stylesheet" href="/os/desktop.css">
+  <script>try { if (JSON.parse(localStorage.getItem('zenoumath.consent'))?.v !== '2026-11-20') document.documentElement.classList.add('consent-pending'); } catch { document.documentElement.classList.add('consent-pending'); }</script>
+  <script src="/js/consent.js" defer></script>
+  <script src="/os/desktop.js" type="module"></script>
+  <title>ZenouOS Beta</title>
+</head>
+<body>
+  <div class="wallpaper" id="wallpaper" aria-hidden="true"></div>
+  <div class="wallpaper-shade" aria-hidden="true"></div>
+  <header class="desktop-bar">
+    <a class="desktop-brand" href="/os/" aria-label="ZenouOS desktop"><img src="/assets/favicon.svg" alt="" width="30" height="30"><strong>Zenou<span>OS</span></strong><small>Beta</small></a>
+    <time class="desktop-clock"></time>
+    <div class="desktop-actions">
+      <button type="button" id="quickButton" aria-label="Quick settings" aria-controls="quickPanel" aria-expanded="false"></button>
+      <button type="button" id="notificationButton" aria-label="Notifications" aria-controls="notificationPanel" aria-expanded="false"></button>
+      <a href="/?interface=classic" class="exit-link">Classic website</a>
+    </div>
+  </header>
+  <main class="workspace" id="workspace" aria-label="ZenouOS desktop">
+    <nav id="shortcuts" class="shortcuts" aria-label="Desktop shortcuts"></nav>
+    <div id="windowLayer" class="window-layer"></div>
+  </main>
+  <div class="desktop-bottom">
+    <nav class="taskbar" aria-label="Taskbar">
+      <button type="button" id="launcherButton" class="task-launcher" aria-controls="launcher" aria-expanded="false"><span class="app-grid-icon" aria-hidden="true"></span><span>Apps</span></button>
+      <div id="taskApps" class="task-apps" aria-label="Pinned and running apps"></div>
+      <button type="button" id="showDesktop" aria-label="Show desktop"></button>
+    </nav>
+  </div>
+  <section id="launcher" class="popover launcher" hidden aria-label="App launcher">
+    <header><h2>Applications</h2><button type="button" data-dismiss aria-label="Close launcher">×</button></header>
+    <input id="appSearch" type="search" placeholder="Find an app…" aria-label="Find an app">
+    <div id="launcherApps" class="launcher-apps"></div>
+    <section id="recentApps" aria-label="Recently opened apps" hidden><h3>Recently opened</h3><div></div></section>
+    <footer><a href="/?interface=classic">Return to Classic Zenou Unblocked</a></footer>
+  </section>
+  <section id="quickPanel" class="popover tray" hidden aria-label="Quick settings"></section>
+  <section id="notificationPanel" class="popover tray" hidden aria-label="Notification center"></section>
+  <div id="desktopMenu" class="popover context-menu" hidden role="group" aria-label="Desktop actions"></div>
+  <div id="osToast" role="status" class="toast" hidden></div>
+  <noscript>Enable JavaScript to use ZenouOS, or return to the <a href="/?interface=classic">Classic website</a>.</noscript>
+</body>
+</html>

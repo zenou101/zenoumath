@@ -103,6 +103,7 @@
   const state = $('#webState');
   const input = $('#webUrl');
   const now = $('#webNow');
+  const openDirect = $('#webOpenDirect');
 
   const history = [];
   let hIndex = -1;
@@ -164,9 +165,13 @@
   function load(rawUrl, opts) {
     const url = normalize(rawUrl);
     if (!url) return;
+    let address;
+    try { address = new URL(url, location.href); }
+    catch { now.textContent = 'Enter a valid web address.'; return; }
+    if (!['http:', 'https:', 'about:'].includes(address.protocol)) return;
     const label = (opts && opts.label) || hostOf(url);
 
-    if (opts && opts.push !== false) {
+    if (opts?.push !== false) {
       history.splice(hIndex + 1);
       history.push({ url, label });
       hIndex = history.length - 1;
@@ -179,23 +184,31 @@
     stopTimer();
     frame.src = url;
     input.value = url.startsWith('about:') ? '' : url;
-    now.textContent = label;
+    now.textContent = `Loading ${label}…`;
+    if (openDirect) {
+      openDirect.hidden = !['http:', 'https:'].includes(address.protocol);
+      if (!openDirect.hidden) openDirect.href = address.href;
+    }
     pushRecent(url, label);
+    document.dispatchEvent(new CustomEvent('zenou:web-navigate', { detail: url }));
     if (opts && opts.tab) setActiveTab(opts.tab); else setActiveTab('start');
 
-    /* A frame blocked by frame-ancestors still fires load in most browsers, so
-       this is a hint, not a detector. It appears only when nothing has painted
-       for a while and the site is one of the known blockers. */
+    /* Cross-origin frame policies can prevent rendering even when load fires. */
     loadTimer = setTimeout(() => {
-      if (!frame.hidden) {
-        now.textContent = `${label} · still blank? the site may refuse framing`;
-      }
+      if (!frame.hidden) showState('This page is taking longer than expected', 'Some sites prevent embedding. You can retry or open the address in its own tab.');
     }, 7000);
   }
 
   frame.addEventListener('load', () => {
     stopTimer();
-    if (current) now.textContent = current.label;
+    if (current) {
+      hideState();
+      now.textContent = current.label;
+    }
+  });
+  frame.addEventListener('error', () => {
+    stopTimer();
+    if (current) showState('This page could not be loaded', 'Check the address, retry, or open it in its own tab.');
   });
 
   /* ---------- code reveal before leaving ---------- */
@@ -445,6 +458,7 @@
 
   /* ---------- start tab ---------- */
   function goStart() {
+    stopTimer();
     frame.hidden = true;
     frame.src = 'about:blank';
     start.hidden = false;
@@ -453,6 +467,8 @@
     now.textContent = 'Nothing loaded yet';
     input.value = '';
     current = null;
+    if (openDirect) openDirect.hidden = true;
+    document.dispatchEvent(new CustomEvent('zenou:web-navigate', { detail: '' }));
   }
 
   /* ---------- boot ---------- */
@@ -467,7 +483,6 @@
       e.preventDefault();
       const v = input.value.trim();
       if (!v) return;
-      setActiveTab('start');
       load(v);
     });
 
@@ -475,41 +490,17 @@
       if (hIndex <= 0) return;
       hIndex--;
       const item = history[hIndex];
-      current = item;
-      frame.hidden = false;
-      start.hidden = true;
-      hideState();
-      frame.src = item.url;
-      input.value = item.url;
-      now.textContent = item.label;
-      setActiveTab('start');
+      load(item.url, { label: item.label, push: false });
     });
     $('#webFwd').addEventListener('click', () => {
       if (hIndex >= history.length - 1) return;
       hIndex++;
       const item = history[hIndex];
-      current = item;
-      frame.hidden = false;
-      start.hidden = true;
-      hideState();
-      frame.src = item.url;
-      input.value = item.url;
-      now.textContent = item.label;
-      setActiveTab('start');
+      load(item.url, { label: item.label, push: false });
     });
-    $('#webReload').addEventListener('click', () => {
-      if (!current) return;
-      hideState();
-      frame.src = 'about:blank';
-      setTimeout(() => { frame.src = current.url; }, 80);
-    });
-
-    $('#webRetry').addEventListener('click', () => {
-      if (!current) return;
-      hideState();
-      frame.src = 'about:blank';
-      setTimeout(() => { frame.src = current.url; }, 80);
-    });
+    const reload = () => { if (current) load(current.url, { label: current.label, push: false }); };
+    $('#webReload').addEventListener('click', reload);
+    $('#webRetry').addEventListener('click', reload);
     $('#webMagma').addEventListener('click', () => {
       const target = current && current.url && !current.url.startsWith('about:') ? current.url : '';
       openMagma(target);
@@ -546,11 +537,12 @@
       toast('Magma opened · address copied', 'Paste it into Magma’s bar to load it through the proxy.');
     }
 
-    const hash = (location.hash || '').replace('#', '');
+    let hash;
+    try { hash = decodeURIComponent(location.hash.slice(1)); } catch { return; }
     if (hash) {
       const site = SITES.find(s => s.id === hash);
       if (site) openSite(site);
-      else if (/^https?:/.test(decodeURIComponent(hash))) load(decodeURIComponent(hash));
+      else if (/^https?:/.test(hash)) load(hash);
     }
   }
 

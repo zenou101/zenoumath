@@ -323,6 +323,7 @@
         </div>
 
         <footer class="settings-actions">
+          <button class="btn btn-ghost" type="button" data-os-invitation>ZenouOS Beta</button>
           <button id="seReset" class="btn btn-ghost" type="button">Reset all</button>
           <button id="seSave" class="btn btn-solid" type="button">Done</button>
         </footer>
@@ -1043,6 +1044,7 @@
   }
 
   import('/js/motion.js').catch(() => {});
+  import('/js/os-switch.js').catch(() => {});
   import('/js/account-sync.js').catch(() => {});
 
   /* ---------- direct key shortcuts (Web shortcuts) ---------- */

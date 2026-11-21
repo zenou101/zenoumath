@@ -432,3 +432,20 @@ html[data-motion=calm] .za-group a svg { transition: none; }
     animation: zenou-enter .25s ease-out both;
   }
 }
+
+.os-invite { width: min(480px, calc(100% - 26px)); padding: 0; border: 1px solid #6d8e7c70; border-radius: 16px; background: #16211d; color: #f4f7f5; box-shadow: 0 16px 65px #0009; font: 14px/1.6 var(--za-font); }
+.os-invite::backdrop { background: #050a08a8; backdrop-filter: blur(4px); }
+.os-invite img { display: block; width: 100%; height: 162px; object-fit: cover; object-position: center 52%; }
+.os-invite-copy { padding: 18px 20px 20px; }
+.os-invite h2 { margin: 0; font-size: 25px; letter-spacing: -.035em; }
+.os-invite small { font-size: 11px; color: #b9edce; letter-spacing: normal; }
+.os-invite p { color: #b9c8bf; margin: 8px 0 18px; }
+.os-invite form { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.os-invite :is(.btn,.btn-solid,.btn-ghost) { border: 1px solid #ffffff30; border-radius: 8px; background: #ffffff0a; color: #f4f7f5; min-height: 42px; padding: 8px 14px; cursor: pointer; font: 650 13px var(--za-font); }
+.os-invite .btn-solid { background: #b9edce; color: #132c21; }
+.os-invite .btn:hover { filter: brightness(1.14); }
+
+html[data-zenou-desktop] body[data-arcade-page] { padding-left: 0; }
+html[data-zenou-desktop] body[data-arcade-page] > :is(.za-rail,.topbar,.za-footer,.skip-link) { display: none; }
+html[data-zenou-desktop] body[data-arcade-page] > main { max-width: none; padding: 14px; }
+html[data-zenou-desktop] .web-main .web-hero { display: none; }

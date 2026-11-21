@@ -17,7 +17,7 @@ const BASE = (process.argv[2] || 'http://127.0.0.1:8123').replace(/\/$/, '');
 const ROOT = process.cwd();
 
 const PAGES = [
-  '/', '/account', '/books', '/browse', '/math-games', '/web', '/movies', '/ai', '/social', '/music', '/library',
+  '/', '/account', '/os', '/books', '/browse', '/math-games', '/web', '/movies', '/ai', '/social', '/music', '/library',
   '/search', '/sources', '/title', '/play', '/mineral', '/doorway',
   '/legal', '/legal/terms', '/legal/privacy', '/legal/acceptable-use',
   '/legal/copyright', '/legal/takedown', '/legal/disclaimer',
@@ -57,7 +57,7 @@ for (const page of PAGES) {
   if (!/<title>[^<]+<\/title>/.test(html)) problems.push(`${page}: no <title>`);
   if (!/<meta name="description"/.test(html)) problems.push(`${page}: no meta description`);
   if (!/rel="canonical"/.test(html) && page !== '/404.html') problems.push(`${page}: no canonical`);
-  if (/Zenou Unblocked/.test(html)) problems.push(`${page}: still says "Zenou Unblocked"`);
+  if (/(?<!Classic )Zenou Unblocked/.test(html)) problems.push(`${page}: still says "Zenou Unblocked"`);
   if (page !== '/404.html' && !/consent\.js/.test(html)) problems.push(`${page}: no consent script`);
 
   for (const m of html.matchAll(REF)) {
