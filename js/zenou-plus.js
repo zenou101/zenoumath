@@ -278,7 +278,9 @@
     if (r) {
       const b = document.createElement('span');
       b.className = 'card-rating';
-      b.textContent = '★'.repeat(r);
+      b.innerHTML = '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#star"/></svg>';
+      b.append(document.createTextNode(String(r)));
+      b.setAttribute('aria-label', `Rated ${r} of 5`);
       a.append(b);
     }
     if (extra.actions !== false) {
@@ -287,7 +289,7 @@
       x.className = 'card-x';
       x.title = 'Hide this game';
       x.setAttribute('aria-label', `Hide ${g.t}`);
-      x.innerHTML = '&times;';
+      x.innerHTML = '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#close"/></svg>';
       x.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
         hideGame(g.id, g.t);
@@ -414,7 +416,8 @@
     for (let i = 1; i <= 5; i++) {
       const b = document.createElement('button');
       b.type = 'button';
-      b.textContent = '★';
+      b.innerHTML = '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#star"/></svg>';
+      b.setAttribute('aria-label', `Rate ${i} star${i === 1 ? '' : 's'}`);
       b.title = `${i} star${i === 1 ? '' : 's'}`;
       b.addEventListener('click', () => {
         current = current === i ? 0 : i;

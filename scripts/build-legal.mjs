@@ -86,7 +86,7 @@ ${sidebar}
   <div class="za-crumb"><a href="/">Arcade</a><i aria-hidden="true">/</i><a href="/legal">Legal</a></div>
   <div class="bar-tools">
     <form class="searchbox" role="search" action="/search" method="get">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 1-4.32 13.64L3 19.85 3.94 20.8l3.18-3.18A7.5 7.5 0 0 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+      <svg class="icon ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#search"/></svg>
       <input name="q" type="search" placeholder="Search everything…" aria-label="Search everything">
     </form>
   </div>

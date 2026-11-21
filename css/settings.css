@@ -22,7 +22,7 @@ button:is(.settings-btn, .sidebar-toggle) {
   padding: 0;
   border: 1px solid var(--za-line);
   border-radius: 8px;
-  background: var(--za-panel);
+  background: var(--za-frost-field);
   color: inherit;
   cursor: pointer;
 }
@@ -30,7 +30,7 @@ button:is(.settings-btn, .sidebar-toggle) {
   width: 19px;
   height: 19px;
 }
-.settings-btn svg { fill: currentColor; stroke: none; }
+.settings-btn svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .sidebar-toggle svg {
   width: 19px;
   height: 19px;
@@ -42,8 +42,8 @@ button:is(.settings-btn, .sidebar-toggle):hover { color: var(--accent); border-c
 button:is(.settings-btn, .sidebar-toggle):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .za-rail :is(.za-scroll, .za-foot)[hidden] { display: none; }
 @media (min-width: 781px) {
-  .za-rail .za-brand-row .za-brand { font-size: 20px; padding-left: 12px; }
-  .za-rail .za-brand-row .za-brand b { width: 29px; height: 29px; font-size: 22px; }
+  .za-rail .za-brand-row .za-brand { font-size: 16px; padding-left: 12px; gap: 7px; }
+  .za-rail .za-brand-row .za-mark { width: 26px; height: 26px; margin: 0; }
   .za-rail .za-brand-row .za-brand sup { display: none; }
   .za-brand-row button:is(.settings-btn, .sidebar-toggle) { width: 34px; height: 34px; }
   :root[data-sidebar-collapsed] { --za-rail: 58px; }
@@ -57,7 +57,7 @@ button:is(.settings-btn, .sidebar-toggle):focus-visible { outline: 2px solid var
   [data-sidebar-collapsed] .za-rail .za-brand-row .za-brand { display: none; }
 }
 @media (min-width: 781px) and (max-width: 1090px) {
-  .za-rail .za-brand-row .za-brand b { display: none; }
+  .za-rail .za-brand-row .za-mark { display: none; }
 }
 
 .settings-overlay {
@@ -78,7 +78,7 @@ button:is(.settings-btn, .sidebar-toggle):focus-visible { outline: 2px solid var
 }
 .settings-overlay:not([open]), .settings-overlay [hidden] { display: none; }
 .settings-overlay[open] { display: grid; place-items: center; }
-.settings-overlay::backdrop { background: rgb(3 4 9 / .68); backdrop-filter: blur(8px); }
+.settings-overlay::backdrop { background: rgb(4 9 23 / .44); backdrop-filter: blur(4px) saturate(.9); }
 .settings-overlay *, .settings-overlay *::before { box-sizing: border-box; }
 html:has(.settings-overlay[open]) { overflow: hidden; }
 .settings-panel .btn {
@@ -88,7 +88,7 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   padding: 8px 12px;
   border: 1px solid var(--line-strong, var(--za-line));
   border-radius: 8px;
-  background: var(--za-panel);
+  background: var(--za-frost-field);
   color: var(--text, #faf7f4);
   font: 650 13px/1.25 var(--font-body, var(--za-font));
   cursor: pointer;
@@ -104,10 +104,11 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   overflow: hidden;
-  border-radius: 18px;
-  background: var(--za-panel);
+  border-radius: 25px;
+  background: var(--za-frost);
   border: 1px solid var(--line-strong, var(--za-line));
-  box-shadow: 0 26px 80px rgb(0 0 0 / .5);
+  box-shadow: var(--za-frost-shadow), 0 26px 80px rgb(0 0 0 / .36);
+  backdrop-filter: blur(26px) saturate(1.35);
 }
 .settings-header {
   display: flex;
@@ -115,7 +116,7 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   justify-content: space-between;
   gap: 12px;
   padding: 17px 22px 13px;
-  background: var(--za-nav);
+  background: rgb(10 18 37 / .28);
 }
 .settings-header h2 {
   margin: 0;
@@ -137,7 +138,7 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   gap: 4px;
   padding: 0 14px;
   border-bottom: 1px solid var(--line, var(--za-line));
-  background: var(--za-nav);
+  background: rgb(10 18 37 / .28);
 }
 .settings-tabs [role="tab"] {
   position: relative;
@@ -196,7 +197,7 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   padding: 12px;
   border: 1px solid var(--line, var(--za-line));
   border-radius: 10px;
-  background: var(--za-nav);
+  background: rgb(10 18 37 / .28);
 }
 #seBackgroundStyle { margin-bottom: 18px; }
 .settings-field { display: block; margin-bottom: 18px; }
@@ -384,7 +385,7 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   gap: 10px;
   padding: 11px 22px;
   border-top: 1px solid var(--line, var(--za-line));
-  background: var(--za-nav);
+  background: rgb(10 18 37 / .28);
 }
 .settings-actions .btn { min-width: 90px; }
 .settings-actions #seReset {

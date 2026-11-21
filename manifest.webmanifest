@@ -8,7 +8,10 @@
   "background_color": "#07080e",
   "theme_color": "#07080e",
   "orientation": "any",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/assets/logo-192.png",
@@ -30,9 +33,21 @@
     }
   ],
   "shortcuts": [
-    { "name": "Practice", "url": "/" },
-    { "name": "Lecture hall", "url": "/movies" },
-    { "name": "Tutor room", "url": "/ai" },
-    { "name": "My shelf", "url": "/library" }
+    {
+      "name": "Games",
+      "url": "/?all=1"
+    },
+    {
+      "name": "Books & Manga",
+      "url": "/books/"
+    },
+    {
+      "name": "AI",
+      "url": "/ai/"
+    },
+    {
+      "name": "My library",
+      "url": "/library/"
+    }
   ]
 }

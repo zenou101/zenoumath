@@ -18,6 +18,7 @@ function touchRecent(id) {
 
 const sources = {
   lo: 'Arcade browser launcher',
+  'gn-math': 'GN-Math',
   pf: 'Publisher',
   external: 'External host',
   pg: 'CrazyGames',
@@ -170,7 +171,7 @@ async function boot() {
   const id = p.get('id') || '';
   let GAMES;
   try {
-    const res = await fetch('/catalog/games.json?v=polytrack-embed');
+    const res = await fetch('/catalog/games.json?v=skate-embed');
     if (!res.ok) throw new Error(res.status);
     GAMES = (await res.json()).games;
   } catch {
@@ -353,12 +354,12 @@ function relatedCard(g) {
     img.className = 'card-thumb';
     img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
     img.src = g.img;
-    img.onerror = () => { const pl = document.createElement('span'); pl.className = 'card-plaque'; pl.textContent = '▶'; img.replaceWith(pl); };
+    img.onerror = () => { const pl = document.createElement('span'); pl.className = 'card-plaque'; pl.textContent = (g.t.match(/[A-Za-z0-9]/g) || ['?']).slice(0, 2).join('').toUpperCase(); img.replaceWith(pl); };
     a.append(img);
   } else {
     const pl = document.createElement('span');
     pl.className = 'card-plaque';
-    pl.textContent = '▶';
+    pl.textContent = (g.t.match(/[A-Za-z0-9]/g) || ['?']).slice(0, 2).join('').toUpperCase();
     a.append(pl);
   }
   const play = document.createElement('span');

@@ -34,6 +34,7 @@
     filter: 'all',
     loaded: false,
     timer: 0,
+    active: null,
   };
 
   function toast(title, sub) {
@@ -69,10 +70,10 @@
   function showFallback(tool) {
     const el = frameEls();
     if (!el.fallback) return;
-    el.fallbackTitle.textContent = tool ? tool.name + ' did not paint' : 'Nothing drawn yet';
-    el.fallbackText.textContent = tool && tool.note
-      ? tool.name + ' answered, but the frame stayed empty (' + tool.note + '). Open it in a tab, or carry the address through Magma.'
-      : 'A server that refuses framing leaves the frame empty no matter what this page does. Open it in its own tab, or carry it through Magma.';
+    el.fallbackTitle.textContent = tool ? 'Open ' + tool.name + ' directly' : 'Chat is taking longer to open';
+    el.fallbackText.textContent = tool?.frame === 'attempt'
+      ? 'Duck.ai can block embedded chats. You can open the chat on its website or continue trying the frame.'
+      : 'If the chat is blank or still loading, open it on the provider’s website.';
     el.fallbackOpen.href = tool ? tool.url : '#';
     el.fallbackProxy.href = tool ? proxyHref(tool.url) : '/web';
     el.fallback.hidden = false;
@@ -87,6 +88,7 @@
     if (!tool) return;
     const el = frameEls();
     clearTimeout(state.timer);
+    state.active = tool;
     hideFallback();
     showShroud('Connecting to ' + tool.name);
 
@@ -94,9 +96,20 @@
     el.note.textContent = (tool.vendor ? tool.vendor + ' · ' : '') + (tool.note || '');
     el.openTab.href = tool.url;
     el.openTab.title = 'Open ' + tool.name + ' in a new tab';
+    el.openTab.setAttribute('aria-label', el.openTab.title);
+    el.frame.title = tool.name + ', embedded AI chat';
 
-    el.frame.src = 'about:blank';
-    requestAnimationFrame(() => { el.frame.src = tool.url; });
+    el.frame.onload = () => {
+      if (state.active !== tool) return;
+      hideShroud();
+      if (tool.frame !== 'attempt') clearTimeout(state.timer);
+    };
+    el.frame.onerror = () => {
+      clearTimeout(state.timer);
+      hideShroud();
+      showFallback(tool);
+    };
+    el.frame.src = tool.url;
 
     try { localStorage.setItem(PICK_KEY, tool.id); } catch { /* private mode */ }
 
@@ -108,12 +121,7 @@
     }
 
     state.timer = setTimeout(() => { hideShroud(); showFallback(tool); }, FRAME_TIMEOUT);
-    el.frame.addEventListener('load', function onLoad() {
-      if (el.frame.src === 'about:blank') return;
-      clearTimeout(state.timer);
-      hideShroud();
-      el.frame.removeEventListener('load', onLoad);
-    });
+
   }
 
   function showShroud(title) {
@@ -131,7 +139,7 @@
   function paintSwitch(activeId) {
     const wrap = $('#aiSwitch');
     if (!wrap || !state.catalog) return;
-    const framable = state.tools.filter(t => t.frame === 'inline');
+    const framable = state.tools.filter(t => t.frame === 'inline' || t.frame === 'attempt');
     wrap.innerHTML = '';
     framable.forEach(t => {
       const b = document.createElement('button');
@@ -200,7 +208,8 @@
 
       const badge = card.querySelector('.ai-badge');
       badge.dataset.frame = tool.frame;
-      badge.textContent = tool.frame === 'inline' ? 'Runs in the frame' : 'Own tab';
+      badge.textContent = tool.frame === 'inline' ? 'Runs in the frame'
+        : tool.frame === 'attempt' ? 'Try in frame' : 'Own tab';
 
       const open = card.querySelector('.ai-mini-solid');
       open.href = tool.url;
@@ -211,7 +220,7 @@
       magma.textContent = 'Magma';
       magma.title = 'Open Magma in the viewer, with ' + hostOf(tool.url) + ' copied to the clipboard';
 
-      if (tool.frame === 'inline') {
+      if (tool.frame === 'inline' || tool.frame === 'attempt') {
         const run = document.createElement('button');
         run.type = 'button';
         run.className = 'ai-mini';
@@ -253,10 +262,10 @@
 
     const stage = state.tools.find(t => t.id === (state.catalog.stage && state.catalog.stage.id)) || state.tools[0];
     const wanted = new URLSearchParams(location.search).get('t');
-    const picked = wanted && state.tools.find(t => t.id === wanted && t.frame === 'inline');
+    const picked = wanted && state.tools.find(t => t.id === wanted && (t.frame === 'inline' || t.frame === 'attempt'));
     let remembered = null;
     try { remembered = localStorage.getItem(PICK_KEY); } catch { /* private mode */ }
-    const last = !picked && remembered && state.tools.find(t => t.id === remembered && t.frame === 'inline');
+    const last = !picked && remembered && state.tools.find(t => t.id === remembered && (t.frame === 'inline' || t.frame === 'attempt'));
 
     paintGrid();
     if (stage) loadTool(picked || last || stage);
@@ -265,14 +274,16 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     $('#aiReload').addEventListener('click', () => {
-      const frame = $('#aiStage');
-      if (!frame || !frame.src || frame.src === 'about:blank') return;
-      const src = frame.src;
-      hideFallback();
-      showShroud('Reloading');
-      frame.src = 'about:blank';
-      requestAnimationFrame(() => { frame.src = src; });
+      if (state.active) {
+        const tool = state.active;
+        const frame = $('#aiStage');
+        const next = frame.cloneNode(false);
+        frame.replaceWith(next);
+        loadTool(tool);
+      }
     });
+    $('#aiTrouble').addEventListener('click', () => showFallback(state.active));
+    $('#aiContinue').addEventListener('click', hideFallback);
 
     $('#aiFull').addEventListener('click', () => {
       const host = $('#aiStageHost');

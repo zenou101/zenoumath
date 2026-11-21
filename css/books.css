@@ -1,0 +1,30 @@
+.reader {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-shadow);
+  backdrop-filter: blur(20px);
+}
+.reader-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.reader-source, .reader-actions { display: flex; align-items: center; gap: 10px; }
+.reader-source { font-size: 14px; font-weight: 600; }
+.reader-actions .btn { min-width: 38px; min-height: 38px; padding: 8px; }
+.reader iframe { display: block; width: 100%; height: 76dvh; min-height: 480px; border: 0; background: #111827; }
+.reader-status { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.reader-status a { color: var(--text); text-underline-offset: 3px; }
+.reader:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
+.reader:fullscreen iframe { flex: 1; min-height: 0; height: 100%; }
+@media (max-width: 480px) {
+  .reader-toolbar { padding: 10px; gap: 6px; }
+  .reader-actions { gap: 5px; }
+  .reader-source { gap: 6px; font-size: 12px; }
+  .reader iframe { min-height: 420px; }
+}

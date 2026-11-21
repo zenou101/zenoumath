@@ -13,11 +13,12 @@
  * redirect stubs: they shadowed their own directory index on GitHub Pages,
  * so any cached copy of one has to go.
  */
-const CACHE_VERSION = 'zenou-arcade-v13';
+const CACHE_VERSION = 'zenou-arcade-v15';
 const SHELL = [
   '/',
   '/css/style.css',
   '/css/arcade-shell.css',
+  '/css/arcade-discover.css',
   '/css/settings.css',
   '/css/plus.css',
   '/css/consent.css',
@@ -26,6 +27,8 @@ const SHELL = [
   '/js/atmosphere.js',
   '/js/consent.js',
   '/assets/favicon.png',
+  '/assets/favicon.svg',
+  '/assets/ui-icons.svg',
   '/assets/logo-192.png',
 ];
 

@@ -946,7 +946,7 @@
     toggle.type = 'button';
     toggle.className = 'sidebar-toggle';
     toggle.setAttribute('aria-controls', navigation.id);
-    toggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 5v14"/></svg>';
+    toggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#sidebar"/></svg>';
     row.insertBefore(toggle, settings);
 
     function render(collapsed) {
@@ -984,7 +984,7 @@
     b.title = 'Settings';
     b.setAttribute('aria-label', 'Settings');
     b.setAttribute('aria-haspopup', 'dialog');
-    b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7zm7.4-2.8.1-.7-.1-.7 1.9-1.5-1.7-3-2.2.9a7.6 7.6 0 0 0-1.2-.7L15.9 5h-3.8l-.3 2.2c-.4.2-.8.4-1.2.7l-2.2-.9-1.7 3 1.9 1.5a8 8 0 0 0 0 1.4L6.7 14.4l1.7 3 2.2-.9c.4.3.8.5 1.2.7l.3 2.2h3.8l.3-2.2c.4-.2.8-.4 1.2-.7l2.2.9 1.7-3-1.9-1.7z"/></svg>';
+    b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#settings"/></svg>';
     b.addEventListener('click', open);
     if (brand) {
       const row = document.createElement('div');

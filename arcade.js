@@ -2,27 +2,18 @@
 
 const $ = id => document.getElementById(id);
 
-const paths = {
-  bolt: 'M14 2 4 14h7l-1 8L21 9h-8z',
-  search: 'M10 3a7 7 0 1 0 .01 0 M15 15l6 6',
-  shuffle: 'M3 6h3c5 0 7 12 12 12h3 M17 14l4 4-4 4 M3 18h3q2 0 4-4 M13 9q3-3 5-3h3 M17 2l4 4-4 4',
-  spark: 'M12 2l2.5 7 7.5 3-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-3z',
-  play: 'M8 5v14l11-7z',
-  left: 'm14 6-6 6 6 6',
-  right: 'm10 6 6 6-6 6',
-  upRight: 'M6 18 18 6M8 6h10v10',
-  down: 'M12 5v14m-6-6 6 6 6-6',
-};
+
 
 function icon(name) {
-  return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="' + paths[name] + '"/></svg>';
+  const symbol = name === 'upRight' ? 'external' : name;
+  return '<svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#' + symbol + '"/></svg>';
 }
 
 document.querySelectorAll('[data-icon]').forEach(element => {
   element.innerHTML = icon(element.dataset.icon);
 });
 
-const genres = ['Action', 'Racing', 'Sports', 'Puzzle', 'Adventure', 'Arcade'];
+const genres = ['Action', 'Racing', 'Sports', 'Puzzle', 'Adventure', 'Arcade', 'GN-Math'];
 const covers = {
   'lo-among-us': 'among',
   'lo-geometry-dash': 'geometry',
@@ -72,6 +63,7 @@ function gameUrl(game) {
 }
 
 function titleCase(value) {
+  if (value === 'gn-math') return 'GN-Math';
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 

@@ -1,7 +1,7 @@
 {
   "generated": "2026-11-07",
   "checked": "2026-11-07",
-  "method": "scripts/verify-ai.mjs — GET with redirects followed, framing graded on the final hop",
+  "method": "scripts/verify-ai.mjs \u2014 GET with redirects followed, framing graded on the final hop",
   "stage": {
     "id": "slate",
     "name": "Slate",
@@ -23,7 +23,22 @@
       ],
       "frame": "inline",
       "status": "live",
-      "note": "no framing header · 200",
+      "note": "no framing header \u00b7 200",
+      "checked": "2026-11-07"
+    },
+    {
+      "id": "duck",
+      "name": "Duck.ai",
+      "url": "https://duck.ai/",
+      "vendor": "DuckDuckGo",
+      "blurb": "Private AI chat from DuckDuckGo. Try the embedded chat or open Duck.ai directly.",
+      "tags": [
+        "chat",
+        "search"
+      ],
+      "frame": "attempt",
+      "status": "live",
+      "note": "Previously returned X-Frame-Options SAMEORIGIN. Open directly if the embedded chat is blocked.",
       "checked": "2026-11-07"
     },
     {
@@ -38,7 +53,7 @@
       ],
       "frame": "inline",
       "status": "live",
-      "note": "no framing header · 200",
+      "note": "no framing header \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -53,7 +68,7 @@
       ],
       "frame": "inline",
       "status": "live",
-      "note": "no framing header · 200",
+      "note": "no framing header \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -68,7 +83,7 @@
       ],
       "frame": "inline",
       "status": "live",
-      "note": "no framing header · 200",
+      "note": "no framing header \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -82,7 +97,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -97,7 +112,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "frame-ancestors 'self' · 200",
+      "note": "frame-ancestors 'self' \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -111,7 +126,7 @@
       ],
       "frame": "tab",
       "status": "down",
-      "note": "unreachable · TypeError",
+      "note": "unreachable \u00b7 TypeError",
       "checked": "2026-11-07"
     },
     {
@@ -126,7 +141,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -141,7 +156,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: DENY · 200",
+      "note": "X-Frame-Options: DENY \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -156,7 +171,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: DENY · 200",
+      "note": "X-Frame-Options: DENY \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -185,7 +200,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -200,7 +215,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 403 · Just a moment... (challenge)",
+      "note": "edge answered 403 \u00b7 Just a moment... (challenge)",
       "checked": "2026-11-07"
     },
     {
@@ -214,7 +229,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 403 · Just a moment... (challenge)",
+      "note": "edge answered 403 \u00b7 Just a moment... (challenge)",
       "checked": "2026-11-07"
     },
     {
@@ -228,7 +243,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "frame-ancestors https://huggingface.co · 200",
+      "note": "frame-ancestors https://huggingface.co \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -243,7 +258,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -257,7 +272,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -271,7 +286,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 403 · Just a moment... (challenge)",
+      "note": "edge answered 403 \u00b7 Just a moment... (challenge)",
       "checked": "2026-11-07"
     },
     {
@@ -285,22 +300,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 429 · Vercel Security Checkpoint (challenge)",
-      "checked": "2026-11-07"
-    },
-    {
-      "id": "duck",
-      "name": "Duck.ai",
-      "url": "https://duck.ai/",
-      "vendor": "DuckDuckGo",
-      "blurb": "Anonymous chat: no account, prompts not tied to you. The private option.",
-      "tags": [
-        "chat",
-        "search"
-      ],
-      "frame": "tab",
-      "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "edge answered 429 \u00b7 Vercel Security Checkpoint (challenge)",
       "checked": "2026-11-07"
     },
     {
@@ -315,7 +315,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 403 · Just a moment... (challenge)",
+      "note": "edge answered 403 \u00b7 Just a moment... (challenge)",
       "checked": "2026-11-07"
     },
     {
@@ -329,7 +329,7 @@
       ],
       "frame": "tab",
       "status": "live",
-      "note": "X-Frame-Options: SAMEORIGIN · 200",
+      "note": "X-Frame-Options: SAMEORIGIN \u00b7 200",
       "checked": "2026-11-07"
     },
     {
@@ -343,7 +343,7 @@
       ],
       "frame": "tab",
       "status": "challenge",
-      "note": "edge answered 403 · Attention Required! | Cloudflare (challenge)",
+      "note": "edge answered 403 \u00b7 Attention Required! | Cloudflare (challenge)",
       "checked": "2026-11-07"
     }
   ]

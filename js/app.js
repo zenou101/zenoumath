@@ -140,10 +140,11 @@ const CATEGORY_META = [
   ['chess', 'Chess'],
   ['hoodamath', 'HoodaMath'],
   ['selfhosted', 'Self-hosted'],
+  ['gn-math', 'GN-Math'],
 ];
 const CAT_NAMES = new Map(CATEGORY_META);
 const CAT_ORDER = CATEGORY_META.map(c => c[0]);
-const SOURCE_BADGES = { 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher', external: 'External host' };
+const SOURCE_BADGES = { 'gn-math': 'GN-Math', 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher', external: 'External host' };
 
 const RAILS = [
   { title: 'Instant start, no pre-roll', filter: g => g.p !== 'pg', max: 24 },
@@ -252,7 +253,9 @@ function card(g, extra = {}) {
   if (mine) {
     const stars = document.createElement('span');
     stars.className = 'card-rating';
-    stars.textContent = '★'.repeat(mine);
+    stars.innerHTML = '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#star"/></svg>';
+    stars.append(document.createTextNode(String(mine)));
+    stars.setAttribute('aria-label', `Rated ${mine} of 5`);
     a.append(stars);
   }
 

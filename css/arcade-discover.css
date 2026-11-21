@@ -1,18 +1,15 @@
 html { color-scheme: dark; }
 
 .arcade-discover {
-  --canvas: #111014;
-  --rail: #151419;
-  --panel: #1b1a20;
-  --line: #302d36;
-  --text: #faf7f4;
-  --muted: #b5aebc;
+  --line: var(--za-line);
+  --text: #f7f9ff;
+  --muted: #d1ddf2;
   --za-gap: clamp(20px, 3.2vw, 54px);
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
   margin: 0;
-  background: var(--canvas);
+  background: transparent;
   color: var(--text);
   font: 15px/1.5 var(--za-font);
 }
@@ -42,29 +39,31 @@ body.arcade-discover::after { content: none; }
   left: 12px;
   padding: 10px 16px;
   border-radius: 8px;
-  background: var(--panel);
+  background: var(--za-frost);
   transform: translateY(-160%);
 }
 .skip-link:focus { transform: none; }
 
-.arcade-discover .za-rail { background: var(--rail); border-color: var(--line); }
 .arcade-discover .za-brand { gap: 11px; }
-.arcade-discover .za-brand b { width: 36px; height: 36px; margin: 0; font-size: 26px; transform: none; border-radius: 11px; }
+.arcade-discover .za-brand .za-mark { width: 36px; height: 36px; margin: 0; font-size: 26px; transform: none; border-radius: 11px; }
 .arcade-discover .za-brand small { display: block; margin-top: 4px; color: var(--muted); font: 650 9px/1 var(--za-font); letter-spacing: .13em; }
 .arcade-discover .za-foot { justify-content: space-between; border-top: 1px solid var(--line); border-radius: 0; }
 .arcade-discover .za-group a[aria-current=page] {
-  box-shadow: inset 2px 0 var(--accent);
-  background: color-mix(in srgb, var(--accent) 11%, var(--rail));
+  background: rgb(var(--accent-rgb) / .13);
 }
 .arcade-discover main { display: flex; flex: 1; flex-direction: column; margin-left: var(--za-rail); min-width: 0; }
 .toolbar {
-  min-height: 72px;
+  min-height: 64px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  padding: 12px var(--za-gap);
-  border-bottom: 1px solid var(--line);
-  background: var(--rail);
+  margin: 12px var(--za-gap) 0;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-shadow);
+  backdrop-filter: blur(20px) saturate(1.25);
 }
 .crumb { margin-right: auto; color: var(--muted); font-size: 13px; }
 .crumb span { margin: 0 8px; opacity: .55; }
@@ -77,9 +76,9 @@ body.arcade-discover::after { content: none; }
   padding: 0 12px;
   min-height: 42px;
   color: var(--muted);
-  background: var(--canvas);
+  background: var(--za-frost-field);
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 12px;
 }
 .search:focus-within { border-color: var(--accent); }
 .search input { flex: 1; width: 0; padding: 9px 0; font-size: 14px; background: transparent; border: 0; outline: none; }
@@ -89,9 +88,9 @@ body.arcade-discover::after { content: none; }
 .arcade-discover :is(.shuffle, .za-accent, #sort, #more, #clear) {
   min-height: 42px;
   border: 1px solid var(--line);
-  background: var(--panel);
+  background: var(--za-frost);
   padding: 0 12px;
-  border-radius: 9px;
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 650;
 }
@@ -102,25 +101,26 @@ body.arcade-discover::after { content: none; }
 .page-heading { margin-bottom: 24px; }
 .page-heading h1 {
   font-size: clamp(38px, 4.4vw, 62px);
-  font-weight: 750;
-  letter-spacing: -.045em;
+  font-weight: 780;
+  letter-spacing: -.05em;
   margin: 0;
   line-height: 1.06;
   overflow-wrap: anywhere;
 }
 .page-heading p { margin: 8px 0 0; color: var(--muted); overflow-wrap: anywhere; }
-.spotlight { display: grid; grid-template-columns: minmax(0, 3.3fr) minmax(215px, 1fr); gap: 14px; }
+[data-bg="custom"] .arcade-discover .page-heading { text-shadow: 0 1px 8px rgb(0 4 15 / .85); }
+.spotlight { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 25%); gap: 14px; }
 body.arcade-discover .hero {
   position: relative;
   isolation: isolate;
   display: flex;
-  align-items: center;
-  min-height: clamp(320px, 29vw, 425px);
+  align-items: flex-end;
+  min-height: clamp(340px, 27vw, 430px);
   overflow: hidden;
-  border: 1px solid #5c4244;
-  border-radius: 20px;
-  background: #27181f;
-  box-shadow: none;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--za-panel);
+  box-shadow: var(--za-frost-shadow);
 }
 .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% center; z-index: -2; }
 .hero::after {
@@ -128,10 +128,19 @@ body.arcade-discover .hero {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(90deg, #160e19f2, #1c101ab8 38%, #22141a0a 82%),
-    linear-gradient(0deg, #130c16bf, transparent 28%);
+  background: linear-gradient(90deg, #0b112777, transparent 76%),
+    linear-gradient(0deg, #0a1024bd, transparent 65%);
 }
-.hero-copy { padding: 26px clamp(22px, 3.2vw, 52px) 63px; }
+.hero-copy {
+  width: min(425px, calc(100% - 36px));
+  margin: 18px;
+  padding: clamp(16px, 2.3vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 21px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-shadow);
+  backdrop-filter: blur(17px) saturate(1.2);
+}
 .hero-copy .feature {
   display: inline-flex;
   align-items: center;
@@ -139,8 +148,8 @@ body.arcade-discover .hero {
   margin: 0;
   padding: 5px 9px;
   border: 1px solid rgb(var(--accent-rgb) / .35);
-  border-radius: 5px;
-  background: #1b111cca;
+  border-radius: 8px;
+  background: var(--za-frost-field);
   color: var(--accent);
   font: 750 10px/1.4 var(--za-font);
   letter-spacing: .13em;
@@ -149,18 +158,18 @@ body.arcade-discover .hero {
 .feature svg { width: 13px !important; height: 13px !important; }
 .hero h2 {
   margin: 12px 0 8px;
-  font-size: clamp(35px, 4.4vw, 68px);
+  font-size: clamp(32px, 3.45vw, 54px);
   line-height: 1.04;
   font-weight: 750;
   letter-spacing: -.04em;
 }
-.hero-copy > p:not(.feature) { max-width: 34ch; margin: 13px 0 20px; color: #f0dfe8; font-size: 14px; }
+.hero-copy > p:not(.feature) { max-width: 34ch; margin: 13px 0 20px; color: #edf3ff; font-size: 14px; }
 .arcade-discover .play {
   display: inline-flex;
   gap: 8px;
   align-items: center;
   padding: 10px 17px;
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--accent);
   color: var(--accent-ink);
   font-size: 14px;
@@ -170,26 +179,44 @@ body.arcade-discover .hero {
 .play:hover { filter: brightness(1.11); }
 .hero-controls {
   position: absolute;
-  right: 15px;
-  bottom: 14px;
-  left: clamp(22px, 3.2vw, 52px);
+  top: 14px;
+  right: 14px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-#slide-count { margin-right: auto; color: #f2dfe8; font: 600 11px/1 ui-monospace, monospace; letter-spacing: .12em; }
+#slide-count {
+  color: #eef4ff;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgb(8 14 29 / .78);
+  font: 600 11px/1 ui-monospace, monospace;
+  letter-spacing: .06em;
+}
 .hero-controls button {
   display: grid;
   place-items: center;
   width: 37px;
   height: 37px;
   padding: 0;
-  background: #1f151dd9;
-  border: 1px solid #f4dce43d;
+  background: rgb(8 14 29 / .78);
+  border: 1px solid var(--line);
   border-radius: 50%;
 }
 .hero-controls button:hover { border-color: var(--accent); color: var(--accent); }
-.spotlight-menu { display: grid; grid-auto-rows: 1fr; gap: 10px; min-width: 0; }
+.spotlight-menu {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-shadow);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
 .spotlight-option {
   display: grid;
   grid-template-columns: clamp(62px, 6.4vw, 96px) minmax(0, 1fr) auto;
@@ -198,9 +225,9 @@ body.arcade-discover .hero {
   gap: 10px;
   min-width: 0;
   padding: 8px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 13px;
+  background: var(--za-frost-field);
+  border: 1px solid transparent;
+  border-radius: 15px;
 }
 .spotlight-option img { width: 100%; height: auto; aspect-ratio: 1.15; object-fit: cover; border-radius: 7px; }
 .spotlight-option strong, .spotlight-option small { display: block; }
@@ -209,7 +236,7 @@ body.arcade-discover .hero {
 .spotlight-option svg { color: var(--muted); width: 15px; }
 .spotlight-option:hover, .spotlight-option[aria-pressed=true] {
   border-color: color-mix(in srgb, var(--accent) 58%, var(--line));
-  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  background: rgb(var(--accent-rgb) / .14);
 }
 .spotlight-option[aria-pressed=true] svg { color: var(--accent); }
 
@@ -217,7 +244,15 @@ body.arcade-discover .hero {
 .heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; }
 .heading h2 { display: flex; align-items: center; gap: 9px; margin: 0; font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; letter-spacing: -.035em; }
 .section-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: rgb(var(--accent-rgb) / .12); color: var(--accent); }
-.heading a { white-space: nowrap; font-size: 13px; font-weight: 650; }
+.heading a {
+  white-space: nowrap;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--za-frost-field);
+  font-size: 13px;
+  font-weight: 650;
+}
 .heading a span, .heading a:hover { color: var(--accent); }
 #count { color: var(--muted); font-size: 13px; text-align: right; }
 .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
@@ -225,15 +260,16 @@ body.arcade-discover .card {
   display: block;
   min-width: 0;
   overflow: hidden;
+  padding: 6px;
   border: 1px solid var(--line);
-  border-radius: 13px;
-  background: var(--panel);
-  box-shadow: none;
+  border-radius: 19px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-edge);
   transition: transform .16s ease, border-color .16s ease;
 }
 body.arcade-discover .card:hover, body.arcade-discover .card:focus-visible { border-color: var(--accent); }
 body.arcade-discover .card:hover { transform: translateY(-3px); }
-.art { position: relative; aspect-ratio: 1.9; overflow: hidden; background: radial-gradient(ellipse at 25% 15%, #473148, #201a28 75%); }
+.art { position: relative; aspect-ratio: 1.9; overflow: hidden; border-radius: 13px; background: radial-gradient(ellipse at 25% 15%, #354d77, #1b2644 75%); }
 .art img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .fallback { display: grid; place-items: center; height: 100%; font-size: clamp(20px, 3vw, 44px); letter-spacing: -.07em; font-weight: 750; color: var(--accent); }
 .cards { align-items: stretch; }
@@ -247,12 +283,18 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
 .card-arrow { color: var(--muted); }
 .card:hover .card-arrow { color: var(--accent); }
 
-.catalog { border-top: 1px solid var(--line); padding-top: 24px; }
+.catalog {
+  padding: clamp(14px, 2vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--za-frost);
+  box-shadow: var(--za-frost-edge);
+}
 .catalog-tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .filters { display: flex; gap: 6px; flex-wrap: wrap; }
 .filters button {
   min-height: 36px;
-  background: var(--panel);
+  background: var(--za-frost);
   border: 1px solid var(--line);
   color: var(--muted);
   border-radius: 8px;
@@ -289,28 +331,28 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
 @media (max-width: 780px) {
   .arcade-discover main { margin: 0; }
   .arcade-discover .za-brand { height: 58px; }
-  .arcade-discover .za-brand b { width: 32px; height: 32px; }
+  .arcade-discover .za-brand .za-mark { width: 32px; height: 32px; }
   .arcade-discover .za-scroll { padding-inline: 12px; }
-  .toolbar { min-height: 58px; padding-block: 8px; }
+  .toolbar { min-height: 58px; padding-block: 8px; margin-top: 10px; }
   .content { padding-top: 24px; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
 }
 @media (max-width: 540px) {
   .arcade-discover { --za-gap: 15px; }
   .crumb, .search kbd, .spotlight-option svg { display: none; }
-  .toolbar { gap: 7px; }
+  .toolbar { gap: 6px; margin-inline: 10px; padding-inline: 8px; }
   .search { flex: 1; width: auto; min-width: 0; padding: 0 8px; }
   .arcade-discover :is(.shuffle, .za-accent) { padding-inline: 8px; }
   .arcade-discover .za-accent { width: 92px; max-width: 100%; }
-  body.arcade-discover .hero { min-height: 300px; border-radius: 15px; }
+  body.arcade-discover .hero { min-height: 360px; border-radius: 21px; }
   .hero-image { object-position: 62% center; }
-  .hero::after { background: linear-gradient(90deg, #160e19f5, #1c101a88 63%, #22141a33), linear-gradient(0deg, #130c16bf, transparent 28%); }
-  .spotlight-menu { gap: 6px; }
+  .hero-copy { width: calc(100% - 24px); margin: 12px; border-radius: 17px; }
+  .spotlight-menu { gap: 6px; padding: 6px; border-radius: 17px; }
   .spotlight-option { display: block; padding: 6px; }
   .spotlight-option img { aspect-ratio: 2; }
   .spotlight-option strong { font-size: 12px; }
   .spotlight-option small { display: none; }
-  .card-copy { padding-inline: 9px; }
+  .card-copy { padding-inline: 6px; }
   .card h3 { font-size: 14px; line-height: 1.3; }
 }
 @media (prefers-reduced-motion: reduce) {
