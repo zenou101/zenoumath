@@ -252,6 +252,13 @@
     a.className = 'card';
     a.href = `/play?id=${encodeURIComponent(g.id)}`;
     a.setAttribute('aria-label', g.t);
+    function placeholder() {
+      const plaque = document.createElement('span');
+      plaque.className = 'card-plaque';
+      plaque.textContent = (g.t.match(/[A-Za-z0-9]/g) || ['?']).slice(0, 2).join('').toUpperCase();
+      plaque.setAttribute('aria-hidden', 'true');
+      return plaque;
+    }
     if (g.img) {
       const img = document.createElement('img');
       img.className = 'card-thumb';
@@ -259,14 +266,9 @@
       img.decoding = 'async';
       img.alt = '';
       img.src = g.img;
-      img.onerror = () => {
-        const p = document.createElement('span');
-        p.className = 'card-plaque';
-        p.textContent = (g.t.match(/[A-Za-z0-9]/g) || ['?']).slice(0, 2).join('').toUpperCase();
-        img.replaceWith(p);
-      };
+      img.onerror = () => img.replaceWith(placeholder());
       a.append(img);
-    }
+    } else a.append(placeholder());
     const play = document.createElement('span');
     play.className = 'card-play-badge';
     play.innerHTML = '<i><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></i>';

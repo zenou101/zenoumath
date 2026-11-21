@@ -1044,6 +1044,7 @@
   }
 
   import('/js/motion.js').catch(() => {});
+  import('/js/site-tools.js').catch(() => {});
   import('/js/os-switch.js').catch(() => {});
   import('/js/account-sync.js').catch(() => {});
 
@@ -1055,7 +1056,7 @@
     if (!e.key || e.key.length !== 1 || e.key === ' ') return null;
     const target = e.target;
     if (target && target.matches && target.matches('input, textarea, select, [contenteditable]')) return null;
-    if (document.querySelector('.settings-overlay[open], .sheet-overlay, .web-pin-overlay')) return null;
+    if (document.querySelector('dialog[open], .sheet-overlay, .web-pin-overlay')) return null;
     let list;
     try { list = JSON.parse(localStorage.getItem(WEB_TAB_KEY) || '[]'); } catch { return null; }
     if (!Array.isArray(list)) return null;

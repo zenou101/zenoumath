@@ -1,4 +1,4 @@
-'use strict';
+import { paintQueue, queueButton, watchQueue } from '/js/play-later.js';
 
 const $ = id => document.getElementById(id);
 
@@ -132,7 +132,10 @@ function card(game) {
   link.querySelector('h3').textContent = game.t;
   link.querySelector('small').textContent = game.availability === 'unavailable' ? 'Build unavailable'
     : game.availability === 'external' ? 'Plays on source site' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
-  return link;
+  const tile = document.createElement('div');
+  tile.className = 'play-later-card';
+  tile.append(link, queueButton(game, { notify: message => { $('discover-notice').textContent = message; } }));
+  return tile;
 }
 
 function showMore() {
@@ -141,7 +144,7 @@ function showMore() {
   $('grid').append(...cards);
   shown += cards.length;
   $('more').hidden = shown >= matched.length;
-  return cards[0];
+  return cards[0]?.querySelector('a');
 }
 
 function updateUrl(changes, { replace = false, scroll = false } = {}) {
@@ -248,11 +251,12 @@ $('shuffle').addEventListener('click', () => {
   const pool = (matched.length ? matched : games).filter(game => !game.availability);
   if (pool.length) location.assign(gameUrl(pool[Math.floor(Math.random() * pool.length)]));
 });
+watchQueue(() => paintQueue());
 window.addEventListener('popstate', renderCatalog);
 document.addEventListener('keydown', event => {
   if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey
     || event.target.closest('input, textarea, select, [contenteditable]')
-    || document.querySelector('#consentGate, .settings-overlay[open]')) return;
+    || document.querySelector('#consentGate, dialog[open]')) return;
   event.preventDefault();
   $('query').focus();
 });

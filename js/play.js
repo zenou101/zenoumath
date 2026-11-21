@@ -1,3 +1,5 @@
+import { paintQueue, queueButton, watchQueue } from './play-later.js';
+
 /* ZenouMath, game player page. */
 'use strict';
 
@@ -183,6 +185,14 @@ async function boot() {
     $('#missingView').hidden = false;
     return;
   }
+  const later = queueButton(g, {
+    className: 'btn btn-ghost later-action',
+    text: 'Play Later',
+    notify: message => { $('#stageStatus').textContent = message; },
+  });
+  $('#favBtn').after(later);
+  watchQueue(() => paintQueue());
+
 
   document.title = window.zenouMaskedTitle
     ? window.zenouMaskedTitle(`${g.t} · ZenouMath`)

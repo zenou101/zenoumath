@@ -33,8 +33,6 @@ function start() {
   const home = location.pathname === '/';
   const url = new URL(location.href);
   if (home && url.searchParams.get('interface') === 'classic') {
-    write(interfaceKey, 'classic');
-    write(invitationKey, true);
     url.searchParams.delete('interface');
     history.replaceState(history.state, '', url);
   } else if (topLevel && home && !url.search && !url.hash && window.ZenouConsent?.accepted() && read(interfaceKey, '') === 'os') {

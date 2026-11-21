@@ -1,3 +1,5 @@
+import { queueIds, queueButton, watchQueue } from './play-later.js';
+
 /* ZenouMath, My Library hub.
  *
  * Nine panels over one local store: overview + stats, favourites, recent,
@@ -153,6 +155,23 @@
     if (!list.length) return empty(panel, 'No favourites yet. Tap the heart on any game page.', ['Browse games', '/']);
     sectionHead(panel, `Favourites (${list.length})`, 'Stored in this browser');
     panel.append(gridFor(list));
+  }
+
+  function renderQueue() {
+    const panel = $('#panel-later');
+    panel.replaceChildren();
+    const list = queueIds().map(id => byId.get(id)).filter(Boolean);
+    if (!list.length) return empty(panel, 'Save games here to come back to them later.', ['Browse games', '/?all=1']);
+    sectionHead(panel, `Play Later (${list.length})`, 'Saved in this browser');
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    grid.append(...list.map(game => {
+      const tile = document.createElement('div');
+      tile.className = 'play-later-card';
+      tile.append(Z.gameCard(game, { actions: false }), queueButton(game, { notify: message => Z.toast(message) }));
+      return tile;
+    }));
+    panel.append(grid);
   }
 
   function renderRecent() {
@@ -408,6 +427,7 @@
   const RENDERERS = {
     overview: renderOverview,
     favourites: renderFavourites,
+    later: renderQueue,
     recent: renderRecent,
     playlists: renderPlaylists,
     ratings: renderRatings,
@@ -463,6 +483,18 @@
     });
     const start = (location.hash || '').replace('#', '');
     select(RENDERERS[start] ? start : 'overview');
+    watchQueue(() => {
+      const panel = $('#panel-later');
+      if (panel.hidden) return;
+      const current = document.activeElement;
+      const row = panel.contains(current) ? current.closest('.play-later-card') : null;
+      const index = row ? [...row.parentElement.children].indexOf(row) : -1;
+      renderQueue();
+      if (index >= 0) {
+        const buttons = panel.querySelectorAll('[data-later]');
+        (buttons[Math.min(index, buttons.length - 1)] || $('#tab-later')).focus();
+      }
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

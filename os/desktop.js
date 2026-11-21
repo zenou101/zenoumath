@@ -217,8 +217,10 @@ let started = false;
 function start() {
   if (started || !window.ZenouConsent?.accepted()) return;
   started = true;
-  write(prefix + 'interface', 'os');
-  write(prefix + 'invited', true);
+  if (window.top === window) {
+    write(prefix + 'interface', 'os');
+    write(prefix + 'invited', true);
+  }
   import('/js/account-sync.js').catch(() => {});
   open('zteam', false);
 }

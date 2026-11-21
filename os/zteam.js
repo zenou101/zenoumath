@@ -1,7 +1,8 @@
+import { paintQueue, queueButton, queueIds, watchQueue } from '/js/play-later.js';
 import { artwork, button, el, icon, iconButton, read, write } from './shared.js';
 
 const featured = ['lo-hollow-knight-silksong', 'lo-terraria', 'lo-2048', 'polytrack'];
-const views = [ ['home', 'Home', 'discover'], ['library', 'Library', 'library'], ['discover', 'Discover', 'spark'], ['favorites', 'Favorites', 'heart'], ['recent', 'Recently played', 'reload'], ['added', 'Recently added', 'star'] ];
+const views = [ ['home', 'Home', 'discover'], ['library', 'Library', 'library'], ['discover', 'Discover', 'spark'], ['favorites', 'Favorites', 'heart'], ['later', 'Play Later', 'bookmark'], ['recent', 'Recently played', 'reload'], ['added', 'Recently added', 'star'] ];
 const PAGE = 28;
 let pending;
 function loadCatalog() {
@@ -100,7 +101,7 @@ export async function mount(root, { play, notify, signal }) {
     pick.append(cover(game), el('strong', '', game.t), el('small', '', game.cs?.[0] || 'Game'));
     const save = iconButton('Add to favorites', 'heart', () => toggleFavorite(game));
     save.dataset.favorite = game.id;
-    node.append(pick, save);
+    node.append(pick, queueButton(game, { className: 'icon-button', notify }), save);
     return node;
   }
   function grid(list) {
@@ -120,7 +121,7 @@ export async function mount(root, { play, notify, signal }) {
     const launch = button(playLabel, () => { detail.close(); play(game); }, 'os-button primary');
     const save = iconButton('Add to favorites', 'heart', () => toggleFavorite(game));
     save.dataset.favorite = game.id;
-    actions.append(launch, save);
+    actions.append(launch, queueButton(game, { className: 'os-button', text: 'Play Later', notify }), save);
     info.append(actions);
     detail.replaceChildren(head, info);
     repaintFavorites();
@@ -166,21 +167,35 @@ export async function mount(root, { play, notify, signal }) {
     filters.hidden = target === 'home';
     content.replaceChildren();
     if (target === 'home') { home(); repaintFavorites(); return; }
-    const key = [target, phrase, category.value, sort.value, [...favorites()].join(','), recent().map(game => game.id).join(',')].join('|');
+    const queued = queueIds();
+    const key = [target, phrase, queued.join(','), category.value, sort.value, [...favorites()].join(','), recent().map(game => game.id).join(',')].join('|');
     if (key !== resultKey) {
       const categoryValue = category.value;
       const pool = target === 'favorites' ? [...favorites()].map(id => byId.get(id)).filter(Boolean)
+        : target === 'later' ? queued.map(id => byId.get(id)).filter(Boolean)
         : target === 'recent' ? recent() : target === 'added' ? imported : target === 'discover' ? games.filter(game => !game.availability) : games;
       currentList = pool.filter(game => (!categoryValue || game.cs?.includes(categoryValue)) && (!phrase || game.t.toLowerCase().includes(phrase)));
       if (sort.value) currentList.sort((a, b) => a.t.localeCompare(b.t) * (sort.value === 'desc' ? -1 : 1));
       resultKey = key;
     }
-    count.textContent = target === 'added' ? `${currentList.length.toLocaleString()} games · ${manifest.gnMath.imported}` : `${currentList.length.toLocaleString()} games`;
-    if (!currentList.length) content.append(el('p', 'app-message', target === 'favorites' ? 'Add a favorite from any game card.' : target === 'recent' ? 'Games you play will appear here.' : 'No games match these filters.'));
+    const summary = `${currentList.length.toLocaleString()} ${currentList.length === 1 ? 'game' : 'games'}`;
+    count.textContent = target === 'added' ? `${summary} · ${manifest.gnMath.imported}` : summary;
+    if (!currentList.length) content.append(el('p', 'app-message', target === 'favorites' ? 'Add a favorite from any game card.' : target === 'later' ? 'Save games here to come back to them later.' : target === 'recent' ? 'Games you play will appear here.' : 'No games match these filters.'));
     else content.append(grid(currentList.slice(0, limit)));
     if (currentList.length > limit) content.append(button('Load more games', () => { limit += PAGE; render(); }, 'os-button load-more'));
     repaintFavorites();
   }
+  watchQueue(() => {
+    if (view !== 'later') { paintQueue(root); return; }
+    const chosen = document.activeElement;
+    const index = [...content.querySelectorAll('[data-later]')].indexOf(chosen);
+    render();
+    if (index >= 0) {
+      const buttons = content.querySelectorAll('[data-later]');
+      (buttons[Math.min(index, buttons.length - 1)] || sidebar.querySelector('[aria-current="page"]')).focus();
+    }
+    paintQueue(detail);
+  }, { signal });
   search.addEventListener('input', () => { clearTimeout(queryTimer); queryTimer = setTimeout(() => { limit = PAGE; render(); }, 120); });
   for (const select of [category, sort]) select.addEventListener('change', () => { limit = PAGE; render(); });
   window.addEventListener('storage', event => {

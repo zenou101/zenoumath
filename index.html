@@ -14,6 +14,10 @@
   <link rel="stylesheet" href="/css/arcade-discover.css?v=20">
   <script>
     try {
+      if (window.top === window && new URLSearchParams(location.search).get('interface') === 'classic') {
+        localStorage.setItem('zenouos.interface', JSON.stringify('classic'));
+        localStorage.setItem('zenouos.invited', 'true');
+      }
       const agreement = JSON.parse(localStorage.getItem('zenoumath.consent'));
       if (!agreement || agreement.v !== '2026-11-20') document.documentElement.classList.add('consent-pending');
       const prefs = JSON.parse(localStorage.getItem('zenou_prefs'));
@@ -29,7 +33,7 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script src="/arcade.js?v=discover-6" defer></script>
+  <script type="module" src="/arcade.js?v=discover-7"></script>
   <script src="/js/arcade-accent.js" defer></script>
   <script src="/js/atmosphere.js" defer></script>
   <script src="/js/settings.js" defer></script>
@@ -106,6 +110,7 @@
     </header>
 
     <div class="content">
+      <p id="discover-notice" class="site-visually-hidden" role="status"></p>
       <div class="page-heading">
         <h1 id="page-title">Discover</h1>
         <p id="page-deck">Find your next favorite browser game.</p>

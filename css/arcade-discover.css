@@ -334,3 +334,60 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
   font: italic 900 clamp(16px, 2.3vw, 35px)/1 var(--za-font);
   letter-spacing: -.06em;
 }
+
+/* Discover gives artwork the full stage and keeps navigation in its own strip. */
+.arcade-discover .content { padding-top: clamp(21px, 3vw, 39px); }
+.arcade-discover .page-heading h1 { font-size: clamp(38px, 5.3vw, 68px); font-weight: 780; letter-spacing: -.067em; }
+body.arcade-discover .hero {
+  min-height: clamp(335px, 32vw, 472px);
+  border-radius: calc(var(--za-radius) + 3px);
+  border-color: #b5a4ed58;
+  box-shadow: 0 12px 34px #06061177, 0 0 var(--za-bloom) color-mix(in srgb, var(--za-tone-deep) calc(var(--za-glow) * 70%), transparent);
+}
+.arcade-discover .hero::after {
+  background: linear-gradient(90deg,#100e20e8 2%,#100e20c2 23%,#0e102157 66%,#0b0c1b10),
+    linear-gradient(0deg,#090b17d7 0%,transparent 70%);
+}
+.arcade-discover .hero-copy {
+  width: min(540px, calc(100% - 38px));
+  margin: 0;
+  padding: clamp(22px, 4vw, 49px);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.arcade-discover .hero-copy .feature {
+  color: #f5eeff;
+  background: #1a142ed0;
+  border-color: #d6c7ff56;
+  border-radius: 6px;
+  letter-spacing: .1em;
+}
+.arcade-discover .hero h2 { font-size: clamp(32px, 4.5vw, 66px); letter-spacing: -.065em; }
+.arcade-discover .hero-copy > p:not(.feature) { color: #e7e1f5; font-size: clamp(13px, 1.2vw, 16px); }
+.arcade-discover .spotlight-menu { border-radius: var(--za-radius); padding: 9px; background: #131321d9; }
+.arcade-discover .spotlight-option { border-radius: 9px; background: #ffffff06; }
+.arcade-discover .spotlight-option[aria-pressed=true] { border-color: #b8aaff7c; background: #b6a2ff22; }
+.arcade-discover .spotlight-option:is(:hover,:focus-visible) { background: #b6a2ff29; }
+.arcade-discover .spotlight-option img { aspect-ratio: 1.26; }
+.arcade-discover .heading a { border-color: #7464a863; background: #201d31d9; }
+.arcade-discover .catalog { background: #131521a3; border-radius: var(--za-radius); }
+.arcade-discover :is(.search,.shuffle,.za-accent) { background: #1c1e32; }
+.arcade-discover .cards { gap: 14px; }
+body.arcade-discover .card { border-radius: 13px; padding: 0; background: var(--za-frost); }
+.arcade-discover .card .art { border-radius: 0; }
+.arcade-discover .card-copy { padding: 9px 12px; min-height: 58px; }
+@media (max-width:1080px) {
+  .arcade-discover .spotlight-option img { aspect-ratio: 1.36; }
+}
+@media (max-width:620px) {
+  .arcade-discover .hero::after { background: linear-gradient(0deg,#0d0b1ddc 8%,#100e207d 63%,#100e2010); }
+  .arcade-discover .hero-copy { width: 100%; }
+  .arcade-discover .hero h2 { font-size: clamp(32px,9vw,47px); }
+  .arcade-discover .spotlight-option img { aspect-ratio: 1.7; }
+}
+@media (max-width:540px) {
+  .arcade-discover .cards { gap: 9px; }
+  .arcade-discover .card-copy { padding-inline: 8px; }
+  body.arcade-discover .hero { min-height: 304px; }
+}

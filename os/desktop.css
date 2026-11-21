@@ -265,3 +265,31 @@ body { isolation: isolate; min-height: 100dvh; }
   .taskbar { gap: 4px; }
 }
 @media (max-width: 350px) { .desktop-brand small { display: none; } .task-app { padding-inline: 5px; } }
+
+/* Shared visual language for ZenouOS while keeping its seasonal themes. */
+.desktop-bar { box-shadow: 0 8px 26px #04060924; }
+.desktop-brand img { box-shadow: 0 0 19px color-mix(in srgb, var(--accent) 31%, transparent); }
+.desktop-actions .exit-link, .task-launcher { background: #ffffff0b; }
+.taskbar { border-radius: 17px; }
+.os-window { border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+.os-window.active { box-shadow: 0 16px 60px #03080cb0, 0 0 22px color-mix(in srgb, var(--accent) 17%, transparent); }
+.window-bar { background: linear-gradient(108deg, color-mix(in srgb, var(--accent) 7%, var(--panel)), var(--panel) 67%); }
+.zteam-side { background: color-mix(in srgb, var(--panel) 74%, var(--night)); }
+.zteam-tab[aria-current=page] { background: color-mix(in srgb, var(--accent) 11%, transparent); border-color: color-mix(in srgb, var(--accent) 26%, transparent); }
+.zteam-head { padding-top: clamp(14px,1.7vw,22px); }
+.zteam-head h2 { font-size: clamp(24px,3.3vw,37px); letter-spacing: -.055em; }
+.zteam-hero { min-height: clamp(210px, 33dvh, 315px); border-radius: 16px; }
+.zteam-hero::after { background: linear-gradient(90deg,#0b1116ee 4%,#111616ad 52%,#111b1520 100%), linear-gradient(0deg,#0714178f,transparent 65%); }
+.zteam-hero h3 { font-size: clamp(30px,4.5vw,53px); }
+.game-card { border-radius: 11px; }
+.game-card:hover { border-color: color-mix(in srgb, var(--accent) 44%, transparent); }
+.game-card > [data-favorite] { inset: 6px 6px auto auto; width: 31px; height: 31px; background: #0f1718df; }
+.game-card > [data-later] { position:absolute; inset: 6px 42px auto auto; width: 31px; height: 31px; background: #0f1718df; }
+.game-detail [data-later][aria-pressed=true], .game-card [data-later][aria-pressed=true] { color: var(--accent); }
+.game-card [data-later][aria-pressed=true] svg { fill: color-mix(in srgb, var(--accent) 45%, transparent); }
+:root[data-os-motion=off] :is(.desktop-brand img, .os-window.active) { box-shadow: 0 8px 24px #04060975; }
+@media (max-width:700px) {
+  .zteam-head { padding: 10px; }
+  .zteam-hero { min-height: 208px; }
+  .zteam-hero h3 { font-size: 30px; }
+}
