@@ -8,6 +8,18 @@ library, a tutor console and audio for focus, all in one tab. Static site
 
 _Last updated: 7 November 2026._
 
+## Supabase connection
+
+The browser client in `js/supabase.js` uses the project's public URL and
+publishable key. Open Settings → Appearance → Check connection to initialize
+the official Supabase client and verify the project's public settings endpoint.
+The initialized client is available as `window.zenouSupabase`, or through the
+module's `getSupabaseClient()` export. This works on GitHub Pages.
+
+Client requests use the publishable key and the signed-in user's session when
+present. Configure Row Level Security policies in Supabase before connecting
+tables to browser features. Store server secrets in server environment variables.
+
 ## What it is, precisely
 
 | Section | Route | Holds |

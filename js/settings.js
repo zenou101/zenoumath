@@ -226,6 +226,12 @@
             <button id="seHueClear" class="btn btn-ghost" type="button">Use preset colours</button>
           </div>
 
+          <div class="settings-field settings-connection">
+            <span>Supabase connection</span>
+            <button id="seSupabaseCheck" class="btn btn-ghost" type="button" aria-describedby="seSupabaseStatus">Check connection</button>
+            <small id="seSupabaseStatus" role="status" aria-live="polite">Project configured. Check its availability here.</small>
+          </div>
+
         </section>
 
         <section class="settings-section" role="tabpanel" id="settingsWallpaper" aria-labelledby="settingsTabWallpaper" hidden>
@@ -323,6 +329,23 @@
       </div>`;
 
     const titleInput = $('#seTitle', root);
+    const connectionButton = $('#seSupabaseCheck', root);
+    const connectionStatus = $('#seSupabaseStatus', root);
+    connectionButton.addEventListener('click', async () => {
+      connectionButton.disabled = true;
+      connectionStatus.textContent = 'Checking Supabase…';
+      try {
+        const { checkSupabaseConnection } = await import('/js/supabase.js');
+        await checkSupabaseConnection();
+        connectionStatus.textContent = 'Connected to Supabase.';
+      } catch (error) {
+        connectionStatus.textContent = error instanceof TypeError || error.name === 'TimeoutError'
+          ? 'Could not reach Supabase. Check your connection and try again.'
+          : 'Connection check failed. ' + error.message;
+      } finally {
+        connectionButton.disabled = false;
+      }
+    });
     const themeWrap = $('#seThemes', root);
     const prefsWrap = $('#sePrefs', root);
     const backgroundStyle = $('#seBackgroundStyle', root);
