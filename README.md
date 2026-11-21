@@ -235,3 +235,19 @@ npm run dev               # same, with --watch
 ```
 
 No install step: there are no runtime dependencies. `node >= 20` for the server.
+
+## Accounts and library sync
+
+Run `supabase/migrations/20261121_library.sql` in the Supabase SQL editor.
+The table uses Row Level Security so each authenticated user can read and write
+only their own rows. Enable email authentication and add
+`https://zenoumath.space/account/` to Authentication → URL Configuration → Redirect URLs.
+Use the same route on your local origin when testing locally.
+
+The Account link in the sidebar offers email/password registration and sign-in.
+Email confirmation follows the project's Supabase settings. Favorites, recent games,
+playlists, notes, ratings, playtime, hidden games, achievements, XP and activity days
+sync while signed in. The first empty account imports this device's guest library.
+Signing out restores the guest library. Pending edits are kept on the device for
+retry. Changes to different fields merge. Concurrent edits to the same field use
+the last successful save.

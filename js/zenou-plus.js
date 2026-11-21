@@ -726,7 +726,7 @@
   const TOUR = [
     ['Search or press ⌘K', 'One box finds games, pages and actions. Try ⌘K (Ctrl K) for the command palette.'],
     ['Chips filter the shelf', '“No pre-roll ads” keeps only games that start without an ad screen.'],
-    ['Everything is yours', 'Favourites, ratings, notes, playlists and stats live in this browser, no account.'],
+    ['Everything is yours', 'Save favourites, ratings, notes and playlists here. Sign in to sync your library across devices.'],
   ];
 
   function tour() {

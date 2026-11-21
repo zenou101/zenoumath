@@ -100,7 +100,7 @@
       '<ul>' +
       '<li>It does not host video or audio files. Playback happens inside the third party’s own player, requested by your browser directly from them.</li>' +
       '<li>It does not sell, license or claim ownership of any content it links to.</li>' +
-      '<li>It has no accounts, no sign-in and no server-side profile of you.</li>' +
+      '<li>Accounts are optional. When signed in, your game library and activity sync to your Supabase account.</li>' +
       '</ul>' +
       '<h3>Your responsibilities</h3>' +
       '<ul>' +

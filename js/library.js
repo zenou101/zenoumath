@@ -338,7 +338,7 @@
     panel.innerHTML = '';
     const head = document.createElement('div');
     head.className = 'lib-head';
-    head.innerHTML = '<h2>Your data</h2><p>Local only. Take a copy before you clear site data.</p>';
+    head.innerHTML = '<h2>Your data</h2><p>Export a backup of your library before clearing site data.</p>';
     panel.append(head);
 
     const box = document.createElement('div');

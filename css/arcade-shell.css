@@ -397,3 +397,55 @@ html:not([data-bg]) .atmo-dim { opacity: .10; }
 .card-x .ui-icon { width: 14px; height: 14px; }
 
 .searchbox .ui-icon { fill: none; stroke: currentColor; }
+
+@keyframes zenou-enter {
+  from { opacity: .2; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes zenou-reveal {
+  from { opacity: .3; translate: 0 14px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes zenou-dialog {
+  from { opacity: 0; transform: translateY(16px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  body:has(>.za-rail) main > :is(header, .page-head, .toolbar, .ai-hero, .math-intro) {
+    animation: zenou-enter .5s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .motion-visible { animation: zenou-reveal .5s cubic-bezier(.2,.7,.2,1) var(--reveal-delay, 0ms) both; }
+  .settings-overlay[open] .settings-panel { animation: zenou-dialog .25s ease-out both; }
+  .za-group a, .za-foot, .btn, .settings-btn, .sidebar-toggle, .lib-tab, .theme-chip, .ai-mini {
+    transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s;
+  }
+  .za-group a svg { transition: transform .25s; }
+  .za-group a:hover svg { transform: translateY(-1px) rotate(-7deg); }
+  .za-group a:hover { transform: translateX(3px); }
+  .settings-btn:hover svg { transform: rotate(45deg); transition: transform .4s ease; }
+  .btn:active, .ai-mini:active, .lib-tab:active { transform: scale(.96); }
+  .card { transition: transform .25s, box-shadow .25s, border-color .25s; }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 14px 30px rgb(0 0 0 / .24); }
+  .card img { transition: transform .45s ease; }
+  .card:hover img { transform: scale(1.035); }
+  input, textarea { transition: border-color .2s, box-shadow .2s; }
+  input:focus, textarea:focus { box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / .12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(>.za-rail) *, body:has(>.za-rail) *::before, body:has(>.za-rail) *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-motion=calm] .motion-visible,
+html[data-motion=calm] .settings-panel,
+html[data-motion=calm] main > :is(header, .page-head, .toolbar, .ai-hero, .math-intro) { animation: none; }
+html[data-motion=calm] .card img,
+html[data-motion=calm] .za-group a svg { transition: none; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion=calm]) :is(.settings-section, .lib-panel, .za-scroll):not([hidden]) {
+    animation: zenou-enter .25s ease-out both;
+  }
+}

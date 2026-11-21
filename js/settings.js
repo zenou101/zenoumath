@@ -961,6 +961,12 @@
     const navigation = rail.querySelector('.za-scroll');
     if (!navigation) return;
     navigation.id ||= 'arcade-navigation';
+    const account = document.createElement('a');
+    account.href = '/account/';
+    account.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>Account';
+    if (location.pathname.startsWith('/account')) account.setAttribute('aria-current', 'page');
+    navigation.querySelector('nav')?.append(account);
+
     const footer = rail.querySelector('.za-foot');
     const root = document.documentElement;
     const key = 'zenou_sidebar_collapsed';
@@ -1020,6 +1026,9 @@
       bar.append(b);
     }
   }
+
+  import('/js/motion.js').catch(() => {});
+  import('/js/account-sync.js').catch(() => {});
 
   /* ---------- direct key shortcuts (Web shortcuts) ---------- */
   const WEB_TAB_KEY = 'zenou_webtabs';

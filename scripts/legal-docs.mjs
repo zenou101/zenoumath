@@ -100,7 +100,7 @@ export const DOCS = [
       ['agree', 'Agreeing to these terms'],
       ['use', 'Permitted use'],
       ['third', 'Third-party sites and players'],
-      ['accounts', 'No accounts'],
+      ['accounts', 'Accounts'],
       ['availability', 'Availability and changes'],
       ['ip', 'Intellectual property'],
       ['liability', 'Liability'],
@@ -143,8 +143,8 @@ export const DOCS = [
     <p>Most of what you watch or play on this site is served by somebody else, under their terms, not ours. When you open a third-party player, embed or assistant, that company's own terms and privacy policy apply, and they may set their own cookies or storage.</p>
     <p>We do not own, license, host, verify the legality of, or take responsibility for third-party content. Availability is checked when a source is listed and re-checked periodically, but a source that answered last week may be gone today. A source is never shown on the assumption that it works.</p>
 
-    <h2 id="accounts">6. No accounts</h2>
-    <p>There is no sign-in and no user account. Settings, saved items, ratings, notes and the acceptance record live in your own browser. Clearing site data deletes them permanently; we cannot restore them because we never had them.</p>
+    <h2 id="accounts">6. Accounts</h2>
+    <p>Accounts use Supabase email and password authentication. Signing in syncs your game library and activity across devices. Guest data, appearance settings and the acceptance record are stored on your device. Keep your password private.</p>
 
     <h2 id="availability">7. Availability and changes</h2>
     <p>The site is provided free of charge and as-is. We may change it, restrict a part of it, or withdraw it entirely at any time, and we do not guarantee uninterrupted or error-free operation. We may suspend access for anyone who breaches these terms.</p>
@@ -177,7 +177,7 @@ export const DOCS = [
     title: 'Privacy Policy | ZenouMath',
     desc: 'What ZenouMath collects, what it deliberately does not collect, which third parties can see your browser, and how to exercise your rights under the Privacy Act 1988 (Cth).',
     h1: 'Privacy Policy',
-    intro: 'ZenouMath has no accounts. This page describes the data the site and its third-party services may receive.',
+    intro: 'Accounts are optional. This page describes account data, library sync and third-party services.',
     toc: [
       ['responsible', 'Who is responsible'],
       ['not', 'What is not collected'],
@@ -199,22 +199,22 @@ export const DOCS = [
     <h2 id="not">2. What is not collected</h2>
     <p>This is the shortest list to trust, so it comes first:</p>
     <ul>
-      <li><strong>No accounts.</strong> No name, email address, password or profile.</li>
+      <li><strong>Optional accounts.</strong> Supabase handles email and password authentication. Signed-in accounts store their game library and activity in Supabase.</li>
       <li><strong>No site analytics or session recording.</strong> ZenouMath uses Google AdSense for advertising services, as described below.</li>
-      <li><strong>No account or session cookies.</strong> Advertising services and embeds may use cookies or similar storage.</li>
-      <li><strong>No server-side viewing history.</strong> What you watch, play or save is not recorded on the server.</li>
+      <li><strong>Session storage.</strong> Supabase authentication tokens are stored in your browser to keep you signed in. Advertising services and embeds may use cookies or similar storage.</li>
+      <li><strong>Library sync.</strong> Signed-in accounts upload favorites, recent games, ratings, notes, playlists, playtime, hidden games, achievements, XP and activity days.</li>
       <li><strong>No selling or renting of personal information.</strong> Ever, to anyone.</li>
     </ul>
 
     <h2 id="collected">3. What is collected</h2>
-    <p>Two things, both ordinary:</p>
+    <p>The site processes the following information.</p>
     <h3>Server request logs</h3>
     <p>The web server that serves the pages records ordinary request metadata: the requested path, the time, the HTTP status, the user-agent string your browser sends, and the IP address the request came from. These logs exist to keep the site up and to detect abuse. They are retained for <code>[RETENTION PERIOD]</code> and then deleted or rotated.</p>
     <h3>API usage counters</h3>
     <p>The optional metadata API in front of TMDB keeps in-memory counters (requests served, cache hits and misses) and a keyed cache of upstream responses. These are operational statistics, not profiles: there is no per-visitor identifier attached to them and they are cleared when the process restarts.</p>
 
     <h2 id="local">4. What stays in your browser</h2>
-    <p>These keys live in <code>localStorage</code> on your device. They never reach a server, and clearing site data deletes them.</p>
+    <p>These keys are stored on your device. Signed-in library data also syncs to Supabase. Appearance settings and uploaded wallpapers stay on your device.</p>
     <table class="legal-table">
       <thead><tr><th>Key</th><th>Holds</th></tr></thead>
       <tbody>
@@ -226,7 +226,7 @@ export const DOCS = [
         <tr><td><code>__gsuite_theme_pref_v2</code></td><td>A cached copy of the doorway menu, so a dead mirror does not leave a blank door.</td></tr>
       </tbody>
     </table>
-    <p>Because none of it is transmitted, the operator cannot read it, export it or restore it for you. That cuts both ways: it is private, and it is not backed up.</p>
+    <p>Guest libraries are stored on the device. Signed-in libraries also have a cloud copy. Pending changes need a successful connection to reach the cloud.</p>
 
     <h2 id="third">5. Third parties your browser contacts</h2>
     <p>This is the part most privacy policies bury. Wherever you go on this site, your browser may talk directly to the following companies, and they will see your IP address and user-agent at minimum:</p>
@@ -260,7 +260,7 @@ export const DOCS = [
     <p>Personal information is not sold, rented or shared for marketing. It may be disclosed where the law compels it, or to a hosting provider strictly as part of serving the site. Logs may be held on infrastructure located outside Australia, most likely the United States or the European Union, depending on where the site is hosted. The countries involved are <code>[HOSTING LOCATIONS]</code> and should be confirmed against the host actually used.</p>
 
     <h2 id="security">9. Security</h2>
-    <p>The site is served over HTTPS. There is no account database to breach because there are no accounts. That reduces risk; it does not eliminate it. No system is perfectly secure, and no guarantee of security is given.</p>
+    <p>The site uses HTTPS and Supabase authentication. Database access policies restrict library rows to their account owner. No system guarantees complete security.</p>
 
     <h2 id="rights">10. Your rights and complaints</h2>
     <p>Under the Australian Privacy Principles you may ask what personal information is held about you, ask for it to be corrected, and ask for a correction to be associated with the record. In practice, almost everything is in your own browser — but the request can still be made.</p>
@@ -323,7 +323,7 @@ export const DOCS = [
     <p>Corrections, takedown notices and reports are welcome and read. Do not send confidential material you are not entitled to disclose. By sending a notice, you confirm the information in it is accurate and that you are the rights holder or authorised to act for them — a false notice can itself be actionable.</p>
 
     <h2 id="consequences">5. Consequences</h2>
-    <p>A breach may result in the site restricting or blocking access, removing a listing, or referring the matter to a hosting provider or a relevant authority. Because there are no accounts, a block is applied at the network level and may affect other users behind the same address; the operator will try to keep that proportionate.</p>
+    <p>A breach may result in the site restricting or blocking access, removing a listing, or referring the matter to a hosting provider or a relevant authority. Network restrictions may affect users behind the same address. The operator will try to keep restrictions proportionate.</p>
 
     <h2 id="report">6. Reporting misuse</h2>
     <p>Report abuse, a broken or hijacked listing, or a doorway that has been repurposed to something illegal through the <a href="/legal/contact">contact page</a>. Include the URL and what you saw; a screenshot helps.</p>

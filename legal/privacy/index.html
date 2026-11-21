@@ -44,7 +44,7 @@
   <header class="legal-head">
     <p class="legal-kicker">Legal · Privacy</p>
     <h1>Privacy Policy</h1>
-    <p>ZenouMath has no accounts. This page describes the data the site and its third-party services may receive.</p>
+    <p>Accounts are optional. This page describes account data, library sync and third-party services.</p>
   </header>
   <div class="legal-status">
     <strong>Working draft, not legal advice.</strong> This document describes what the site actually does rather than copying a template. Items in <code>[SQUARE BRACKETS]</code> are facts only the operator can supply and must be completed before this page is relied on. <a href="/legal/contact#review">What needs review</a>.
@@ -74,22 +74,22 @@
     <h2 id="not">2. What is not collected</h2>
     <p>This is the shortest list to trust, so it comes first:</p>
     <ul>
-      <li><strong>No accounts.</strong> No name, email address, password or profile.</li>
+      <li><strong>Optional accounts.</strong> Supabase handles email and password authentication. Signed-in accounts store their game library and activity in Supabase.</li>
       <li><strong>No site analytics or session recording.</strong> ZenouMath uses Google AdSense for advertising services, as described below.</li>
-      <li><strong>No account or session cookies.</strong> Advertising services and embeds may use cookies or similar storage.</li>
-      <li><strong>No server-side viewing history.</strong> What you watch, play or save is not recorded on the server.</li>
+      <li><strong>Session storage.</strong> Supabase authentication tokens are stored in your browser to keep you signed in. Advertising services and embeds may use cookies or similar storage.</li>
+      <li><strong>Library sync.</strong> Signed-in accounts upload favorites, recent games, ratings, notes, playlists, playtime, hidden games, achievements, XP and activity days.</li>
       <li><strong>No selling or renting of personal information.</strong> Ever, to anyone.</li>
     </ul>
 
     <h2 id="collected">3. What is collected</h2>
-    <p>Two things, both ordinary:</p>
+    <p>The site processes the following information.</p>
     <h3>Server request logs</h3>
     <p>The web server that serves the pages records ordinary request metadata: the requested path, the time, the HTTP status, the user-agent string your browser sends, and the IP address the request came from. These logs exist to keep the site up and to detect abuse. They are retained for <code>[RETENTION PERIOD]</code> and then deleted or rotated.</p>
     <h3>API usage counters</h3>
     <p>The optional metadata API in front of TMDB keeps in-memory counters (requests served, cache hits and misses) and a keyed cache of upstream responses. These are operational statistics, not profiles: there is no per-visitor identifier attached to them and they are cleared when the process restarts.</p>
 
     <h2 id="local">4. What stays in your browser</h2>
-    <p>These keys live in <code>localStorage</code> on your device. They never reach a server, and clearing site data deletes them.</p>
+    <p>These keys are stored on your device. Signed-in library data also syncs to Supabase. Appearance settings and uploaded wallpapers stay on your device.</p>
     <table class="legal-table">
       <thead><tr><th>Key</th><th>Holds</th></tr></thead>
       <tbody>
@@ -101,7 +101,7 @@
         <tr><td><code>__gsuite_theme_pref_v2</code></td><td>A cached copy of the doorway menu, so a dead mirror does not leave a blank door.</td></tr>
       </tbody>
     </table>
-    <p>Because none of it is transmitted, the operator cannot read it, export it or restore it for you. That cuts both ways: it is private, and it is not backed up.</p>
+    <p>Guest libraries are stored on the device. Signed-in libraries also have a cloud copy. Pending changes need a successful connection to reach the cloud.</p>
 
     <h2 id="third">5. Third parties your browser contacts</h2>
     <p>This is the part most privacy policies bury. Wherever you go on this site, your browser may talk directly to the following companies, and they will see your IP address and user-agent at minimum:</p>
@@ -135,7 +135,7 @@
     <p>Personal information is not sold, rented or shared for marketing. It may be disclosed where the law compels it, or to a hosting provider strictly as part of serving the site. Logs may be held on infrastructure located outside Australia, most likely the United States or the European Union, depending on where the site is hosted. The countries involved are <code>[HOSTING LOCATIONS]</code> and should be confirmed against the host actually used.</p>
 
     <h2 id="security">9. Security</h2>
-    <p>The site is served over HTTPS. There is no account database to breach because there are no accounts. That reduces risk; it does not eliminate it. No system is perfectly secure, and no guarantee of security is given.</p>
+    <p>The site uses HTTPS and Supabase authentication. Database access policies restrict library rows to their account owner. No system guarantees complete security.</p>
 
     <h2 id="rights">10. Your rights and complaints</h2>
     <p>Under the Australian Privacy Principles you may ask what personal information is held about you, ask for it to be corrected, and ask for a correction to be associated with the record. In practice, almost everything is in your own browser — but the request can still be made.</p>

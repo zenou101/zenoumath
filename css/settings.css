@@ -565,3 +565,5 @@ html:has(.settings-overlay[open]) { overflow: hidden; }
   object-fit: cover;
   border-radius: 5px;
 }
+
+#accountForm input { box-sizing: border-box; display: block; width: 100%; padding: 12px; margin-top: 8px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--za-frost-field); color: var(--text); font: inherit; }
