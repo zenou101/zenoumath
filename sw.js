@@ -2,8 +2,8 @@
  *
  * Deliberately small: a stale shell beats a blank page when the network drops,
  * but nobody wants yesterday's catalogue forever. So:
- *   · HTML + catalogue + JSON  -> network first, cache as a fallback
- *   · CSS / JS / images        -> cache first, refreshed in the background
+ *   · HTML / CSS / JSON  -> network first, cache as a fallback
+ *   · Other assets       -> cache first, refreshed in the background
  *
  * Clean URLs matter here: with no .html on any public path, "is this a page?"
  * is answered by a request with no file extension, not by a filename match.
@@ -13,12 +13,12 @@
  * redirect stubs: they shadowed their own directory index on GitHub Pages,
  * so any cached copy of one has to go.
  */
-const CACHE_VERSION = 'zenou-arcade-v18';
+const CACHE_VERSION = 'zenou-arcade-v19';
 const SHELL = [
   '/',
   '/css/style.css',
   '/css/arcade-shell.css',
-  '/css/arcade-discover.css',
+  '/css/arcade-discover.css?v=19',
   '/css/settings.css',
   '/css/plus.css',
   '/css/consent.css',
@@ -28,6 +28,7 @@ const SHELL = [
   '/js/account-sync.js',
   '/js/username-auth.js',
   '/css/interface.css',
+  '/css/interface.css?v=19',
   '/js/motion.js',
   '/js/atmosphere.js',
   '/js/consent.js',
@@ -64,7 +65,7 @@ self.addEventListener('fetch', (event) => {
   const extensionless = !/\.[a-z0-9]+$/i.test(url.pathname);
   const networkFirst = req.mode === 'navigate'
     || extensionless
-    || /\.(json|webmanifest)$/i.test(url.pathname)
+    || /\.(css|json|webmanifest)$/i.test(url.pathname)
     || url.pathname.endsWith('/');
 
   if (networkFirst) {

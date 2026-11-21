@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/arcade-shell.css">
   <link rel="stylesheet" href="/css/accent.css">
   <link rel="stylesheet" href="/css/consent.css">
-  <link rel="stylesheet" href="/css/arcade-discover.css">
+  <link rel="stylesheet" href="/css/arcade-discover.css?v=19">
   <script>
     try {
       const agreement = JSON.parse(localStorage.getItem('zenoumath.consent'));
@@ -35,7 +35,7 @@
   <script src="/js/settings.js" defer></script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/css/interface.css">
+<link rel="stylesheet" href="/css/interface.css?v=19">
 </head>
 <body class="arcade-discover">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -78,14 +78,14 @@
   </aside>
   <main id="main">
     <header class="toolbar">
-      <div class="crumb">Arcade <span aria-hidden="true">/</span> <strong id="place">Discover</strong></div>
+      <div class="za-crumb">Arcade <i aria-hidden="true">/</i> <strong id="place">Discover</strong></div>
       <label class="search">
         <span data-icon="search"></span>
         <input type="search" id="query" placeholder="Search games…" aria-label="Search games" aria-keyshortcuts="/">
         <kbd aria-hidden="true">/</kbd>
       </label>
-      <button class="shuffle" id="shuffle" type="button" disabled title="Play a random game">
-        <span data-icon="shuffle"></span> Shuffle
+      <button class="shuffle" id="shuffle" type="button" disabled aria-label="Shuffle games" title="Play a random game">
+        <span data-icon="shuffle"></span> <span class="shuffle-label">Shuffle</span>
       </button>
       <select class="za-accent" aria-label="Accent color" title="Accent color">
         <option value="white">White</option>
@@ -118,7 +118,7 @@
               <p class="feature"><span data-icon="spark"></span> Arcade spotlight</p>
               <h2 id="heroTitle">Hollow Knight:<br>Silksong</h2>
               <p id="heroText">Explore a haunted kingdom of silk and song.</p>
-              <a class="play" id="heroPlay" href="/play/?id=lo-hollow-knight-silksong"><span data-icon="play"></span> Play now</a>
+              <a class="btn btn-solid play" id="heroPlay" href="/play/?id=lo-hollow-knight-silksong"><span data-icon="play"></span> Play now</a>
             </div>
             <div class="hero-controls">
               <span id="slide-count" aria-live="polite">01 / 03</span>
@@ -163,10 +163,15 @@
         <button id="more" type="button" hidden>Load more games <span data-icon="down"></span></button>
       </section>
     </div>
-    <footer class="footer">
-      <a href="/browse/#browse">Advanced catalog filters <span data-icon="upRight"></span></a>
-      <a href="/legal/">Legal &amp; privacy <span data-icon="upRight"></span></a>
-      <button type="button" data-consent-review>Review use agreement</button>
+    <footer class="za-footer">
+      <a href="/">Zenou Arcade</a>
+      <nav aria-label="Site information">
+        <a href="/browse/#browse">Advanced catalog filters</a>
+        <a href="/legal/">Legal centre</a>
+        <a href="/legal/privacy/">Privacy</a>
+        <a href="/legal/contact/">Contact</a>
+        <a href="/legal/" data-consent-review>Use agreement</a>
+      </nav>
     </footer>
   </main>
 </body>
