@@ -222,7 +222,6 @@ function card(g, extra = {}) {
     img.loading = 'lazy';
     img.decoding = 'async';
     img.alt = '';
-    img.src = g.img;
     img.onerror = () => {
       const plaque = document.createElement('span');
       plaque.className = 'card-plaque';
@@ -231,6 +230,7 @@ function card(g, extra = {}) {
       img.replaceWith(plaque);
     };
     a.append(img);
+    img.src = g.img;
   } else {
     const plaque = document.createElement('span');
     plaque.className = 'card-plaque';

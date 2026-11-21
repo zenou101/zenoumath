@@ -28,18 +28,6 @@ body.arcade-discover::after { content: none; }
   stroke-linejoin: round;
   vertical-align: middle;
 }
-.skip-link {
-  position: fixed;
-  z-index: 80;
-  top: 12px;
-  left: 12px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  background: var(--za-frost);
-  transform: translateY(-160%);
-}
-.skip-link:focus { transform: none; }
-
 .arcade-discover main { display: flex; flex: 1; flex-direction: column; margin-left: var(--za-rail); min-width: 0; }
 .toolbar {
   display: flex;

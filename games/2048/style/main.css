@@ -539,7 +539,7 @@ hr {
 
   body {
     margin: 20px 0;
-    padding: 0 20px; }
+    padding: 0 clamp(0px, (100vw - 280px) / 2, 20px); }
 
   h1.title {
     font-size: 27px;

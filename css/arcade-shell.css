@@ -87,24 +87,7 @@ body:has(>.za-rail) :is(.hero,.math-intro,.xp-card,.frame-wrap,.dc-hero,.t-hero,
 }
 @media(max-width:780px){body:has(>.za-rail)::after{left:0}}
 
-'/* Shared surfaces for the arcade sections. */
-[data-arcade-page] > .topbar {
-  width: calc(100% - 2 * var(--za-gap));
-  min-height: 64px;
-  margin: 12px var(--za-gap) 0;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 19px;
-  box-shadow: var(--za-frost-shadow);
-}
-@media (max-width: 780px) {
-  [data-arcade-page] > .topbar {
-    width: calc(100% - 20px);
-    min-height: 58px;
-    margin: 10px 10px 0;
-    padding: 8px 10px;
-  }
-}
+/* Page-specific panels. */
 [data-arcade-page] :is(.page-head, .web-hero, .ai-hero, .social-hero, .movies-hero, .dw-head) {
   background: var(--za-frost);
   box-shadow: var(--za-frost-shadow);

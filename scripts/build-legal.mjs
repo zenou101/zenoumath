@@ -112,39 +112,7 @@ ${doc.body}
   </nav>
 </main>
 
-<footer class="sitefoot">
-  <div class="foot-grid">
-    <div>
-      <span class="foot-mark">Zenou <b>Math</b></span>
-      <p>Practice sets, a reference desk, a lecture library and audio for focus, in one tab. Free, no account, no install.</p>
-      <p class="foot-small">Published at <a href="https://zenoumath.space/" rel="noopener">zenoumath.space</a></p>
-    </div>
-    <div>
-      <h3>Where it comes from</h3>
-      <p>Every practice set runs inside this page, embedded from its publisher's own build: <a href="https://www.hoodamath.com" rel="noopener">HoodaMath</a>, <a href="https://www.crazygames.com" rel="noopener">CrazyGames</a>, <a href="https://scratch.mit.edu" rel="noopener">Scratch</a> or the developer's own server. Nothing is re-hosted and credit stays with each creator.</p>
-      <p>Lecture pages show metadata from TMDB and frame other people's players. Audio plays through the Spotify and SoundCloud official embeds.</p>
-    </div>
-    <div>
-      <h3>Contact</h3>
-      <p>Corrections, takedown notices and privacy requests: <a href="/legal/contact">the contact page</a>.</p>
-      <p class="foot-small">ZenouMath is an independent study site. It is not a school and is not affiliated with one.</p>
-    </div>
-    <div>
-      <h3>Legal</h3>
-      <p class="foot-small">
-        <a href="/legal">Legal centre</a> ·
-        <a href="/legal/terms">Terms</a> ·
-        <a href="/legal/privacy">Privacy</a> ·
-        <a href="/legal/acceptable-use">Acceptable use</a> ·
-        <a href="/legal/copyright">Copyright</a> ·
-        <a href="/legal/takedown">Takedown</a> ·
-        <a href="/legal/disclaimer">Disclaimer</a> ·
-        <a href="/legal/contact">Contact</a>
-      </p>
-      <p class="foot-small"><a href="#" data-consent-review>Review the use agreement</a></p>
-    </div>
-  </div>
-</footer>
+<footer class="za-footer"><a href="/">Zenou Arcade</a><nav aria-label="Site information"><a href="/doorway/">Doorways</a><a href="/sources/">Movie sources</a><a href="/legal/">Legal centre</a><a href="/legal/privacy/">Privacy</a><a href="/legal/contact/">Contact</a><a href="/legal/" data-consent-review>Use agreement</a><a href="https://github.com/zenou101">GitHub</a></nav></footer>
 
 <script src="/js/atmosphere.js" defer></script>
 <script src="/js/settings.js" defer></script>

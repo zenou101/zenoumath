@@ -80,7 +80,7 @@
     frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(t.trailer.key)}?rel=0`;
     frame.title = `${t.title} — ${t.trailer.name}`;
     frame.loading = 'lazy';
-    frame.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    frame.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
     frame.setAttribute('allowfullscreen', '');
     host.append(frame);
     $('#trailerBlock').hidden = false;
@@ -142,6 +142,10 @@
     if (backdrop) {
       const image = $('#heroImg');
       image.addEventListener('load', () => $('#hero').classList.add('is-ready'), { once: true });
+      image.addEventListener('error', () => {
+        image.hidden = true;
+        image.closest('.dc-hero, .t-hero')?.classList.add('is-ready');
+      }, { once: true });
       image.src = backdrop;
     } else {
       $('#hero').classList.add('is-ready');
@@ -373,7 +377,7 @@
     const frame = document.createElement('iframe');
     frame.src = provider.url;
     frame.title = `${state.title?.title || 'Title'} on ${provider.name}`;
-    frame.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write';
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; clipboard-write';
     frame.setAttribute('allowfullscreen', '');
     frame.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
     frame.setAttribute(

@@ -460,7 +460,7 @@ window.bodyRect=document.body.getBoundingClientRect();console.log("BodyRect dime
 // ------------------------
 function showHipsterSplash(){//analytics.track('game_onboarding', 'loading', 'game_developer_branding');
 hipsterWhale.show();hipsterWhale.play(function(){brandingDone=true;loadingScreen.show(skipPreroll);attemptStart();});}function loadPreroll(){console.log("2. loadPreroll");// First up, load what's required for our preroll
-AssetLoader.add.script('scripts/loading-flow.min.js');AssetLoader.add.image('sprites/poki-icon.png');AssetLoader.add.image('sprites/poki-logo.png');AssetLoader.load(function(){//analytics.track('game_onboarding', 'loading', 'poki_branding');
+AssetLoader.add.script('scripts/loading-flow.min.js');AssetLoader.add.image('sprites/poki-logo.png');AssetLoader.load(function(){//analytics.track('game_onboarding', 'loading', 'poki_branding');
 // Requirements loaded, create and start the preroll
 var preroll=new PokiPreroll();preroll.wrapper=wrapper;preroll.logoSrc=AssetLoader.getAssetById('sprites/poki-logo.png').src;preroll.createElements();if(!skipPreroll){// Show HipsterWhale after preroll has faded out
 preroll.play(showHipsterSplash);}// While the preroll runs, load the required assets for the hipster whale screen
@@ -562,7 +562,7 @@ if(!window.performance||!window.performance.now){Date.now||(Date.now=function(){
 	height: 120%;
 	transform: translateX(0);
 	animation: scroll 23.008631319358816s infinite linear;
-	background-image: url(sprites/poki-icon.png);
+	background-color: #082a36;
 	background-size: 113px 113px;
 }
 
@@ -574,7 +574,7 @@ if(!window.performance||!window.performance.now){Date.now||(Date.now=function(){
 		transform: translateX(0);
 	}
 }
-</style><link type="text/css" rel="stylesheet" href="blob:https://brainworxedu.github.io/aec491e9-65d4-4152-9afb-527073ec6fc1"><link type="text/css" rel="stylesheet" href="blob:https://brainworxedu.github.io/77ff2d54-cdb3-4d06-9da7-254f97e73f31"></head>
+</style></head>
 
 <body style="touch-action: none; overscroll-behavior: none; user-select: none;">
   <canvas id="canvas"></canvas>
@@ -582,4 +582,4 @@ if(!window.performance||!window.performance.now){Date.now||(Date.now=function(){
 
   
 
-<div id="container" style="position: absolute; left: 50%; top: 50%; background: rgb(123, 203, 237); width: 1244px; height: 811px; margin-left: -622px; margin-top: -405.5px;"><div id="poki-preroll" style="visibility: hidden;"><img crossorigin="anonymous" src="blob:https://brainworxedu.github.io/a1e86dab-b4b7-46bf-a73e-a2325d742e10" class="logo" style="transform: translateY(-811px);"><div class="icon-container"><div class="icon-scroller" style="left: -100%;"></div><div class="icon-scroller" style="left: 0%;"></div><div class="icon-scroller" style="left: 100%;"></div></div></div><canvas width="1244" height="811" style="width: 1244px; height: 811px; transform: translateZ(0px);"></canvas><div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; perspective: 1000px; display: flex; justify-content: center; align-items: center; z-index: 2; overflow: hidden;"><img src="blob:https://brainworxedu.github.io/6d8de69e-d3cf-4553-abbb-91fa5e190ad9" style="min-width: 50%; max-width: 80%; max-height: 50%; margin-top: -15%; position: relative; z-index: 2; transform: translate3d(0px, 0px, 0px); transition: 750ms cubic-bezier(0.165, 0.84, 0.44, 1); display: block;"><div style="z-index: 1; background-color: rgb(105, 206, 236); opacity: 0; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; perspective: 1000px;"></div></div></div><div style="font-family: EditUndoBrk; width: 0px; height: 0px; overflow: hidden;">Loading EditUndoBrk</div><div style="width: 0px; height: 0px; overflow: hidden;">Loading 8bitwonder</div><div style="position: absolute; display: none; background-color: rgba(105, 206, 236, 0.4); z-index: 3; left: 0px; top: 0px; width: 1244px; height: 811px;"><div style="font: 72px / 112px EditUndoBrk; color: rgb(255, 255, 255); text-align: center; width: 337px; height: 112px; position: absolute; left: 50%; top: 50%; display: none; margin-left: -168.5px; margin-top: -56px;"></div><img class="pixelated" src="blob:https://brainworxedu.github.io/d77efd35-9f7d-4e18-9c29-3127bb24ec0b" style="position: absolute; left: 50%; top: 47.5%; height: 10%; display: none; margin-top: 0px; margin-left: 0px;"></div></body></html>
+<div id="container" style="position: absolute; left: 50%; top: 50%; background: rgb(123, 203, 237); width: 1244px; height: 811px; margin-left: -622px; margin-top: -405.5px;"><div id="poki-preroll" style="visibility: hidden;"><img crossorigin="anonymous" alt="" class="logo" style="transform: translateY(-811px);"><div class="icon-container"><div class="icon-scroller" style="left: -100%;"></div><div class="icon-scroller" style="left: 0%;"></div><div class="icon-scroller" style="left: 100%;"></div></div></div><canvas width="1244" height="811" style="width: 1244px; height: 811px; transform: translateZ(0px);"></canvas><div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; perspective: 1000px; display: flex; justify-content: center; align-items: center; z-index: 2; overflow: hidden;"><img alt="" style="min-width: 50%; max-width: 80%; max-height: 50%; margin-top: -15%; position: relative; z-index: 2; transform: translate3d(0px, 0px, 0px); transition: 750ms cubic-bezier(0.165, 0.84, 0.44, 1); display: block;"><div style="z-index: 1; background-color: rgb(105, 206, 236); opacity: 0; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; perspective: 1000px;"></div></div></div><div style="font-family: EditUndoBrk; width: 0px; height: 0px; overflow: hidden;">Loading EditUndoBrk</div><div style="width: 0px; height: 0px; overflow: hidden;">Loading 8bitwonder</div><div style="position: absolute; display: none; background-color: rgba(105, 206, 236, 0.4); z-index: 3; left: 0px; top: 0px; width: 1244px; height: 811px;"><div style="font: 72px / 112px EditUndoBrk; color: rgb(255, 255, 255); text-align: center; width: 337px; height: 112px; position: absolute; left: 50%; top: 50%; display: none; margin-left: -168.5px; margin-top: -56px;"></div><img class="pixelated" alt="" style="position: absolute; left: 50%; top: 47.5%; height: 10%; display: none; margin-top: 0px; margin-left: 0px;"></div></body></html>

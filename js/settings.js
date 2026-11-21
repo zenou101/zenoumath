@@ -994,9 +994,12 @@
       store.set(key, collapsed);
     });
 
-    render(store.get(key, false) === true);
+    const mobile = matchMedia('(max-width: 780px)');
+    const restoreSidebar = () => render(store.get(key, mobile.matches) === true);
+    restoreSidebar();
+    mobile.addEventListener('change', restoreSidebar);
     window.addEventListener('pageshow', event => {
-      if (event.persisted) render(store.get(key, navigation.hidden) === true);
+      if (event.persisted) restoreSidebar();
     });
   }
 
@@ -1022,6 +1025,18 @@
       brand.replaceWith(row);
       row.append(brand, b);
       mountSidebarToggle(rail, row, b);
+      const main = document.querySelector('main');
+      if (main) {
+        main.id ||= 'main';
+        main.tabIndex = -1;
+        if (!document.querySelector('.skip-link')) {
+          const skip = document.createElement('a');
+          skip.className = 'skip-link';
+          skip.href = '#' + main.id;
+          skip.textContent = 'Skip to content';
+          rail.before(skip);
+        }
+      }
     } else {
       bar.append(b);
     }

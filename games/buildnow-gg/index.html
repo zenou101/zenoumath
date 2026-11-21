@@ -4,7 +4,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>BuildNow GG</title>
-  <style>html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#fff}.noselect{user-select:none;-webkit-user-select:none}#loading-text{position:fixed;inset:0 0 auto 0;z-index:2;color:#111;font-size:clamp(24px,4vw,48px);font-family:cursive;text-align:center;margin-top:20px;pointer-events:none}#unity-canvas{position:fixed;top:0;left:0;width:100%;height:100%;outline:none;display:block}</style>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #101214; }
+    .noselect { user-select: none; }
+    #loading-text { position: fixed; inset: 0; z-index: 2; display: grid; place-items: center; margin: 0; padding: 24px; color: #edf2fa; font: 500 15px/1.6 system-ui, sans-serif; text-align: center; pointer-events: none; }
+    #loading-text[hidden] { display: none; }
+    #unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; outline: none; display: block; }
+  </style>
 </head>
 <body class="noselect">
   <div id="loading-text" role="status">Loading BuildNow GG…</div>

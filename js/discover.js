@@ -182,6 +182,10 @@
     if (backdrop) {
       const image = $('#heroImg');
       image.addEventListener('load', () => hero.classList.add('is-ready'), { once: true });
+      image.addEventListener('error', () => {
+        image.hidden = true;
+        image.closest('.dc-hero, .t-hero')?.classList.add('is-ready');
+      }, { once: true });
       image.src = backdrop;
     } else {
       hero.classList.add('is-ready');

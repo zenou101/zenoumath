@@ -17,7 +17,7 @@ const BASE = (process.argv[2] || 'http://127.0.0.1:8123').replace(/\/$/, '');
 const ROOT = process.cwd();
 
 const PAGES = [
-  '/', '/account', '/books', '/web', '/movies', '/ai', '/social', '/music', '/library',
+  '/', '/account', '/books', '/browse', '/math-games', '/web', '/movies', '/ai', '/social', '/music', '/library',
   '/search', '/sources', '/title', '/play', '/mineral', '/doorway',
   '/legal', '/legal/terms', '/legal/privacy', '/legal/acceptable-use',
   '/legal/copyright', '/legal/takedown', '/legal/disclaimer',

@@ -456,7 +456,7 @@
     frame.src = src;
     frame.title = label || 'Movie player';
     frame.referrerPolicy = 'no-referrer';
-    frame.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write';
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; clipboard-write';
     frame.allowFullscreen = true;
     frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-presentation');
     el.frame.innerHTML = '';

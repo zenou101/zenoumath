@@ -127,3 +127,42 @@ body:has(>.za-rail) .keys button:last-child { background: #edf2fa; color: #14171
 html[data-motion=calm] body:has(>.za-rail) *,
 html[data-motion=calm] body:has(>.za-rail) *::before,
 html[data-motion=calm] body:has(>.za-rail) *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+
+.skip-link {
+  position: fixed;
+  z-index: 90;
+  top: 12px;
+  left: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: none; }
+
+
+[data-arcade-page=search] #results > section + section { margin-top: 28px; }
+[data-arcade-page=search] #qEcho { overflow-wrap: anywhere; }
+.search-services { display: flex; flex-wrap: wrap; gap: 8px; }
+[data-arcade-page=search] .search-placeholder {
+ display: grid;
+ place-items: center;
+ aspect-ratio: 16 / 10;
+ background: var(--surface-2);
+ color: var(--muted);
+ font-weight: 650;
+}
+[data-arcade-page=search] .search-placeholder-poster { aspect-ratio: 2 / 3; height: auto; }
+@media (max-width: 500px) {
+ [data-arcade-page=sources] .movies-watch-head { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 380px) {
+ body[data-arcade-page=play] > main.play-main { padding-inline: 12px; }
+}
+
+@media (min-width: 781px) and (max-width: 1040px) {
+ .account-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 480px; min-height: auto; }
+ .account-intro h1 br { display: none; }
+ .account-back { margin-top: 8px; }
+}
