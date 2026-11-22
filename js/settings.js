@@ -970,7 +970,8 @@
 
     const footer = rail.querySelector('.za-foot');
     const root = document.documentElement;
-    const key = 'zenou_sidebar_collapsed';
+    const mobile = matchMedia('(max-width: 780px)');
+    const layoutKey = () => mobile.matches ? 'zenou_sidebar_mobile' : 'zenou_sidebar_collapsed';
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
@@ -992,16 +993,61 @@
     toggle.addEventListener('click', () => {
       const collapsed = !navigation.hidden;
       render(collapsed);
-      store.set(key, collapsed);
+      store.set(layoutKey(), collapsed);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !mobile.matches || navigation.hidden || document.querySelector('dialog[open]')) return;
+      render(true);
+      store.set(layoutKey(), true);
+      toggle.focus();
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!mobile.matches || navigation.hidden || rail.contains(event.target) || row.contains(event.target) || document.querySelector('dialog[open]')) return;
+      render(true);
+      store.set(layoutKey(), true);
     });
 
-    const mobile = matchMedia('(max-width: 780px)');
-    const restoreSidebar = () => render(store.get(key, mobile.matches) === true);
+    const restoreSidebar = () => render(store.get(layoutKey(), mobile.matches) === true);
     restoreSidebar();
     mobile.addEventListener('change', restoreSidebar);
     window.addEventListener('pageshow', event => {
       if (event.persisted) restoreSidebar();
     });
+  }
+
+  function mountPrimaryNavigation(rail, row, settings) {
+    const primary = [
+      ['/', 'Discover', 'discover'], ['/?all=1', 'Games', 'gamepad'],
+      ['/library/', 'Library', 'library'], ['/web/', 'Web', 'globe'],
+    ];
+    const nav = document.createElement('nav');
+    nav.className = 'masthead-links';
+    nav.setAttribute('aria-label', 'Main sections');
+    for (const [href, title, symbol] of primary) {
+      const link = document.createElement('a');
+      link.href = href;
+      link.innerHTML = '<svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#' + symbol + '"/></svg>';
+      const text = document.createElement('span');
+      text.textContent = title;
+      link.append(text);
+      nav.append(link);
+    }
+    row.insertBefore(nav, settings);
+    const path = value => value.replace(/\/$/, '') || '/';
+    const update = () => {
+      const route = path(location.pathname);
+      const params = new URLSearchParams(location.search);
+      const catalog = route === '/' && (params.has('all') || Boolean(params.get('c') || params.get('q')));
+      for (const link of nav.children) {
+        const games = link.search === '?all=1';
+        const active = games ? catalog || ['/play', '/browse', '/math-games'].includes(route)
+          : path(link.pathname) === route && !(link.pathname === '/' && catalog);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    update();
+    new MutationObserver(update).observe(rail, { attributes: true, subtree: true, attributeFilter: ['aria-current'] });
   }
 
   function injectButton() {
@@ -1020,11 +1066,18 @@
     b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#settings"/></svg>';
     b.addEventListener('click', open);
     if (brand) {
-      const row = document.createElement('div');
+      const embedded = document.documentElement.hasAttribute('data-zenou-desktop');
+      const row = document.createElement(embedded ? 'div' : 'header');
       row.className = 'za-brand-row';
       const rail = brand.parentElement;
       brand.replaceWith(row);
       row.append(brand, b);
+      if (!embedded) {
+        row.classList.add('site-masthead');
+        rail.before(row);
+        document.documentElement.setAttribute('data-site-masthead', '');
+        mountPrimaryNavigation(rail, row, b);
+      }
       mountSidebarToggle(rail, row, b);
       const main = document.querySelector('main');
       if (main) {
@@ -1044,7 +1097,7 @@
   }
 
   import('/js/motion.js').catch(() => {});
-  import('/js/site-tools.js').catch(() => {});
+  import('/js/site-tools.js?v=blue-shell').catch(() => {});
   import('/js/os-switch.js').catch(() => {});
   import('/js/account-sync.js').catch(() => {});
 

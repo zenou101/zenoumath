@@ -1,17 +1,17 @@
 import { appIcon, button, el, icon, iconButton, link, prefix, read, write } from './shared.js';
 import { createWindows } from './windows.js';
-import { applyAppearance, appearance, setAppearance } from './appearance.js';
+import { applyAppearance, appearance, setAppearance } from './appearance.js?v=blue-shell';
 
 const $ = id => document.getElementById(id);
 const apps = [
   { id: 'zteam', name: 'Zteam', icon: 'gamepad', tint: 'green', size: [1120, 705], file: './zteam.js', description: 'Game library' },
   { id: 'browser', name: 'ZBrowse', icon: 'globe', tint: 'blue', size: [1000, 650], file: './browser.js', description: 'Web browser' },
-  { id: 'paper', name: 'ZenouPaper Engine', short: 'ZenouPaper', icon: 'spark', tint: 'rose', size: [900, 650], file: './paper.js', description: 'Wallpaper gallery' },
-  { id: 'settings', name: 'ZSettings', short: 'Settings', icon: 'settings', tint: 'gray', file: './utilities.js', description: 'Personalize your desktop' },
-  { id: 'notes', name: 'ZNotes', icon: 'book', tint: 'yellow', file: './utilities.js', description: 'Local notes' },
-  { id: 'files', name: 'ZFiles', icon: 'library', tint: 'blue', file: './utilities.js', description: 'Notes and wallpapers' },
-  { id: 'calculator', name: 'ZCalculator', short: 'Calculator', icon: 'calculator', tint: 'yellow', size: [400, 490], file: './utilities.js', description: 'Calculate an expression' },
-  { id: 'about', name: 'ZAbout', icon: 'info', tint: 'gray', size: [560, 595], file: './utilities.js', description: 'Release notes and feedback' },
+  { id: 'paper', name: 'ZenouPaper Engine', short: 'ZenouPaper', icon: 'spark', tint: 'rose', size: [900, 650], file: './paper.js?v=blue-shell', description: 'Wallpaper gallery' },
+  { id: 'settings', name: 'ZSettings', short: 'Settings', icon: 'settings', tint: 'gray', file: './utilities.js?v=blue-shell', description: 'Personalize your desktop' },
+  { id: 'notes', name: 'ZNotes', icon: 'book', tint: 'yellow', file: './utilities.js?v=blue-shell', description: 'Local notes' },
+  { id: 'files', name: 'ZFiles', icon: 'library', tint: 'blue', file: './utilities.js?v=blue-shell', description: 'Notes and wallpapers' },
+  { id: 'calculator', name: 'ZCalculator', short: 'Calculator', icon: 'calculator', tint: 'yellow', size: [400, 490], file: './utilities.js?v=blue-shell', description: 'Calculate an expression' },
+  { id: 'about', name: 'ZAbout', icon: 'info', tint: 'gray', size: [560, 595], file: './utilities.js?v=blue-shell', description: 'Release notes and feedback' },
 ];
 const pinned = apps.slice(0, 4);
 const secondary = apps.slice(4);

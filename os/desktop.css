@@ -293,3 +293,54 @@ body { isolation: isolate; min-height: 100dvh; }
   .zteam-hero { min-height: 208px; }
   .zteam-hero h3 { font-size: 30px; }
 }
+
+/* Workspace controls and app navigation. */
+.desktop-bar {
+  background: color-mix(in srgb, var(--night) 88%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.desktop-actions button { border: 1px solid var(--line); }
+.taskbar {
+  gap: 10px;
+  padding: 5px 10px;
+  background: color-mix(in srgb, var(--night) 91%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.task-app[aria-pressed=true] { background: color-mix(in srgb, var(--accent) 17%, transparent); }
+.window-bar {
+  background: linear-gradient(105deg, color-mix(in srgb, var(--accent) 11%, var(--panel)), var(--night) 78%);
+}
+.launcher { background: linear-gradient(142deg, color-mix(in srgb, var(--accent) 9%, var(--panel)), var(--night) 72%); }
+.app-tiles { gap: 7px; }
+.app-tiles .app-shortcut {
+  min-height: 76px;
+  justify-content: center;
+  background: #ffffff07;
+  border: 1px solid var(--line);
+}
+.app-tiles .app-shortcut:hover { background: #ffffff14; }
+.zteam-view { grid-template: auto minmax(0,1fr) / minmax(0,1fr); }
+.zteam-side {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding: 7px clamp(8px,2vw,18px);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+.zteam-tab { flex: none; padding: 6px 9px; min-height: 36px; gap: 6px; }
+.zteam-scroll { padding-inline: clamp(10px,2vw,22px); }
+.zteam-hero { min-height: clamp(200px,32dvh,340px); }
+.zteam-hero .zteam-hero-art { left: 28%; width: 72%; object-position: 60% 47%; }
+.zteam-hero::after { background: linear-gradient(90deg,var(--night) 15%, color-mix(in srgb,var(--night) 94%,transparent) 31%,color-mix(in srgb,var(--night) 46%,transparent) 60%,transparent); }
+.zteam-hero-info { max-width: min(52%,520px); }
+.game-card { background: linear-gradient(154deg, color-mix(in srgb,var(--accent) 8%,var(--panel)),var(--panel) 64%); }
+@media (max-width:700px) {
+  .taskbar { gap: 4px; }
+  .zteam-tab { padding-inline: 7px; }
+  .zteam-hero-info { max-width: 100%; }
+  .zteam-hero .zteam-hero-art { left: 0; width: 100%; }
+  .zteam-hero::after { background: linear-gradient(0deg,var(--night),color-mix(in srgb,var(--night) 74%,transparent) 58%,transparent); }
+}

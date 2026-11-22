@@ -1,5 +1,5 @@
 import { button, el, iconButton, link, prefix, read, write } from './shared.js';
-import { appearance, resetAppearance, setAppearance, uploadedWallpapers } from './appearance.js';
+import { appearance, resetAppearance, setAppearance, uploadedWallpapers } from './appearance.js?v=blue-shell';
 
 const noteKey = prefix + 'notes';
 const feedbackKey = prefix + 'feedback';

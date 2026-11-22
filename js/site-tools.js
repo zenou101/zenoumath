@@ -35,7 +35,7 @@ function gameLink(game) {
 }
 
 function install() {
-  const rail = document.querySelector('.za-rail > .za-brand-row');
+  const rail = document.querySelector('.site-masthead, .za-rail > .za-brand-row');
   if (!rail || document.documentElement.hasAttribute('data-zenou-desktop') || document.querySelector('.quick-launch')) return;
 
   const shortcut = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘ K' : 'Ctrl K';
@@ -46,7 +46,9 @@ function install() {
   launcher.setAttribute('aria-haspopup', 'dialog');
   launcher.setAttribute('aria-keyshortcuts', 'Control+K Meta+K');
   launcher.append(icon('search'), el('span', '', 'Quick search'), el('kbd', '', shortcut));
-  rail.after(launcher);
+  const toggle = rail.querySelector('.sidebar-toggle');
+  if (rail.classList.contains('site-masthead') && toggle) toggle.before(launcher);
+  else rail.after(launcher);
 
   const dialog = el('dialog', 'quick-dialog');
   dialog.setAttribute('aria-label', 'Quick search');

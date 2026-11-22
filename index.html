@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/arcade-shell.css">
   <link rel="stylesheet" href="/css/accent.css">
   <link rel="stylesheet" href="/css/consent.css">
-  <link rel="stylesheet" href="/css/arcade-discover.css?v=20">
+  <link rel="stylesheet" href="/css/arcade-discover.css?v=21">
   <script>
     try {
       if (window.top === window && new URLSearchParams(location.search).get('interface') === 'classic') {
@@ -33,10 +33,10 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=discover-7"></script>
+  <script type="module" src="/arcade.js?v=discover-8"></script>
   <script src="/js/arcade-accent.js" defer></script>
-  <script src="/js/atmosphere.js" defer></script>
-  <script src="/js/settings.js" defer></script>
+  <script src="/js/atmosphere.js?v=blue-shell" defer></script>
+  <script src="/js/settings.js?v=blue-shell" defer></script>
   <script type="module" src="/js/os-switch.js"></script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
@@ -111,10 +111,14 @@
 
     <div class="content">
       <p id="discover-notice" class="site-visually-hidden" role="status"></p>
-      <div class="page-heading">
+      <section class="page-heading" id="discover-intro" aria-labelledby="page-title">
         <h1 id="page-title">Discover</h1>
         <p id="page-deck">Find your next favorite browser game.</p>
-      </div>
+        <nav id="discover-actions" class="discover-actions" aria-label="Discover shortcuts">
+          <a class="btn btn-solid" href="/?all=1"><span data-icon="gamepad"></span> Browse all games</a>
+          <a class="btn btn-ghost" href="/library/#later"><span data-icon="bookmark"></span> Play Later</a>
+        </nav>
+      </section>
 
       <div id="spot">
         <section class="spotlight" aria-label="Game spotlight">
@@ -132,7 +136,10 @@
               <button id="next" type="button" aria-label="Next spotlight" data-icon="right"></button>
             </div>
           </div>
-          <div id="spotlight-menu" class="spotlight-menu" role="group" aria-label="Choose a spotlight game"></div>
+          <aside class="spotlight-list" aria-labelledby="spotlight-list-title">
+            <h2 id="spotlight-list-title">Featured games</h2>
+            <div id="spotlight-menu" class="spotlight-menu" role="group" aria-label="Choose a spotlight game"></div>
+          </aside>
         </section>
 
         <section class="shelf" id="recent" hidden aria-labelledby="recent-heading">

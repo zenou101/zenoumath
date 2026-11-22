@@ -335,59 +335,103 @@ body.arcade-discover .card:hover { transform: translateY(-3px); }
   letter-spacing: -.06em;
 }
 
-/* Discover gives artwork the full stage and keeps navigation in its own strip. */
-.arcade-discover .content { padding-top: clamp(21px, 3vw, 39px); }
-.arcade-discover .page-heading h1 { font-size: clamp(38px, 5.3vw, 68px); font-weight: 780; letter-spacing: -.067em; }
+/* Discover uses an editorial intro, a feature stage and a choice of games. */
+.arcade-discover .content { padding-top: clamp(16px, 2.8vw, 32px); }
+.arcade-discover .page-heading h1 { font-size: clamp(36px, 5vw, 67px); font-weight: 790; letter-spacing: -.065em; }
+.arcade-discover .discover-home {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  min-height: clamp(185px, 19vw, 278px);
+  padding: clamp(18px, 3vw, 44px);
+  border: 1px solid #779fef67;
+  border-radius: calc(var(--za-radius) + 4px);
+  background:
+    linear-gradient(90deg,#081528f4,#091629db 33%,#0e1c352f 78%),
+    url('/art/zenou-glass.webp') 54% 44% / cover no-repeat,
+    radial-gradient(ellipse at 94% 50%,#2455e2,#142b67 54%,#0a1832 88%);
+  box-shadow: inset 0 1px #dae8ff24, 0 0 var(--za-bloom) #4777dc54;
+}
+.arcade-discover .discover-home p { color: #d5e2f6; font-size: clamp(13px,1.35vw,17px); }
+.discover-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: clamp(12px,1.8vw,24px); }
+.discover-actions .btn { display: inline-flex; align-items: center; gap: 7px; }
+body.arcade-discover .discover-actions .btn-solid { background: var(--za-tone); color: #102116; }
+.discover-actions .btn-ghost { background: #102039d4; }
+.discover-actions svg { width: 15px !important; height: 15px !important; }
+.arcade-discover .spotlight { align-items: stretch; gap: 14px; }
 body.arcade-discover .hero {
-  min-height: clamp(335px, 32vw, 472px);
+  min-height: clamp(290px,29vw,412px);
+  align-items: center;
   border-radius: calc(var(--za-radius) + 3px);
-  border-color: #b5a4ed58;
-  box-shadow: 0 12px 34px #06061177, 0 0 var(--za-bloom) color-mix(in srgb, var(--za-tone-deep) calc(var(--za-glow) * 70%), transparent);
+  border-color: #6386bf77;
+  background: #111d33;
+  box-shadow: 0 10px 25px #040c1d6b;
+}
+.arcade-discover .hero-image {
+  left: 28%;
+  width: 72%;
+  object-position: 64% 47%;
 }
 .arcade-discover .hero::after {
-  background: linear-gradient(90deg,#100e20e8 2%,#100e20c2 23%,#0e102157 66%,#0b0c1b10),
-    linear-gradient(0deg,#090b17d7 0%,transparent 70%);
+  background:
+    linear-gradient(90deg,#101e35 29%,#101e35b0 43%,#101e3534 74%,transparent),
+    linear-gradient(0deg,#0b1223a8,transparent 75%);
 }
 .arcade-discover .hero-copy {
-  width: min(540px, calc(100% - 38px));
+  width: min(470px, 68%);
+  max-width: none;
   margin: 0;
-  padding: clamp(22px, 4vw, 49px);
+  padding: clamp(17px, 3.1vw, 41px);
   background: transparent;
   border: 0;
   box-shadow: none;
 }
 .arcade-discover .hero-copy .feature {
-  color: #f5eeff;
-  background: #1a142ed0;
-  border-color: #d6c7ff56;
+  background: #172d4d;
+  color: var(--za-tone);
+  border-color: #9fbefa45;
   border-radius: 6px;
-  letter-spacing: .1em;
 }
-.arcade-discover .hero h2 { font-size: clamp(32px, 4.5vw, 66px); letter-spacing: -.065em; }
-.arcade-discover .hero-copy > p:not(.feature) { color: #e7e1f5; font-size: clamp(13px, 1.2vw, 16px); }
-.arcade-discover .spotlight-menu { border-radius: var(--za-radius); padding: 9px; background: #131321d9; }
-.arcade-discover .spotlight-option { border-radius: 9px; background: #ffffff06; }
-.arcade-discover .spotlight-option[aria-pressed=true] { border-color: #b8aaff7c; background: #b6a2ff22; }
-.arcade-discover .spotlight-option:is(:hover,:focus-visible) { background: #b6a2ff29; }
-.arcade-discover .spotlight-option img { aspect-ratio: 1.26; }
-.arcade-discover .heading a { border-color: #7464a863; background: #201d31d9; }
-.arcade-discover .catalog { background: #131521a3; border-radius: var(--za-radius); }
-.arcade-discover :is(.search,.shuffle,.za-accent) { background: #1c1e32; }
+.arcade-discover .hero h2 { font-size: clamp(31px,4vw,57px); letter-spacing: -.055em; }
+.arcade-discover .hero-copy > p:not(.feature) { color: #d2dbef; }
+.arcade-discover .hero-controls { top: auto; bottom: 13px; right: 13px; }
+.arcade-discover .spotlight-list {
+  display: grid;
+  grid-template-rows: auto minmax(0,1fr);
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--za-radius);
+  background: var(--za-frost);
+}
+.spotlight-list h2 { margin: 2px 5px 10px; color: var(--text); font-size: 14px; }
+.arcade-discover .spotlight-menu { padding: 0; border: 0; background: none; box-shadow: none; }
+.arcade-discover .spotlight-option { border-radius: 9px; background: #96bdff0c; }
+.arcade-discover .spotlight-option[aria-pressed=true] { border-color: #8db6f67f; background: #7aaaff21; }
+.arcade-discover .spotlight-option:is(:hover,:focus-visible) { background: #9bbcff2b; }
+.arcade-discover .spotlight-option img { aspect-ratio: 1.36; }
+.arcade-discover .heading a { border-color: #577db478; background: #182a45e6; }
+.arcade-discover .catalog { background: #101b2de6; border-radius: var(--za-radius); }
+.arcade-discover :is(.search,.shuffle,.za-accent) { background: #152640; }
 .arcade-discover .cards { gap: 14px; }
-body.arcade-discover .card { border-radius: 13px; padding: 0; background: var(--za-frost); }
+body.arcade-discover .card { border-radius: 12px; padding: 0; background: var(--za-frost); }
 .arcade-discover .card .art { border-radius: 0; }
 .arcade-discover .card-copy { padding: 9px 12px; min-height: 58px; }
 @media (max-width:1080px) {
-  .arcade-discover .spotlight-option img { aspect-ratio: 1.36; }
+  .arcade-discover .spotlight-option img { aspect-ratio: 1.45; }
 }
 @media (max-width:620px) {
-  .arcade-discover .hero::after { background: linear-gradient(0deg,#0d0b1ddc 8%,#100e207d 63%,#100e2010); }
-  .arcade-discover .hero-copy { width: 100%; }
-  .arcade-discover .hero h2 { font-size: clamp(32px,9vw,47px); }
+  .arcade-discover .hero-image { left: 0; width: 100%; object-position: 63% center; }
+  .arcade-discover .hero::after { background: linear-gradient(0deg,#071528e8 12%,#0b16299c 48%,#09162a24 100%); }
+  body.arcade-discover .hero { min-height: 282px; align-items: end; }
+  .arcade-discover .hero-controls { bottom: auto; top: 9px; right: 9px; }
+  .arcade-discover .hero-copy { width: 100%; padding-top: 56px; }
+  .arcade-discover .hero h2 { font-size: clamp(28px,8vw,48px); }
+  .arcade-discover .spotlight-list { padding: 7px; }
   .arcade-discover .spotlight-option img { aspect-ratio: 1.7; }
 }
 @media (max-width:540px) {
+  .arcade-discover .discover-home { background-position: 0 0, 58% center; }
   .arcade-discover .cards { gap: 9px; }
   .arcade-discover .card-copy { padding-inline: 8px; }
-  body.arcade-discover .hero { min-height: 304px; }
 }

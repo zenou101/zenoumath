@@ -5,6 +5,7 @@ const defaults = { theme: 'christmas', wallpaper: 'theme', accent: '', fit: 'cov
 export const wallpapers = [
   { id: 'christmas', name: 'Christmas Valley', category: 'Nature', url: '/assets/zenouos/christmas.webp' },
   { id: 'original', name: 'Liquid Chrome', category: 'Abstract', url: '/assets/wallpapers/liquid-chrome.png' },
+  { id: 'blue-glass', name: 'Blue Glass', category: 'Abstract', url: '/art/zenou-glass.webp' },
   { id: 'purple-eye', name: 'Saskue v2', category: 'Anime', url: '/assets/wallpapers/purple-eye.png' },
   { id: 'red-silhouette', name: 'Red Man', category: 'Dark', url: '/assets/wallpapers/red-silhouette.png' },
   { id: 'light-and-shadow', name: 'Lumina', category: 'Minimal', url: '/assets/wallpapers/light-and-shadow.png' },

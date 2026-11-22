@@ -1,5 +1,5 @@
 import { artwork, button, el, iconButton, prefix, read, write } from './shared.js';
-import { addWallpaper, appearance, removeWallpaper, setAppearance, uploadedWallpapers, wallpapers } from './appearance.js';
+import { addWallpaper, appearance, removeWallpaper, setAppearance, uploadedWallpapers, wallpapers } from './appearance.js?v=blue-shell';
 
 export async function mount(root, { notify, signal }) {
   const header = el('div', 'utility-head');

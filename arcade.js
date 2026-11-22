@@ -176,6 +176,8 @@ function renderCatalog() {
   if ($('query').value !== input) $('query').value = input;
   $('sort').value = ['az', 'za'].includes(sort) ? sort : '';
   $('spot').hidden = browsing;
+  $('discover-actions').hidden = browsing;
+  $('discover-intro').classList.toggle('discover-home', !browsing);
   $('place').textContent = pageTitle;
   $('page-title').textContent = pageTitle;
   $('page-deck').textContent = query ? 'Matching games for “' + input.trim() + '”.'

@@ -10,6 +10,7 @@
   if (window.ZenouAtmo) return;
 
   const wallpaperPresets = [
+    { id: 'blue-glass', name: 'Blue Glass', src: '/art/zenou-glass.webp' },
     { id: 'purple-eye', name: 'saskue v2', src: '/assets/wallpapers/purple-eye.png' },
     { id: 'red-silhouette', name: 'red man', src: '/assets/wallpapers/red-silhouette.png' },
     { id: 'liquid-chrome', name: 'Liquid Chrome', src: '/assets/wallpapers/liquid-chrome.png' },
