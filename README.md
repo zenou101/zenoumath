@@ -1,42 +1,38 @@
 <div align="center">
 
+<img src="assets/favicon.svg" width="84" height="84" alt="ZenouMath icon">
+
 # ZenouMath
 
-**Games, entertainment, and useful tools — all in one place.**
+**A browser arcade with a desktop of its own.**
 
-[**Visit ZenouMath**](https://zenoumath.space) · [Report an issue](https://github.com/zenou101/zenoumath/issues)
+Browse games by genre, shuffle the catalogue when you can't pick, or save a title for later. Switch to the optional ZenouOS desktop to open your games and tools in their own windows.
 
-![Website](https://img.shields.io/badge/Website-zenoumath.space-7c6cff?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-Web-222?style=flat-square)
-![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-555?style=flat-square)
+[![Website](https://img.shields.io/badge/site-zenoumath.space-365781)](https://zenoumath.space/)
+[![Local server](https://img.shields.io/badge/local%20server-Node.js%2020%2B-39724a)](package.json)
+[![Licence](https://img.shields.io/badge/licence-all%20rights%20reserved-545968)](LICENSE)
+
+[**Open the arcade**](https://zenoumath.space/) · [Try ZenouOS Beta](https://zenoumath.space/os/) · [Explore](#explore) · [Run locally](#run-locally)
 
 </div>
 
----
+| Arcade · Discover | ZenouOS Beta · App launcher |
+| :---: | :---: |
+| [![Arcade Discover with the game spotlight, featured games and genre navigation](docs/screenshots/arcade.webp)](docs/screenshots/arcade.webp) | [![ZenouOS desktop with the app launcher open above the taskbar](docs/screenshots/zenouos.webp)](docs/screenshots/zenouos.webp) |
 
-## About
+## Explore
 
-ZenouMath is a browser-based hub bringing games, media, and web tools together in one interface. Built with HTML, CSS, and JavaScript, it's designed to be easy to use and regularly improved.
-
-## What's inside
-
-| Section | What it offers |
+| Where to go | What you can do |
 | --- | --- |
-| Games | A large browser-game library with search and a dedicated player |
-| Web tools | A reference browser and links to third-party web tools |
-| Movies & TV | Title discovery, details, and third-party viewing sources |
-| AI tools | Assistant interface and a directory of tools |
-| Music & videos | Embedded media and searchable content |
-| Library | Favourites, ratings, notes, and saved items |
-| Accounts | Username-based accounts and library syncing |
+| [**All games**](https://zenoumath.space/?all=1) | Search for a title, browse a genre or use **Shuffle** to pick your next game. |
+| [**My library**](https://zenoumath.space/library/) | Reopen recently played games, keep a **Play Later** queue, and organise favourites, playlists, ratings and notes. An optional username account syncs favourites, ratings and notes across browsers. |
+| [**ZenouOS Beta**](https://zenoumath.space/os/) | Launch games from **Zteam**, change the wallpaper in **ZenouPaper Engine**, or keep **ZNotes** open alongside another app. Choose **Classic website** to switch back. |
+| **Media** | Browse [books and manga](https://zenoumath.space/books/), open the [music player](https://zenoumath.space/music/), or look up [films and TV shows](https://zenoumath.space/movies/). Playback depends on the external provider. |
+| **Tools** | Open the [web tools](https://zenoumath.space/web/) or explore the [AI assistant and tool directory](https://zenoumath.space/ai/). |
 
-Features and third-party availability may change over time.
+## Run locally
 
-## Getting started
-
-**Use the website:** [zenoumath.space](https://zenoumath.space)
-
-**Run locally:** Node.js 20 or newer is required for the optional local server.
+The arcade is built with HTML, CSS and JavaScript. The included Node.js server serves the site and its media API. Use **Node.js 20 or newer**.
 
 ```bash
 git clone https://github.com/zenou101/zenoumath.git
@@ -44,36 +40,27 @@ cd zenoumath
 npm start
 ```
 
-Then visit `http://127.0.0.1:8123`.
+Open **http://127.0.0.1:8123**. You can browse the arcade and launch ZenouOS without an API key. For live TMDB movie and TV metadata, copy [.env.example](.env.example) to `.env`, set `TMDB_READ_TOKEN` or `TMDB_API_KEY`, and restart the server.
 
-The main site is static. Some media discovery features require server-side API configuration; see `.env.example` for available settings.
+### Development
 
-## Development
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local server and restart it when server code changes. |
+| `npm test` | Exercise the media API against local test data. |
+| `node scripts/audit.mjs` | Check internal links and sitemap routes while the local server is running. |
 
-```bash
-npm run dev
-node scripts/audit.mjs
-npm test
-```
+### Project layout
 
-The project is actively developed, so some features may be changed or improved between updates.
-
-## Important notes
-
-ZenouMath is not affiliated with any school or education authority. Games, embedded content, third-party services, logos, and trademarks belong to their respective owners. Availability and terms of external services are outside this project's control.
+| Path | Contents |
+| --- | --- |
+| [`arcade.js`](arcade.js) and [`catalog/`](catalog/) | Discover page behaviour and the catalogues used across the site |
+| [`os/`](os/) | ZenouOS desktop, window manager, Zteam and wallpaper gallery |
+| [`js/`](js/) and [`css/`](css/) | Shared browser features, account sync and styles |
+| [`server/`](server/) and [`scripts/`](scripts/) | Local HTTP server, media API and project checks |
 
 ## Copyright and usage
 
-**© 2026 ZenouMath / zenou101. All rights reserved.**
+**© 2026 ZenouMath / zenou101. All rights reserved.** The original code and assets are published for viewing and reference. Reuse, modification and redistribution require prior written permission, subject to applicable law and GitHub's Terms of Service. Third-party games, embeds, logos and trademarks retain their respective owners' rights. See the [licence](LICENSE).
 
-The original code and other original material in this repository are **source-available, not open source**. No permission is granted to copy, modify, redistribute, republish, or incorporate them into other projects without prior written authorization, except where applicable law or GitHub's Terms of Service permit.
-
-See [LICENSE](LICENSE) for details. Third-party components and content retain their respective rights and licences.
-
----
-
-<div align="center">
-
-Made by [**Zenou**](https://github.com/zenou101) · [**Open ZenouMath**](https://zenoumath.space)
-
-</div>
+ZenouMath is independent of schools and education authorities. [Site terms and privacy](https://zenoumath.space/legal/) · [Report an issue](https://github.com/zenou101/zenoumath/issues).
