@@ -204,7 +204,7 @@
     if (image) root.style.setProperty('--custom-bg', `url("${image}")`);
     else root.style.removeProperty('--custom-bg');
 
-    root.dataset.bg = preset ? 'custom' : prefs.bg || 'aurora';
+    root.dataset.bg = preset ? 'custom' : prefs.bg || 'plain';
     root.dataset.bgEffects = prefs.bgEffects || 'none';
     root.dataset.motion = prefs.motion || 'full';
     const dim = Number(prefs.bgDim ?? 45);

@@ -40,4 +40,12 @@ The existing API suite passed all 64 tests. A local Chromium browser exercised a
 
 [Desktop screenshot](catalogue-1440.webp) · [Mobile screenshot](catalogue-390.webp)
 
-Production deployment depends on the outstanding game-launch and source checks. A zero-error local test cannot establish the status of every remote game or a production deployment.
+## Bro Blogs launch integration
+
+The four website tiles open an external proxy service on Bro Blogs. Its public frontend shows the outgoing destinations, while the service's internal implementation is unavailable. ZenouMath uses the four underlying portal addresses and opens them in a regular browser tab. Poki, Coolmath Games and PlayCLASSIC returned HTTP 200 during this check. CrazyGames returned HTTP 503.
+
+Of the 289 game rows, 144 point to an iframe launcher, 117 to the standard game launcher, 22 to the Flash launcher, one to the self-hosted launcher and five to other paths. A loader name describes the entry point and does not establish rights to the game content. The public interface renders title search, link tiles, a Play overlay, a separate About action and operator status labels.
+
+The Games page and Web directory now share one [portal catalogue](../../catalog/portals.js). Searching Games filters both portal and game sections. Game cards expose Play or View details on hover or keyboard focus. About opens a native dialog with the game's recorded categories, description and launch link. The games page also supports recently played ordering. These additions reuse the production catalogue, launchers and saved IDs.
+
+The local checks cover the player page and destination for the imported direct links. Full third-party gameplay, every legacy source licence and authenticated account sync are unverified.

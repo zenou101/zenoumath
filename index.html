@@ -33,7 +33,7 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=discover-8"></script>
+  <script type="module" src="/arcade.js?v=catalogue-10"></script>
   <script src="/js/arcade-accent.js" defer></script>
   <script src="/js/atmosphere.js?v=blue-shell" defer></script>
   <script src="/js/settings.js?v=blue-shell" defer></script>
@@ -172,11 +172,14 @@
             <select id="sort">
               <option value="">Featured</option>
               <option value="new">Recently added</option>
+              <option value="recent">Recently played first</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
             </select>
           </label>
         </div>
+        <section id="gameSites" hidden aria-labelledby="gameSitesHeading"><h3 id="gameSitesHeading">Game websites</h3><div id="portalLinks"></div></section>
+        <dialog id="gameDetails" aria-labelledby="detailsTitle"><h2 id="detailsTitle"></h2><p id="detailsCategory"></p><p id="detailsBody"></p><a class="btn btn-solid" id="detailsPlay">Open game</a> <form method="dialog"><button type="submit" autofocus>Close</button></form></dialog>
         <div class="cards" id="grid"></div>
         <div id="empty" class="empty" hidden>
           <p id="empty-message"></p>

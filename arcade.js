@@ -1,3 +1,4 @@
+import { gamePortals } from '/catalog/portals.js';
 import { paintQueue, queueButton, watchQueue } from '/js/play-later.js';
 
 const $ = id => document.getElementById(id);
@@ -129,12 +130,29 @@ function card(game) {
   } else {
     showFallback();
   }
+  const action = document.createElement('span');
+  action.className = 'tile-launch';
+  action.textContent = game.availability ? 'View details' : 'Play';
+  link.querySelector('.art').append(action);
   link.querySelector('h3').textContent = game.t;
   link.querySelector('small').textContent = game.availability === 'unavailable' ? 'Build unavailable'
-    : game.availability === 'external' ? 'Plays on source site' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
+    : game.availability === 'external' ? 'External link' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
   const tile = document.createElement('div');
   tile.className = 'play-later-card';
   tile.append(link, queueButton(game, { notify: message => { $('discover-notice').textContent = message; } }));
+  const info = document.createElement('button');
+  info.type = 'button';
+  info.className = 'card-info';
+  info.setAttribute('aria-label', 'About ' + game.t);
+  info.innerHTML = icon('info');
+  info.onclick = () => {
+    $('detailsTitle').textContent = game.t;
+    $('detailsCategory').textContent = (game.cs || []).map(titleCase).join(' · ');
+    $('detailsBody').textContent = game.note || game.dep || 'See the game page for launch options.';
+    $('detailsPlay').href = gameUrl(game);
+    $('gameDetails').showModal();
+  };
+  tile.append(info);
   return tile;
 }
 
@@ -174,7 +192,7 @@ function renderCatalog() {
   const pageTitle = query ? 'Search results' : genre ? titleCase(genre) : browsing ? 'All games' : 'Discover';
 
   if ($('query').value !== input) $('query').value = input;
-  $('sort').value = ['az', 'za', 'new'].includes(sort) ? sort : '';
+  $('sort').value = ['az', 'za', 'new', 'recent'].includes(sort) ? sort : '';
   $('spot').hidden = browsing;
   $('discover-actions').hidden = browsing;
   $('discover-intro').classList.toggle('discover-home', !browsing);
@@ -185,6 +203,16 @@ function renderCatalog() {
       : browsing ? 'Explore the full browser game catalog.' : 'Find your next favorite browser game.';
   $('sectionName').textContent = browsing ? 'Game catalog' : 'Browse games';
 
+  const sites = genre ? [] : gamePortals.filter(site => site.label.toLowerCase().includes(query));
+  $('gameSites').hidden = !sites.length;
+  $('portalLinks').replaceChildren(...sites.map(site => {
+    const link = document.createElement('a');
+    link.href = site.url;
+    link.rel = 'noopener noreferrer';
+    link.target = '_blank';
+    link.textContent = site.label;
+    return link;
+  }));
   const labels = ['All', ...genres];
   if (genre && !labels.some(label => label.toLowerCase() === genre)) labels.push(titleCase(genre));
   const filters = $('filters');
@@ -224,6 +252,12 @@ function renderCatalog() {
   if (sort === 'az') matched.sort((a, b) => collator.compare(a.t, b.t));
   if (sort === 'za') matched.sort((a, b) => collator.compare(b.t, a.t));
 
+  if (sort === 'recent') {
+    let history = [];
+    try { history = JSON.parse(localStorage.getItem('zenou_recent')) || []; } catch {}
+    const times = new Map(Array.isArray(history) ? history.filter(Boolean).map(row => [row.id, row.ts]) : []);
+    matched.sort((a, b) => (times.get(b.id) || 0) - (times.get(a.id) || 0));
+  }
   $('count').textContent = loadState === 'loading' ? 'Loading games…'
     : loadState === 'error' ? '' : matched.length.toLocaleString() + (matched.length === 1 ? ' game' : ' games');
   $('grid').replaceChildren();

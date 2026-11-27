@@ -35,7 +35,7 @@
   const PREF_GROUPS = [
     ['gameLayout', 'Game layout', [['compact','Compact'], ['standard','Standard'], ['large','Large'], ['list','List']]],
     ['launchMode', 'Game launch', [['inline','In page'], ['fullscreen','Fullscreen'], ['tab','New tab']]],
-    ['gameSort', 'Default game order', [['featured','Featured'], ['az','A–Z'], ['za','Z–A']]],
+    ['gameSort', 'Default game order', [['featured','Featured'], ['az','A–Z'], ['za','Z–A'], ['new','Recently added'], ['recent','Recently played']]],
     ['glow', 'Glow strength', [['off', 'Off'], ['soft', 'Soft'], ['medium', 'Medium'], ['strong', 'Strong']]],
     ['radius', 'Corner style', [['sharp', 'Sharp'], ['soft', 'Soft'], ['round', 'Round']]],
     ['density', 'Card density', [['cozy', 'Cozy'], ['compact', 'Compact']]],
