@@ -40,9 +40,27 @@
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
     ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
   ];
-  const DEFAULTS = { theme: 'white', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'white', glow: 'off', radius: 'soft', density: 'cozy', bg: 'plain', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
+
+  const catalogueOptions = {
+    launch: [['inline','In page'], ['fullscreen','Fullscreen'], ['external','New tab']],
+    layout: [['standard','Standard grid'], ['compact','Compact grid'], ['large','Large grid'], ['list','List view']],
+    sort: [['','Featured'], ['az','Title A–Z'], ['za','Title Z–A'], ['recent','Recently played first'], ['added','Recently added first']],
+  };
+  window.ZenouCataloguePrefs = {
+    get(key) {
+      const value = readPrefs()[key];
+      const options = catalogueOptions[key];
+      return options.some(([id]) => id === value) ? value : options[0][0];
+    },
+    set(key, value) {
+      if (!catalogueOptions[key]?.some(([id]) => id === value)) return;
+      setPref(key, value);
+      window.dispatchEvent(new CustomEvent('zenou:catalogue-pref', {detail: key}));
+    },
+  };
 
   function readPrefs() {
     const saved = store.get(PREF_KEY, {});
@@ -219,6 +237,13 @@
             <div id="seThemes" class="theme-chips"></div>
           </div>
           <div id="sePrefs"></div>
+          <label class="settings-field">Game layout<select data-catalogue="layout"></select></label>
+          <label class="settings-field">Preferred launch mode<select data-catalogue="launch"></select></label>
+          <label class="settings-field">Default game sort<select data-catalogue="sort"></select></label>
+          <div class="settings-field"><span>Storage and privacy</span>
+            <a href="/library/#favourites">Manage favourites</a><a href="/library/#data">Export or import backup</a>
+            <button class="btn btn-ghost" id="clearRecentGames" type="button">Clear recently played</button>
+          </div>
 
           <div class="settings-field hue-field">
             <span><label for="seHue">Custom accent hue</label> <output id="seHueOut">off</output></span>
@@ -329,6 +354,18 @@
         </footer>
       </div>`;
 
+    for (const select of root.querySelectorAll('[data-catalogue]')) {
+      const key = select.dataset.catalogue;
+      for (const [value,label] of catalogueOptions[key]) select.add(new Option(label,value));
+      select.value = window.ZenouCataloguePrefs.get(key);
+      select.onchange = () => window.ZenouCataloguePrefs.set(key,select.value);
+    }
+    $('#clearRecentGames', root).onclick = () => {
+      if (!confirm('Clear recently played games from this browser?')) return;
+      store.set('zenou_recent', []);
+      window.dispatchEvent(new Event('zenou:recent-cleared'));
+      $('#clearRecentGames', root).textContent = 'History cleared';
+    };
     const titleInput = $('#seTitle', root);
     const connectionButton = $('#seSupabaseCheck', root);
     const connectionStatus = $('#seSupabaseStatus', root);
@@ -920,6 +957,7 @@
     });
 
     $('#seReset', root).addEventListener('click', () => {
+      if (!confirm('Reset appearance, wallpaper and browser tab settings?')) return;
       store.del('zenou_mask');
       store.del(PREF_KEY);
       try { store.del('zenou_view'); } catch { /* ignore */ }
@@ -1007,7 +1045,7 @@
       store.set(layoutKey(), true);
     });
 
-    const restoreSidebar = () => render(store.get(layoutKey(), mobile.matches) === true);
+    const restoreSidebar = () => render(store.get(layoutKey(), true) === true);
     restoreSidebar();
     mobile.addEventListener('change', restoreSidebar);
     window.addEventListener('pageshow', event => {
@@ -1018,7 +1056,7 @@
   function mountPrimaryNavigation(rail, row, settings) {
     const primary = [
       ['/', 'Discover', 'discover'], ['/?all=1', 'Games', 'gamepad'],
-      ['/library/', 'Library', 'library'], ['/web/', 'Web', 'globe'],
+      ['/apps/', 'Apps', 'spark'], ['/web/', 'Web', 'globe'], ['/library/', 'Library', 'library'],
     ];
     const nav = document.createElement('nav');
     nav.className = 'masthead-links';
@@ -1105,10 +1143,10 @@
   const WEB_TAB_KEY = 'zenou_webtabs';
   const SITE_KEY_DEFAULTS = { search: '/', random: '4', games: '1', library: '2', settings: '3', shortcuts: '?' };
   function directShortcutFor(e) {
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return null;
+    if (e.repeat || e.isComposing || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return null;
     if (!e.key || e.key.length !== 1 || e.key === ' ') return null;
     const target = e.target;
-    if (target && target.matches && target.matches('input, textarea, select, [contenteditable]')) return null;
+    if (target && target.closest?.('input, textarea, select, [contenteditable]')) return null;
     if (document.querySelector('dialog[open], .sheet-overlay, .web-pin-overlay')) return null;
     let list;
     try { list = JSON.parse(localStorage.getItem(WEB_TAB_KEY) || '[]'); } catch { return null; }

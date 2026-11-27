@@ -33,7 +33,7 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=discover-8"></script>
+  <script type="module" src="/arcade.js?v=catalogue-9"></script>
   <script src="/js/arcade-accent.js" defer></script>
   <script src="/js/atmosphere.js?v=blue-shell" defer></script>
   <script src="/js/settings.js?v=blue-shell" defer></script>
@@ -160,14 +160,24 @@
         <div class="heading"><h2 id="sectionName">Browse games</h2><span id="count" role="status"></span></div>
         <div class="catalog-tools">
           <div class="filters" id="filters" role="group" aria-label="Game genres"></div>
+          <label class="sort">Layout
+            <select id="layout" aria-label="Game layout">
+              <option value="compact">Compact grid</option><option value="standard" selected>Standard grid</option>
+              <option value="large">Large grid</option><option value="list">List view</option>
+            </select>
+          </label>
           <label class="sort">Sort by
             <select id="sort">
               <option value="">Featured</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
+              <option value="recent">Recently played first</option>
+              <option value="added">Recently added first</option>
             </select>
           </label>
         </div>
+        <section id="gameSites" hidden aria-labelledby="gameSitesHeading"><h3 id="gameSitesHeading">Game websites</h3><div id="portalLinks"></div></section>
+        <dialog id="gameDetails" aria-labelledby="detailsTitle"><h2 id="detailsTitle"></h2><p id="detailsCategory"></p><p id="detailsBody"></p><a class="btn btn-solid" id="detailsPlay">Open game</a> <form method="dialog"><button type="submit" autofocus>Close</button></form></dialog>
         <div class="cards" id="grid"></div>
         <div id="empty" class="empty" hidden>
           <p id="empty-message"></p>

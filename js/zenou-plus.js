@@ -785,7 +785,7 @@
   /* ================================================================
      data export / import
      ================================================================ */
-  const EXPORT_KEYS = [K.fav, K.recent, K.ratings, K.notes, K.playtime, K.hidden, K.playlists, K.xp, K.ach, K.days, 'zenou_prefs'];
+  const EXPORT_KEYS = [K.fav, K.recent, K.ratings, K.notes, K.playtime, K.hidden, K.playlists, K.xp, K.ach, K.days, 'zenou_prefs', 'zenou_directory_favourites', 'zenou_directory_layout'];
 
   function exportData() {
     const out = { app: 'zenou-unblocked', v: 2, exported: new Date().toISOString(), data: {} };

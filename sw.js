@@ -13,7 +13,7 @@
  * redirect stubs: they shadowed their own directory index on GitHub Pages,
  * so any cached copy of one has to go.
  */
-const CACHE_VERSION = 'zenou-arcade-v20';
+const CACHE_VERSION = 'zenou-arcade-v21';
 const SHELL = [
   '/',
   '/css/style.css',

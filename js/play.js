@@ -43,13 +43,14 @@ function showUnavailable(game) {
   const external = game.availability === 'external';
   $('#playerStage').hidden = true;
   $('#errorPanel').hidden = false;
-  $('#errorTitle').textContent = external ? 'Play on the source site' : 'Browser build unavailable';
+  $('#errorTitle').textContent = external ? 'Open the source site' : 'Browser build unavailable';
   $('#errorMessage').textContent = game.dep || 'The game URL is missing.';
   const source = external && safePage(game.g);
   if (source) {
     const link = $('#sourceGame');
     link.href = source.href;
-    link.textContent = 'Play ' + game.t + ' on ' + source.hostname.replace(/^www\./, '');
+    link.textContent = 'Open ' + game.t + ' on ' + source.hostname.replace(/^www\./, '');
+    link.addEventListener('click', () => touchRecent(game.id));
     link.hidden = false;
   }
 }
@@ -109,6 +110,7 @@ function setupFrame(game, url) {
 
   function load() {
     clearTimers();
+    frameWrap.querySelector('.preferred-launch')?.remove();
     status.textContent = '';
     frameWrap.classList.remove('frame-failed');
     loading.hidden = false;
@@ -165,7 +167,24 @@ function setupFrame(game, url) {
     }
   });
   $('#retryBtn').addEventListener('click', load);
-  load();
+  const preference = window.ZenouCataloguePrefs?.get('launch');
+  if (preference === 'external' || preference === 'fullscreen') {
+    loading.hidden = true;
+    frame.hidden = true;
+    const launch = document.createElement(preference === 'external' ? 'a' : 'button');
+    launch.className = 'btn btn-solid preferred-launch';
+    if (preference === 'external') {
+      launch.textContent = 'Open game in new tab';
+      launch.href = open.href;
+      launch.target = '_blank';
+      launch.rel = 'noopener noreferrer';
+    } else {
+      launch.textContent = 'Play in fullscreen';
+      launch.type = 'button';
+      launch.onclick = () => { full.click(); load(); };
+    }
+    frameWrap.append(launch);
+  } else load();
 }
 
 async function boot() {
