@@ -160,9 +160,18 @@
         <div class="heading"><h2 id="sectionName">Browse games</h2><span id="count" role="status"></span></div>
         <div class="catalog-tools">
           <div class="filters" id="filters" role="group" aria-label="Game genres"></div>
+          <label class="sort">Layout
+            <select id="gameLayout">
+              <option value="compact">Compact grid</option>
+              <option value="standard" selected>Standard grid</option>
+              <option value="large">Large grid</option>
+              <option value="list">List</option>
+            </select>
+          </label>
           <label class="sort">Sort by
             <select id="sort">
               <option value="">Featured</option>
+              <option value="new">Recently added</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
             </select>

@@ -515,3 +515,65 @@ body[data-arcade-page=play] .game-info { min-width: 0; }
 @media (prefers-reduced-transparency:reduce) {
   .site-masthead { backdrop-filter: none; background: var(--za-nav); }
 }
+
+/* Classic arcade surfaces and catalogue density. */
+html:has(.za-rail) {
+  --za-canvas: #090909;
+  --za-nav: #101010;
+  --za-panel: #151515;
+  --za-line: #303030;
+  --za-frost: #151515;
+  --za-frost-fill: #151515;
+  --za-frost-shadow: none;
+  --za-ambient: #090909;
+  --surface-2: #1d1d1d;
+  --line-strong: #555;
+  --text: #f5f5f5;
+  --muted: #aaa;
+  --muted-2: #999;
+  --za-tone: var(--accent);
+  --za-tone-deep: var(--accent);
+}
+html[data-site-masthead] :is(.site-masthead,.za-rail,.za-footer,.toolbar,.masthead-links),
+.settings-panel :is(.settings-header,.settings-tabs,.settings-actions) {
+  background: var(--za-nav);
+  border-color: var(--za-line);
+  box-shadow: none;
+}
+body.arcade-discover :is(.search,.shuffle,.za-accent,#gameLayout,#sort) {
+  background: #151515;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+#gameLayout { font: inherit; padding: 8px; }
+.arcade-discover #grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(min(100%,var(--card-width,190px)),1fr));
+  gap: 12px;
+}
+html[data-game-layout=compact] #grid { --card-width: 135px; gap: 8px; }
+html[data-game-layout=large] #grid { --card-width: 280px; }
+html[data-game-layout=list] #grid { grid-template-columns: 1fr; gap: 5px; }
+html[data-game-layout=list] #grid .card { display: flex; align-items: center; padding-right: 46px; }
+html[data-game-layout=list] #grid .art { width: 82px; height: 52px; flex: none; }
+html[data-game-layout=list] #grid .card-copy { flex: 1; min-width: 0; min-height: 52px; }
+@media (max-width: 780px) {
+  html[data-site-masthead] { --masthead-height: 103px; --mobile-nav-height: 0px; }
+  html[data-site-masthead] .site-masthead { height: 54px; }
+  .site-masthead .masthead-links { inset: 54px 0 auto; height: 49px; padding: 2px 6px; border-bottom: 1px solid var(--line); }
+  .site-masthead .masthead-links a { min-width: 0; flex: 1; }
+  .arcade-discover #grid { --card-width: 150px; }
+}
+#startGame { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%,-50%); z-index: 2; }
+.directory-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.directory-controls :is(input,select), .directory-save { color: var(--text); background: var(--za-panel); border: 1px solid var(--line); border-radius: 5px; padding: 7px 10px; }
+.directory-entry { display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+.directory-entry .web-site { text-decoration: none; }
+.directory-save { justify-self: end; margin-top: 4px; cursor: pointer; }
+#webSites[data-layout=list] { grid-template-columns: 1fr; }
+#webSites[data-layout=list] .directory-entry { grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+html[data-site-masthead] .site-masthead.za-brand-row { display: flex; flex-direction: row; align-items: center; padding: 0 clamp(12px,2vw,28px); }
+html[data-site-masthead] .site-masthead .quick-launch { margin: 0; }
+body.arcade-discover .catalog, body[data-arcade-page] :is(.page-head,.ai-hero,.web-hero,.social-hero,.movies-hero,.dw-head) { background: var(--za-nav); }
+body.arcade-discover #page-title { font-size: clamp(26px,3.2vw,40px); }
