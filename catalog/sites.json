@@ -1,5 +1,5 @@
 {
-  "v": "2026-11-27b",
+  "v": "2026-11-27c",
   "updated": "2026-11-27",
   "sites": [
     {
@@ -141,6 +141,18 @@
       "glyph": "✦",
       "kind": "tool",
       "note": "Mantle's AI chat, framed in the viewer.",
+      "frame": "allowed",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "uv-proxy",
+      "name": "UV Proxy",
+      "url": "https://uv.kodev-v2.my.id/",
+      "glyph": "UV",
+      "kind": "proxy",
+      "label": "Proxy",
+      "note": "Third-party unblock proxy for sites that refuse framing.",
       "frame": "allowed",
       "featured": false,
       "source": "ZenouMath"

@@ -810,6 +810,19 @@ html[data-motion=calm] .zn-spinner { transition: none; animation: none; }
   min-width: 0;
 }
 
+.zn-site-label {
+  display: inline-flex;
+  align-self: center;
+  padding: 3px 6px;
+  border: 1px solid #ffffff2e;
+  border-radius: 5px;
+  background: #ffffff0d;
+  color: #eef0f1;
+  font: 700 8px/1 var(--zn-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
 .zn-dir-card .zn-site {
   flex: 1;
   width: 100%;

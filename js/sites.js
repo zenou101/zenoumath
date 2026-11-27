@@ -158,6 +158,13 @@ function siteCard(site) {
   name.textContent = site.name;
   button.append(name);
 
+  if (site.label) {
+    const label = document.createElement('span');
+    label.className = 'zn-site-label';
+    label.textContent = site.label;
+    button.append(label);
+  }
+
   const note = document.createElement('span');
   note.className = 'zn-site-note';
   note.textContent = site.note || '';
@@ -197,6 +204,7 @@ const FILTERS = [
   ['media', 'Media'],
   ['app', 'Apps'],
   ['tool', 'Tools'],
+  ['proxy', 'Proxy'],
 ];
 
 function paintFilters() {
