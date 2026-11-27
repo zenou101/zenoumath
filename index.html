@@ -33,7 +33,7 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=catalogue-9"></script>
+  <script type="module" src="/arcade.js?v=catalogue-10"></script>
   <script src="/js/arcade-accent.js" defer></script>
   <script src="/js/atmosphere.js?v=blue-shell" defer></script>
   <script src="/js/settings.js?v=blue-shell" defer></script>
@@ -161,18 +161,20 @@
         <div class="catalog-tools">
           <div class="filters" id="filters" role="group" aria-label="Game genres"></div>
           <label class="sort">Layout
-            <select id="layout" aria-label="Game layout">
-              <option value="compact">Compact grid</option><option value="standard" selected>Standard grid</option>
-              <option value="large">Large grid</option><option value="list">List view</option>
+            <select id="gameLayout">
+              <option value="compact">Compact grid</option>
+              <option value="standard" selected>Standard grid</option>
+              <option value="large">Large grid</option>
+              <option value="list">List</option>
             </select>
           </label>
           <label class="sort">Sort by
             <select id="sort">
               <option value="">Featured</option>
+              <option value="new">Recently added</option>
+              <option value="recent">Recently played first</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
-              <option value="recent">Recently played first</option>
-              <option value="added">Recently added first</option>
             </select>
           </label>
         </div>

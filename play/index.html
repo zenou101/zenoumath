@@ -63,11 +63,12 @@
 
     <div id="playerStage" class="player-stage">
       <div id="frameWrap" class="frame-wrap">
-        <div id="loading" class="loading" role="status">
+        <button id="startGame" type="button" class="btn btn-solid">Play game</button>
+        <div hidden id="loading" class="loading" role="status">
           <div class="game-spinner" aria-hidden="true"></div>
           <p>Loading game…</p>
         </div>
-        <iframe id="gameFrame" title="Game" allowfullscreen allow="autoplay; gamepad; clipboard-read; clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-pointer-lock allow-downloads allow-presentation" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+        <iframe id="gameFrame" title="Game" allowfullscreen allow="autoplay; gamepad" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-pointer-lock allow-downloads allow-presentation" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
       </div>
       <div class="stage-toolbar">
         <p id="stageStatus" role="status"></p>

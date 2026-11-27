@@ -92,10 +92,15 @@
         <div class="web-start-hero">
           <div>
             <span class="web-start-kicker">Where to?</span>
-            <h2>Ten doors, one room.</h2>
-            <p>Pick a site, or paste any address in the bar above. Everything stays in this page.</p>
+            <h2>Websites and apps</h2>
+            <p>Search the directory or enter an address above.</p>
           </div>
           <div id="webRecent" class="web-recent"></div>
+        </div>
+        <div class="directory-controls">
+          <input id="directorySearch" type="search" placeholder="Search websites and apps" aria-label="Search websites and apps">
+          <select id="directoryFilter" aria-label="Filter directory"><option value="">All entries</option><option value="app">Apps</option><option value="site">Websites</option><option value="portal">Game portals</option><option value="saved">Favourites</option></select>
+          <select id="directoryView" aria-label="Directory layout"><option value="grid">Grid</option><option value="list">List</option></select>
         </div>
         <div id="webSites" class="web-sites"></div>
       </div>
@@ -149,7 +154,7 @@
 <script src="/js/music-player.js" defer></script>
 <script src="/js/settings.js?v=blue-shell" defer></script>
 <script src="/js/zenou-plus.js" defer></script>
-<script src="/js/web.js?v=2" defer></script>
+<script type="module" src="/js/web.js?v=3"></script>
 <script src="/js/consent.js" defer></script>
 </body>
 </html>

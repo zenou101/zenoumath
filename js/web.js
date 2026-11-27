@@ -1,3 +1,4 @@
+import { gamePortals } from '/catalog/portals.js';
 /* ZenouMath, reference desk.
  *
  * A frame, an address bar and six tabs the visitor binds in Settings. The
@@ -21,6 +22,7 @@
   const HOME_TITLE = 'Reference desk, ZenouMath';
 
   const SITES = [
+    ...gamePortals,
     {
       id: 'rabbits', label: 'Bouncing Rabbits', glyph: 'B',
       url: 'https://bouncingrabbits.cyou/',
@@ -272,9 +274,23 @@
     const wrap = $('#webSites');
     if (!wrap) return;
     wrap.innerHTML = '';
-    SITES.forEach(site => {
-      const b = document.createElement('button');
-      b.type = 'button';
+    const saved = readJson('zenou_directory_favourites', []);
+    const favs = new Set(Array.isArray(saved) ? saved : []);
+    const query = $('#directorySearch').value.trim().toLowerCase();
+    const filter = $('#directoryFilter').value;
+    wrap.dataset.layout = $('#directoryView').value;
+    const matches = SITES.filter(site => (site.label + ' ' + site.note).toLowerCase().includes(query)
+      && (!filter || (filter === 'saved' ? favs.has(site.id) : site.kind === filter)));
+    if (!matches.length) wrap.textContent = 'No matching entries.';
+    matches.forEach(site => {
+      const entry = document.createElement('div');
+      entry.className = 'directory-entry';
+      const b = document.createElement(site.kind === 'portal' ? 'a' : 'button');
+      if (site.kind === 'portal') {
+        b.href = site.url;
+        b.target = '_blank';
+        b.rel = 'noopener noreferrer';
+      } else b.type = 'button';
       b.className = 'web-site';
       b.innerHTML = '<span class="web-site-glyph"></span><b></b><small></small><i></i>';
       b.querySelector('.web-site-glyph').textContent = site.glyph;
@@ -286,8 +302,24 @@
         : site.kind === 'site' ? 'Direct'
         : site.kind === 'doorway' ? 'New tab'
         : 'Via Magma';
-      b.addEventListener('click', () => openSite(site));
-      wrap.append(b);
+      if (site.kind === 'portal') badge.textContent = 'External site';
+      else b.addEventListener('click', () => openSite(site));
+      const save = document.createElement('button');
+      save.className = 'directory-save';
+      save.type = 'button';
+      const paintSave = () => {
+        save.textContent = favs.has(site.id) ? 'Saved' : 'Save';
+        save.setAttribute('aria-pressed', String(favs.has(site.id)));
+        save.setAttribute('aria-label', 'Favourite ' + site.label);
+      };
+      paintSave();
+      save.addEventListener('click', () => {
+        if (favs.has(site.id)) favs.delete(site.id); else favs.add(site.id);
+        writeJson('zenou_directory_favourites', [...favs]);
+        if (filter === 'saved') paintSites(); else paintSave();
+      });
+      entry.append(b, save);
+      wrap.append(entry);
     });
   }
 
@@ -473,6 +505,14 @@
 
   /* ---------- boot ---------- */
   function boot() {
+    if (new URLSearchParams(location.search).get('kind') === 'app') $('#directoryFilter').value = 'app';
+    $('#directoryView').value = readJson('zenou_directory_view', 'grid') === 'list' ? 'list' : 'grid';
+    $('#directorySearch').addEventListener('input', paintSites);
+    $('#directoryFilter').addEventListener('change', paintSites);
+    $('#directoryView').addEventListener('change', event => {
+      writeJson('zenou_directory_view', event.target.value);
+      paintSites();
+    });
     paintSites();
     paintRecent();
     setupShell();

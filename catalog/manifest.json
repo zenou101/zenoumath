@@ -1,9 +1,9 @@
 {
   "build": "2026-11-27",
   "totals": {
-    "entries": 6655,
+    "entries": 6686,
     "embeddedEntries": 6562,
-    "external": 2,
+    "external": 123,
     "lo": 13,
     "pf": 343,
     "sc": 2025,
@@ -16,15 +16,16 @@
     "gamedistribution": 1,
     "hoodamath": 661,
     "crazygames-official": 3008,
-    "official-link": 90,
-    "externalOnly": 91
+    "externalOnly": 122,
+    "official-link": 121
   },
   "verification": {
     "method": "Catalog entries provide embedded player launch URLs. External hosts control availability. The GN-Math source file audit is recorded separately.",
     "hoodamath": "Every HoodaMath game is played from their own build URL (hoodamath.com/mobile/games/<dir>/game.html), checked for HTTP 200 and for the absence of X-Frame-Options / CSP frame-ancestors. Maths categories are skipped; puzzle, logic and board games are kept.",
     "scratch": "Every Scratch ID probed against the official Scratch API · official /embed player",
     "crazygames": "Titles served from games.crazygames.com are embedded through that file host; publisher builds are embedded from their own domain.",
-    "providerNote": "pf games load from the publisher's own hosting with no portal shell."
+    "providerNote": "pf games load from the publisher's own hosting with no portal shell.",
+    "officialLinks": "New source-page listings are direct links. They make no embedding or redistribution claim."
   },
   "gnMath": {
     "source": "https://raw.githubusercontent.com/gn-math/assets/6bacc0f4e61e95e6a4e4309a63b189e179d91e34/zones.json",
