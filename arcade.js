@@ -1,342 +1,559 @@
-import { gamePortals } from '/catalog/portals.js';
+/* ZenouMath games catalogue.
+ *
+ * One catalogue (catalog/games.json), one website directory
+ * (catalog/sites.json), one grid. Search, filters, sort and layout all update
+ * in place: no reload, no second copy of the data, no per-page game lists.
+ */
 import { paintQueue, queueButton, watchQueue } from '/js/play-later.js';
 
 const $ = id => document.getElementById(id);
+const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+const PAGE_SIZE = 48;
+const GENRES = ['Action', 'Racing', 'Puzzle', 'Sports', 'Adventure', 'Arcade', 'GN-Math'];
+const LAYOUTS = [
+  ['compact', 'Compact grid', '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="10" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="4" height="5" rx="1"/><rect x="3" y="10" width="5" height="5" rx="1"/><rect x="10" y="10" width="5" height="5" rx="1"/><rect x="17" y="10" width="4" height="5" rx="1"/><rect x="3" y="17" width="5" height="4" rx="1"/><rect x="10" y="17" width="5" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/>'],
+  ['standard', 'Standard grid', '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'],
+  ['large', 'Large grid', '<rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/><rect x="13" y="14" width="8" height="7" rx="1"/>'],
+  ['list', 'List', '<rect x="3" y="4" width="4" height="4" rx="1"/><rect x="10" y="5" width="11" height="2" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="10" y="11" width="11" height="2" rx="1"/><rect x="3" y="16" width="4" height="4" rx="1"/><rect x="10" y="17" width="11" height="2" rx="1"/>'],
+];
 
-
-
-function icon(name) {
-  const symbol = name === 'upRight' ? 'external' : name;
-  return '<svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#' + symbol + '"/></svg>';
+function icon(name, viewBox = '0 0 24 24') {
+  return `<svg aria-hidden="true" viewBox="${viewBox}"><use href="/assets/ui-icons.svg#${name}"/></svg>`;
+}
+function svgPaths(paths) {
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">${paths}</svg>`;
+}
+function store(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+}
+function prefs() {
+  const saved = store('zenou_prefs', {});
+  return saved && typeof saved === 'object' ? saved : {};
+}
+function savePref(key, value) {
+  const next = { ...prefs(), [key]: value };
+  try { localStorage.setItem('zenou_prefs', JSON.stringify(next)); } catch { /* quota */ }
+  if (typeof window.ZenouSettings?.setPref === 'function') window.ZenouSettings.setPref(key, value);
+}
+function favourites() {
+  const list = store('zenou_fav', []);
+  return new Set(Array.isArray(list) ? list : []);
+}
+function recentIds() {
+  const list = store('zenou_recent', []);
+  if (!Array.isArray(list)) return [];
+  return [...new Set(list.filter(Boolean).map(row => row.id).filter(Boolean))];
 }
 
-document.querySelectorAll('[data-icon]').forEach(element => {
-  element.innerHTML = icon(element.dataset.icon);
-});
-
-const genres = ['Action', 'Racing', 'Sports', 'Puzzle', 'Adventure', 'Arcade', 'GN-Math'];
-const covers = {
-  'lo-among-us': 'among',
-  'lo-geometry-dash': 'geometry',
-  'lo-terraria': 'terraria',
-  'lo-clustertruck': 'cluster',
-  'lo-granny': 'granny',
-  'lo-hollow-knight-silksong': 'silksong',
+const state = {
+  games: [],
+  sites: [],
+  matched: [],
+  shown: 0,
+  load: 'loading',
+  query: '',
+  genre: '',
+  sort: '',
+  favOnly: false,
+  layout: prefs().gameLayout || 'standard',
 };
-const slides = [
-  {
-    id: 'lo-hollow-knight-silksong',
-    title: 'Hollow Knight: Silksong',
-    subtitle: 'Metroidvania',
-    lines: ['Hollow Knight:', 'Silksong'],
-    description: 'Explore a haunted kingdom of silk and song.',
-    image: 'silksong-library_hero',
-    cover: 'silksong-header',
-  },
-  {
-    id: 'lo-terraria',
-    title: 'Terraria',
-    subtitle: 'Sandbox',
-    description: 'Dig, fight and build your way through a pixel world.',
-    image: 'terraria-library_hero',
-    cover: 'terraria-header',
-  },
-  {
-    id: 'lo-2048',
-    title: '2048',
-    subtitle: 'Puzzle',
-    description: 'Slide matching tiles together and build your way to 2048.',
-    image: '/assets/thumbs/2048.svg',
-    cover: '/assets/thumbs/2048.svg',
-  },
-];
-const picks = ['polytrack', 'lo-geometry-dash', 'lo-terraria', 'lo-crossy-road'];
-const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-const pageSize = 32;
-let activeSlide = 0;
-let games = [];
-let matched = [];
-let shown = 0;
-let loadState = 'loading';
+
+function titleCase(value) {
+  if (!value) return '';
+  if (value.toLowerCase() === 'gn-math') return 'GN-Math';
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
 
 function gameUrl(game) {
   return game.direct || '/play/?id=' + encodeURIComponent(game.id);
 }
 
-function titleCase(value) {
-  if (value === 'gn-math') return 'GN-Math';
-  return value.charAt(0).toUpperCase() + value.slice(1);
+function esc(value) {
+  return String(value ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function artwork(path) {
-  return path.startsWith('/') ? path : '/art/' + path + '.jpg';
+function coverFor(game) {
+  if (!game.img) return '';
+  const value = String(game.img);
+  if (value.startsWith('/')) return value;
+  if (/^https:\/\//i.test(value)) return value;
+  return '/art/' + value + '.jpg';
 }
 
-function showSlide(index) {
-  activeSlide = (index + slides.length) % slides.length;
-  const slide = slides[activeSlide];
-  $('heroTitle').replaceChildren(...(slide.lines
-    ? [slide.lines[0], document.createElement('br'), slide.lines[1]]
-    : [slide.title]));
-  $('heroText').textContent = slide.description;
-  $('heroPlay').href = gameUrl(slide);
-  $('hero-image').src = artwork(slide.image);
-  $('hero').classList.toggle('hero-tile', slide.id === 'lo-2048');
-  $('slide-count').textContent = [activeSlide + 1, slides.length]
-    .map(value => String(value).padStart(2, '0')).join(' / ');
-  Array.from($('spotlight-menu').children).forEach((button, position) => {
-    button.setAttribute('aria-pressed', String(position === activeSlide));
-  });
+function showStatus(message) {
+  const node = $('catalogStatus');
+  if (!node) return;
+  node.textContent = message || '';
+  node.hidden = !message;
 }
 
-slides.forEach((slide, index) => {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'spotlight-option';
-  button.innerHTML = '<img alt="" width="144" height="96"><span><strong></strong><small></small></span>' + icon('right');
-  button.querySelector('img').src = artwork(slide.cover);
-  button.querySelector('strong').textContent = slide.title;
-  button.querySelector('small').textContent = slide.subtitle;
-  button.addEventListener('click', () => showSlide(index));
-  $('spotlight-menu').append(button);
-});
-$('next').addEventListener('click', () => showSlide(activeSlide + 1));
-$('prev').addEventListener('click', () => showSlide(activeSlide - 1));
-showSlide(0);
+/* ------------------------------------------------------------- navigation */
 
-function card(game) {
-  const link = document.createElement('a');
-  link.href = gameUrl(game);
-  link.className = 'card';
-  link.innerHTML = '<div class="art"><span class="fallback" aria-hidden="true" hidden></span><img alt="" loading="lazy"></div>'
-    + '<div class="card-copy"><div><h3></h3><small></small></div><span class="card-arrow">' + icon('upRight') + '</span></div>';
-
-  const image = link.querySelector('img');
-  const fallback = link.querySelector('.fallback');
-  fallback.textContent = game.t.slice(0, 2).toUpperCase();
-  if (game.id === 'polytrack') {
-    link.classList.add('polytrack-card');
-    fallback.textContent = 'POLYTRACK';
-  }
-  const showFallback = () => {
-    image.hidden = true;
-    fallback.hidden = false;
-  };
-  const cover = covers[game.id];
-  const source = cover ? '/art/' + cover + '-header.jpg' : game.img;
-  if (source) {
-    image.addEventListener('error', showFallback, { once: true });
-    image.src = source;
-  } else {
-    showFallback();
-  }
-  const action = document.createElement('span');
-  action.className = 'tile-launch';
-  action.textContent = game.availability ? 'View details' : 'Play';
-  link.querySelector('.art').append(action);
-  link.querySelector('h3').textContent = game.t;
-  link.querySelector('small').textContent = game.availability === 'unavailable' ? 'Build unavailable'
-    : game.availability === 'external' ? 'External link' : (game.cs || []).slice(0, 2).map(titleCase).join(' · ');
-  const tile = document.createElement('div');
-  tile.className = 'play-later-card';
-  tile.append(link, queueButton(game, { notify: message => { $('discover-notice').textContent = message; } }));
-  const info = document.createElement('button');
-  info.type = 'button';
-  info.className = 'card-info';
-  info.setAttribute('aria-label', 'About ' + game.t);
-  info.innerHTML = icon('info');
-  info.onclick = () => {
-    $('detailsTitle').textContent = game.t;
-    $('detailsCategory').textContent = (game.cs || []).map(titleCase).join(' · ');
-    $('detailsBody').textContent = game.note || game.dep || 'See the game page for launch options.';
-    $('detailsPlay').href = gameUrl(game);
-    $('gameDetails').showModal();
-  };
-  tile.append(info);
-  return tile;
+function readUrl() {
+  const params = new URLSearchParams(location.search);
+  state.query = (params.get('q') || '').trim();
+  state.genre = (params.get('c') || '').trim().toLowerCase();
+  state.favOnly = params.get('fav') === '1';
+  state.sort = params.get('sort') || prefs().gameSort || '';
+  if (params.has('all') && !state.genre && !state.query) state.genre = '';
 }
 
-function showMore() {
-  const batch = matched.slice(shown, shown + pageSize);
-  const cards = batch.map(card);
-  $('grid').append(...cards);
-  shown += cards.length;
-  $('more').hidden = shown >= matched.length;
-  return cards[0]?.querySelector('a');
-}
-
-function updateUrl(changes, { replace = false, scroll = false } = {}) {
+function writeUrl(changes, { replace = false } = {}) {
   const params = new URLSearchParams(location.search);
   for (const [key, value] of Object.entries(changes)) {
     if (value) params.set(key, value);
     else params.delete(key);
   }
-  const query = params.toString();
-  const target = '/' + (query ? '?' + query : '');
-  if (target !== location.pathname + location.search + location.hash) {
+  const target = '/' + (params.toString() ? '?' + params.toString() : '');
+  if (target !== location.pathname + location.search) {
     if (replace) history.replaceState(history.state, '', target);
     else history.pushState(null, '', target);
   }
-  renderCatalog();
-  if (scroll) window.scrollTo(0, 0);
 }
 
-function renderCatalog() {
-  const params = new URLSearchParams(location.search);
-  const input = params.get('q') || '';
-  const query = input.trim().toLowerCase();
-  const words = query ? query.split(/\s+/) : [];
-  const genre = params.get('c') || '';
-  const sort = params.get('sort') ?? document.documentElement.dataset.gameSort ?? '';
-  const browsing = !!(query || genre || params.has('all'));
-  const pageTitle = query ? 'Search results' : genre ? titleCase(genre) : browsing ? 'All games' : 'Discover';
+/* ------------------------------------------------------------- site cards */
 
-  if ($('query').value !== input) $('query').value = input;
-  $('sort').value = ['az', 'za', 'new', 'recent'].includes(sort) ? sort : '';
-  $('spot').hidden = browsing;
-  $('discover-actions').hidden = browsing;
-  $('discover-intro').classList.toggle('discover-home', !browsing);
-  $('place').textContent = pageTitle;
-  $('page-title').textContent = pageTitle;
-  $('page-deck').textContent = query ? 'Matching games for “' + input.trim() + '”.'
-    : genre ? 'Explore ' + genre + ' games.'
-      : browsing ? 'Explore the full browser game catalog.' : 'Find your next favorite browser game.';
-  $('sectionName').textContent = browsing ? 'Game catalog' : 'Browse games';
+const PROXY_BASE = 'https://uv.kodev-v2.my.id/?q=';
+function proxiedUrl(url) {
+  try {
+    const bytes = new TextEncoder().encode(url);
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return PROXY_BASE + btoa(binary);
+  } catch { return 'https://uv.kodev-v2.my.id/'; }
+}
+function openProxyTab(url) {
+  const target = proxiedUrl(url);
+  const tab = window.open('about:blank', '_blank');
+  if (!tab) { location.href = target; return; }
+  try { tab.opener = null; } catch { /* ignore */ }
+  try { tab.location.replace(target); } catch { try { tab.location.href = target; } catch { /* ignore */ } }
+}
 
-  const sites = genre ? [] : gamePortals.filter(site => site.label.toLowerCase().includes(query));
-  $('gameSites').hidden = !sites.length;
-  $('portalLinks').replaceChildren(...sites.map(site => {
-    const link = document.createElement('a');
-    link.href = site.url;
-    link.rel = 'noopener noreferrer';
+function siteCard(site) {
+  const link = document.createElement('a');
+  link.className = 'zn-site';
+  if (site.frame !== 'internal') {
+    link.href = proxiedUrl(site.url);
     link.target = '_blank';
-    link.textContent = site.label;
-    return link;
-  }));
-  const labels = ['All', ...genres];
-  if (genre && !labels.some(label => label.toLowerCase() === genre)) labels.push(titleCase(genre));
-  const filters = $('filters');
-  const rebuildFilters = labels.join('|') !== filters.dataset.labels;
-  if (rebuildFilters) {
-    filters.dataset.labels = labels.join('|');
-    filters.replaceChildren(...labels.map((label, index) => {
+    link.rel = 'noopener noreferrer';
+    link.addEventListener('click', event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      openProxyTab(site.url);
+    });
+  } else {
+    link.href = '/web/?site=' + encodeURIComponent(site.id) + '&launch=1';
+  }
+  link.title = site.note || site.name;
+  const art = document.createElement('span');
+  art.className = 'zn-site-art';
+  if (site.icon) {
+    const img = document.createElement('img');
+    img.src = site.icon;
+    img.alt = '';
+    img.width = 96;
+    img.height = 96;
+    img.loading = 'lazy';
+    img.addEventListener('error', () => {
+      img.remove();
+      const glyph = document.createElement('span');
+      glyph.className = 'zn-glyph';
+      glyph.textContent = site.glyph || site.name.slice(0, 1);
+      art.append(glyph);
+    }, { once: true });
+    art.append(img);
+  } else {
+    const glyph = document.createElement('span');
+    glyph.className = 'zn-glyph';
+    glyph.textContent = site.glyph || site.name.slice(0, 1);
+    art.append(glyph);
+  }
+  const dot = document.createElement('span');
+  dot.className = 'zn-site-dot';
+  dot.dataset.frame = site.frame || 'unknown';
+  dot.title = site.frame === 'internal' ? 'A ZenouMath page' : 'Opens in a new tab through the unblock proxy';
+  art.append(dot);
+  link.append(art);
+  const name = document.createElement('span');
+  name.className = 'zn-site-name';
+  name.textContent = site.name;
+  link.append(name);
+  return link;
+}
+
+function renderSites() {
+  const row = $('siteRow');
+  if (!row) return;
+  const featured = state.sites.filter(site => site.featured).slice(0, 4);
+  row.replaceChildren(...featured.map(siteCard));
+}
+
+async function loadSites() {
+  try {
+    const response = await fetch('/catalog/sites.json', { cache: 'no-cache' });
+    if (!response.ok) throw new Error('sites');
+    const data = await response.json();
+    state.sites = Array.isArray(data.sites) ? data.sites : [];
+    renderSites();
+  } catch { /* The games catalogue still works without the website row. */ }
+}
+
+/* ------------------------------------------------------------- game cards */
+
+function makeCard(game) {
+  const wrap = document.createElement('div');
+  wrap.className = 'zn-game-wrap';
+
+  const link = document.createElement('a');
+  link.className = 'zn-game';
+  link.href = gameUrl(game);
+  link.dataset.id = game.id;
+
+  const art = document.createElement('span');
+  art.className = 'zn-game-art';
+  const source = coverFor(game);
+  if (source) {
+    const img = document.createElement('img');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.src = source;
+    img.addEventListener('error', () => {
+      img.remove();
+      const glyph = document.createElement('span');
+      glyph.className = 'zn-glyph-art';
+      glyph.textContent = game.t.slice(0, 2).toUpperCase();
+      art.prepend(glyph);
+    }, { once: true });
+    art.append(img);
+  } else {
+    const glyph = document.createElement('span');
+    glyph.className = 'zn-glyph-art';
+    glyph.textContent = game.t.slice(0, 2).toUpperCase();
+    art.append(glyph);
+  }
+
+  if (game.availability === 'external') {
+    const badge = document.createElement('span');
+    badge.className = 'zn-game-badge';
+    badge.dataset.kind = 'external';
+    badge.textContent = 'External';
+    art.append(badge);
+  } else if (game.availability === 'unavailable') {
+    const badge = document.createElement('span');
+    badge.className = 'zn-game-badge';
+    badge.dataset.kind = 'unavailable';
+    badge.textContent = 'Source only';
+    art.append(badge);
+  }
+
+  const overlay = document.createElement('span');
+  overlay.className = 'zn-game-overlay';
+  const play = document.createElement('span');
+  play.className = 'zn-play';
+  play.innerHTML = svgPaths('<path d="M8 5.5v13l11-6.5z"/>');
+  play.append(document.createTextNode(game.availability === 'unavailable' ? 'Details' : 'Play'));
+  overlay.append(play);
+  art.append(overlay);
+
+  const name = document.createElement('span');
+  name.className = 'zn-game-name';
+  name.textContent = game.t;
+  link.append(art, name);
+
+  const tools = document.createElement('div');
+  tools.className = 'zn-card-tools';
+
+  const fav = document.createElement('button');
+  fav.type = 'button';
+  fav.dataset.fav = game.id;
+  fav.setAttribute('aria-label', 'Favourite ' + game.t);
+  fav.innerHTML = svgPaths('<path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 1 1 19.4 13z"/>');
+  const saved = favourites();
+  fav.setAttribute('aria-pressed', String(saved.has(game.id)));
+  fav.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    const list = favourites();
+    const on = !list.has(game.id);
+    if (on) list.add(game.id); else list.delete(game.id);
+    try { localStorage.setItem('zenou_fav', JSON.stringify([...list])); } catch { /* quota */ }
+    fav.setAttribute('aria-pressed', String(on));
+    window.dispatchEvent(new CustomEvent('zenou:fav', { detail: game.id }));
+  });
+
+  const info = document.createElement('button');
+  info.type = 'button';
+  info.setAttribute('aria-label', 'About ' + game.t);
+  info.innerHTML = svgPaths('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 4.2a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6zM10.8 10h2.4v7h-2.4z"/>');
+  info.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    openDetails(game);
+  });
+
+  tools.append(fav, info);
+  wrap.append(link, tools, queueButton(game, { className: 'zn-queue', notify: message => showStatus(message) }));
+  return wrap;
+}
+
+function openDetails(game) {
+  const dialog = $('gameDetails');
+  if (!dialog) return;
+  $('detailsTitle').textContent = game.t;
+  $('detailsMeta').textContent = (game.cs || []).slice(0, 3).map(titleCase).join(' · ') || 'Game';
+  $('detailsBody').textContent = game.note || game.dep || 'See the game page for launch options.';
+  const play = $('detailsPlay');
+  play.href = gameUrl(game);
+  play.textContent = game.availability === 'unavailable' ? 'Open source page' : 'Play now';
+  dialog.showModal();
+}
+
+/* --------------------------------------------------------------- filtering */
+
+function reloadFavourites() {
+  const saved = favourites();
+  for (const button of document.querySelectorAll('[data-fav]')) {
+    button.setAttribute('aria-pressed', String(saved.has(button.dataset.fav)));
+  }
+  if (state.favOnly) render();
+}
+
+function matches(game) {
+  if (state.favOnly && !favourites().has(game.id)) return false;
+  if (state.genre && !(game.cs || []).some(category => category.toLowerCase() === state.genre)) return false;
+  if (state.query) {
+    const words = state.query.toLowerCase().split(/\s+/).filter(Boolean);
+    const haystack = (game.t + ' ' + (game.cs || []).join(' ')).toLowerCase();
+    if (!words.every(word => haystack.includes(word))) return false;
+  }
+  return true;
+}
+
+function sortGames(list) {
+  if (state.sort === 'new') list.sort((a, b) => String(b.added || '').localeCompare(String(a.added || '')));
+  else if (state.sort === 'az') list.sort((a, b) => collator.compare(a.t, b.t));
+  else if (state.sort === 'za') list.sort((a, b) => collator.compare(b.t, a.t));
+  else if (state.sort === 'recent') {
+    const order = new Map(recentIds().map((id, index) => [id, index]));
+    list.sort((a, b) => (order.has(a.id) ? order.get(a.id) : 9999) - (order.has(b.id) ? order.get(b.id) : 9999));
+  }
+  return list;
+}
+
+function visibleGames() {
+  return sortGames(state.games.filter(matches));
+}
+
+function updateHeading() {
+  const browsing = !!(state.query || state.genre || state.favOnly || new URLSearchParams(location.search).has('all'));
+  const title = state.query ? 'Search results'
+    : state.favOnly ? 'Favourites'
+      : state.genre ? titleCase(state.genre)
+        : browsing ? 'All games' : 'Games';
+  $('page-title').textContent = title;
+  $('sectionName').textContent = state.query ? 'Results' : state.favOnly ? 'Favourites' : state.genre ? titleCase(state.genre) : 'Games';
+  const count = state.load === 'ready' ? state.matched.length : null;
+  $('count').textContent = state.load === 'loading' ? 'Loading games…'
+    : state.load === 'error' ? 'Catalogue unavailable'
+      : count.toLocaleString() + (count === 1 ? ' game' : ' games');
+  $('pageInfo').textContent = count == null ? '' : count.toLocaleString() + (count === 1 ? ' game' : ' games');
+  document.title = title === 'Games' ? 'Games · ZenouMath' : title + ' · ZenouMath';
+}
+
+function renderControls() {
+  const chips = [{ label: 'All', genre: '', fav: false }, ...GENRES.map(label => ({ label, genre: label.toLowerCase(), fav: false })), { label: 'Favourites', genre: '', fav: true }];
+  const host = $('filters');
+  const signature = chips.map(c => c.label).join('|');
+  if (host.dataset.signature !== signature) {
+    host.dataset.signature = signature;
+    host.replaceChildren(...chips.map(chip => {
       const button = document.createElement('button');
       button.type = 'button';
-      button.textContent = label;
-      button.dataset.genre = index ? label.toLowerCase() : '';
+      button.className = 'zn-chip';
+      button.textContent = chip.label;
+      button.dataset.genre = chip.genre;
+      button.dataset.fav = chip.fav ? '1' : '';
       button.addEventListener('click', () => {
-        updateUrl({ all: '1', c: button.dataset.genre });
-        $('catalog').scrollIntoView({ block: 'nearest' });
+        state.genre = chip.genre;
+        state.favOnly = chip.fav;
+        writeUrl({ all: '1', c: chip.genre, fav: chip.fav ? '1' : '', q: state.query });
+        render();
       });
       return button;
     }));
   }
-  Array.from(filters.children).forEach(button => {
-    button.setAttribute('aria-pressed', String(button.dataset.genre === genre));
-  });
-  document.querySelectorAll('.za-group a').forEach(link => {
-    if (link.pathname !== '/') return;
-    const route = new URLSearchParams(link.search);
-    const current = !query && (route.has('c') ? route.get('c') === genre
-      : route.has('all') ? browsing && !genre : !browsing);
-    if (current) link.setAttribute('aria-current', 'page');
-    else link.removeAttribute('aria-current');
-  });
-
-  matched = games.filter(game => {
-    const categories = game.cs || [];
-    return (!genre || categories.includes(genre))
-      && words.every(word => game.searchText.includes(word));
-  });
-  if (sort === 'new') matched.sort((a, b) => (b.added || '').localeCompare(a.added || ''));
-  if (sort === 'az') matched.sort((a, b) => collator.compare(a.t, b.t));
-  if (sort === 'za') matched.sort((a, b) => collator.compare(b.t, a.t));
-
-  if (sort === 'recent') {
-    let history = [];
-    try { history = JSON.parse(localStorage.getItem('zenou_recent')) || []; } catch {}
-    const times = new Map(Array.isArray(history) ? history.filter(Boolean).map(row => [row.id, row.ts]) : []);
-    matched.sort((a, b) => (times.get(b.id) || 0) - (times.get(a.id) || 0));
+  for (const button of host.children) {
+    const active = button.dataset.fav === '1' ? state.favOnly : !state.favOnly && button.dataset.genre === state.genre;
+    button.setAttribute('aria-pressed', String(active));
   }
-  $('count').textContent = loadState === 'loading' ? 'Loading games…'
-    : loadState === 'error' ? '' : matched.length.toLocaleString() + (matched.length === 1 ? ' game' : ' games');
-  $('grid').replaceChildren();
-  shown = 0;
-  showMore();
-  $('empty').hidden = loadState === 'loading' || matched.length > 0;
-  $('empty-message').textContent = loadState === 'error'
-    ? 'The catalog could not load. Refresh the page to try again.'
-    : 'No games match your filters.';
-  $('clear').hidden = loadState === 'error';
+
+  const sort = $('sort');
+  const value = ['new', 'recent', 'az', 'za'].includes(state.sort) ? state.sort : '';
+  if (sort.value !== value) sort.value = value;
+
+  for (const button of $('layoutSwitch').querySelectorAll('[data-layout]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.layout === state.layout));
+  }
 }
 
-$('query').addEventListener('input', event => {
-  const replace = !!history.state?.typing;
-  updateUrl({ q: event.target.value }, { replace });
-  history.replaceState({ typing: true }, '');
-});
-$('query').addEventListener('blur', () => {
-  if (history.state?.typing) history.replaceState(null, '');
-});
-new MutationObserver(renderCatalog).observe(document.documentElement, {
-  attributes: true, attributeFilter: ['data-game-sort'],
-});
-$('sort').addEventListener('change', event => updateUrl({ sort: event.target.value || 'featured' }));
-$('clear').addEventListener('click', () => {
-  updateUrl({ q: '', c: '', sort: '', all: '1' }, { scroll: true });
-  $('query').focus();
-});
-$('more').addEventListener('click', () => showMore()?.focus());
-$('shuffle').addEventListener('click', () => {
-  const pool = (matched.length ? matched : games).filter(game => !game.availability);
-  if (pool.length) location.assign(gameUrl(pool[Math.floor(Math.random() * pool.length)]));
-});
-watchQueue(() => paintQueue());
-window.addEventListener('popstate', renderCatalog);
-document.addEventListener('keydown', event => {
-  if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey
-    || event.target.closest('input, textarea, select, [contenteditable]')
-    || document.querySelector('#consentGate, dialog[open]')) return;
-  event.preventDefault();
-  $('query').focus();
-});
+function paint(reset = true) {
+  state.matched = visibleGames();
+  if (reset) {
+    state.shown = 0;
+    $('grid').replaceChildren();
+  }
+  const grid = $('grid');
+  const batch = state.matched.slice(state.shown, state.shown + PAGE_SIZE);
+  const fragment = document.createDocumentFragment();
+  batch.forEach(game => fragment.append(makeCard(game)));
+  grid.append(fragment);
+  state.shown += batch.length;
+  $('more').hidden = state.shown >= state.matched.length;
+  $('more').textContent = state.shown < state.matched.length
+    ? `Show more (${(state.matched.length - state.shown).toLocaleString()} left)`
+    : 'Show more';
+  $('empty').hidden = state.load !== 'ready' || state.matched.length > 0;
+  $('emptyMessage').textContent = state.load === 'error'
+    ? 'The game catalogue could not load. Refresh the page to try again.'
+    : state.favOnly ? 'No favourites yet. Tap the heart on a game to save it here.'
+      : 'No games match that search.';
+  $('emptyClear').hidden = state.load === 'error';
+  updateHeading();
+  renderControls();
+  if (state.load === 'error') showStatus('The game catalogue could not load.');
+}
 
-function renderShelves() {
-  const byId = new Map(games.map(game => [game.id, game]));
-  $('pickGrid').replaceChildren(...picks.map(id => byId.get(id)).filter(Boolean).map(card));
-  let recentIds = [];
+function render() {
+  const params = new URLSearchParams(location.search);
+  state.query = (params.get('q') || '').trim();
+  state.genre = (params.get('c') || '').trim().toLowerCase();
+  state.favOnly = params.get('fav') === '1';
+  if (params.has('sort')) state.sort = params.get('sort') || '';
+  const input = $('query');
+  if (input.value !== state.query) input.value = state.query;
+
+  // A category may arrive from a game page that is not in the short chip list.
+  if (state.genre && !GENRES.some(label => label.toLowerCase() === state.genre)) {
+    GENRES.push(titleCase(state.genre));
+  }
+  paint(true);
+}
+
+function renderRecent() {
+  const section = $('recentSection');
+  const grid = $('recentGrid');
+  if (!section || !grid) return;
+  const byId = new Map(state.games.map(game => [game.id, game]));
+  const recent = recentIds().map(id => byId.get(id)).filter(Boolean).slice(0, 6);
+  grid.replaceChildren(...recent.map(makeCard));
+  section.hidden = recent.length === 0;
+}
+
+/* ------------------------------------------------------------------- boot */
+
+function bootLayout() {
+  const saved = prefs().gameLayout;
+  if (['compact', 'standard', 'large', 'list'].includes(saved)) state.layout = saved;
+  document.documentElement.dataset.gameLayout = state.layout;
+  const host = $('layoutSwitch');
+  host.replaceChildren(...LAYOUTS.map(([id, label, paths]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.layout = id;
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.innerHTML = svgPaths(paths);
+    button.addEventListener('click', () => {
+      state.layout = id;
+      document.documentElement.dataset.gameLayout = id;
+      savePref('gameLayout', id);
+      renderControls();
+    });
+    return button;
+  }));
+  renderControls();
+}
+
+function bootEvents() {
+  $('query').addEventListener('input', event => {
+    state.query = event.target.value.trim();
+    writeUrl({ q: state.query }, { replace: true });
+    paint(true);
+  });
+  $('query').addEventListener('keydown', event => {
+    if (event.key === 'Escape' && event.target.value) {
+      event.target.value = '';
+      state.query = '';
+      writeUrl({ q: '' }, { replace: true });
+      paint(true);
+    }
+  });
+  $('sort').addEventListener('change', event => {
+    state.sort = event.target.value;
+    savePref('gameSort', state.sort || 'featured');
+    writeUrl({ sort: state.sort }, { replace: true });
+    paint(true);
+  });
+  $('more').addEventListener('click', () => paint(false));
+  $('emptyClear').addEventListener('click', () => {
+    state.query = '';
+    state.genre = '';
+    state.favOnly = false;
+    writeUrl({ q: '', c: '', fav: '' });
+    $('query').value = '';
+    paint(true);
+  });
+  $('shuffle').addEventListener('click', () => {
+    const pool = (state.matched.length ? state.matched : state.games).filter(game => !game.availability);
+    if (pool.length) location.assign(gameUrl(pool[Math.floor(Math.random() * pool.length)]));
+  });
+  $('gameDetails').addEventListener('close', () => {});
+  window.addEventListener('popstate', render);
+  window.addEventListener('pageshow', event => {
+    if (event.persisted && state.load === 'ready') renderRecent();
+  });
+  window.addEventListener('zenou:fav', reloadFavourites);
+  window.addEventListener('zenou:recent-cleared', renderRecent);
+  document.addEventListener('keydown', event => {
+    if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.target.closest('input, textarea, select, [contenteditable]') || document.querySelector('#consentGate, dialog[open]')) return;
+    event.preventDefault();
+    $('query').focus();
+  });
+  watchQueue(() => paintQueue());
+}
+
+async function boot() {
+  bootLayout();
+  bootEvents();
+  readUrl();
+  updateHeading();
+  loadSites();
+  paintQueue();
+
   try {
-    const records = JSON.parse(localStorage.getItem('zenou_recent'));
-    if (Array.isArray(records)) recentIds = [...new Set(records.map(record => record?.id))];
-  } catch { /* Storage can be unavailable. */ }
-  const recent = recentIds.map(id => byId.get(id)).filter(Boolean).slice(0, 4);
-  $('recent-grid').replaceChildren(...recent.map(card));
-  $('recent').hidden = recent.length === 0;
-}
-
-window.addEventListener('pageshow', event => {
-  if (event.persisted && loadState === 'ready') renderShelves();
-});
-
-renderCatalog();
-fetch('/catalog/games.json?v=polytrack-embed')
-  .then(response => {
-    if (!response.ok) throw new Error('Catalog request failed');
-    return response.json();
-  })
-  .then(data => {
-    games = data.games.map(game => ({
+    const response = await fetch('/catalog/games.json?v=2026-11-27', { cache: 'no-cache' });
+    if (!response.ok) throw new Error('catalogue');
+    const data = await response.json();
+    if (!Array.isArray(data.games)) throw new Error('catalogue');
+    state.games = data.games.map(game => ({
       ...game,
       searchText: [game.t, ...(game.cs || [])].join(' ').toLowerCase(),
     }));
-    loadState = 'ready';
-    $('shuffle').disabled = !games.length;
-    renderShelves();
-    renderCatalog();
-  })
-  .catch(() => {
-    games = [];
-    loadState = 'error';
-    $('shuffle').disabled = true;
-    renderCatalog();
-  });
+    state.load = 'ready';
+    const stamp = String(data.v || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+    $('updated').textContent = 'Last updated ' + (stamp
+      ? new Date(+stamp[1], +stamp[2] - 1, +stamp[3]).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      : 'recently');
+    renderRecent();
+    render();
+  } catch {
+    state.load = 'error';
+    state.games = [];
+    render();
+  }
+}
+
+boot();

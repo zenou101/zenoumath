@@ -3,15 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111014">
-  <meta name="description" content="Find your next browser game on Zenou Arcade. Browse by genre, pick a spotlight game, or shuffle the catalog.">
-  <title>ZenouMath</title>
+  <meta name="theme-color" content="#08090a">
+  <meta name="description" content="Games and websites on ZenouMath. Search the catalogue, switch between four layouts, save favourites and open permitted sites in the built-in viewer.">
+  <title>Games · ZenouMath</title>
   <link rel="canonical" href="https://zenoumath.space/">
   <link rel="icon" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/arcade-shell.css">
   <link rel="stylesheet" href="/css/accent.css">
   <link rel="stylesheet" href="/css/consent.css">
   <link rel="stylesheet" href="/css/arcade-discover.css?v=21">
+  <link rel="stylesheet" href="/css/interface.css?v=20">
+  <link rel="stylesheet" href="/css/zenou.css?v=9">
   <script>
     try {
       if (window.top === window && new URLSearchParams(location.search).get('interface') === 'classic') {
@@ -22,6 +24,7 @@
       if (!agreement || agreement.v !== '2026-11-20') document.documentElement.classList.add('consent-pending');
       const prefs = JSON.parse(localStorage.getItem('zenou_prefs'));
       if (prefs?.theme) document.documentElement.dataset.theme = prefs.theme;
+      if (prefs?.gameLayout) document.documentElement.dataset.gameLayout = prefs.gameLayout;
       if (prefs?.hue != null && prefs.hueRgb && prefs.hue2Rgb) {
         for (const [name, rgb] of [['accent', prefs.hueRgb], ['accent-2', prefs.hue2Rgb]]) {
           document.documentElement.style.setProperty('--' + name, 'rgb(' + rgb + ')');
@@ -33,172 +36,127 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=catalogue-10"></script>
-  <script src="/js/arcade-accent.js" defer></script>
+  <script type="module" src="/arcade.js?v=redesign-5"></script>
   <script src="/js/atmosphere.js?v=blue-shell" defer></script>
-  <script src="/js/settings.js?v=blue-shell" defer></script>
-  <script type="module" src="/js/os-switch.js"></script>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/css/interface.css?v=20">
+  <script src="/js/settings.js?v=redesign-1" defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
 </head>
 <body class="arcade-discover">
   <a class="skip-link" href="#main">Skip to content</a>
-  <aside class="za-rail" aria-label="Arcade navigation">
+
+  <aside class="za-rail" aria-label="ZenouMath navigation">
     <a class="za-brand" href="/" aria-label="ZenouMath home"><img class="za-mark" src="/assets/favicon.svg" alt="" width="29" height="29"><span>ZenouMath</span></a>
-    <div class="za-scroll">
+    <div class="za-scroll" id="arcade-navigation">
       <div class="za-group">
-        <small>ARCADE</small>
-        <nav aria-label="Arcade">
-          <a href="/" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#discover"/></svg>Discover</a>
-          <a href="/?all=1"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>All games</a>
-          <a href="/?c=gn-math"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>GN-Math</a>
-          <a href="/math-games/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#calculator"/></svg>Math Games</a>
-          <a href="/library/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#library"/></svg>My library</a>
-        </nav>
-      </div>
-      <div class="za-group">
-        <small>EXPLORE</small>
-        <nav aria-label="Explore">
-          <a href="/music/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#music"/></svg>Music</a>
-          <a href="/books/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#book"/></svg>Books &amp; Manga</a>
-          <a href="/web/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#globe"/></svg>Web</a>
-          <a href="/ai/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#spark"/></svg>AI</a>
-          <a href="/social/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#social"/></svg>Social</a>
-          <a href="/search/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#search"/></svg>Search</a>
-        </nav>
-      </div>
-      <div class="za-group">
-        <small>GENRES</small>
-        <nav aria-label="Genres">
-          <a href="/?c=action"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#bolt"/></svg>Action</a>
-          <a href="/?c=racing"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#racing"/></svg>Racing</a>
-          <a href="/?c=sports"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#sports"/></svg>Sports</a>
-          <a href="/?c=puzzle"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#puzzle"/></svg>Puzzle</a>
-          <a href="/?c=adventure"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#adventure"/></svg>Adventure</a>
+        <nav aria-label="Main sections">
+          <a href="/" aria-current="page">Games</a>
+          <a href="/web/">Websites</a>
+          <a href="/web/?kind=app">Apps</a>
         </nav>
       </div>
     </div>
-    <a class="za-foot" href="/legal/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#info"/></svg>About Zenou</a>
   </aside>
-  <main id="main">
-    <header class="toolbar">
-      <div class="za-crumb">Arcade <i aria-hidden="true">/</i> <strong id="place">Discover</strong></div>
-      <label class="search">
-        <span data-icon="search"></span>
-        <input type="search" id="query" placeholder="Search games…" aria-label="Search games" aria-keyshortcuts="/">
-        <kbd aria-hidden="true">/</kbd>
-      </label>
-      <button class="shuffle" id="shuffle" type="button" disabled aria-label="Shuffle games" title="Play a random game">
-        <span data-icon="shuffle"></span> <span class="shuffle-label">Shuffle</span>
-      </button>
-      <select class="za-accent" aria-label="Accent color" title="Accent color">
-        <option value="white">White</option>
-        <option value="aurora">Aurora</option>
-        <option value="cyan">Cyan</option>
-        <option value="violet">Violet</option>
-        <option value="emerald">Emerald</option>
-        <option value="amber">Amber</option>
-        <option value="crimson">Crimson</option>
-        <option value="ice">Ice</option>
-        <option value="ocean">Ocean</option>
-        <option value="sunset">Sunset</option>
-        <option value="rose">Rose</option>
-        <option value="mint">Mint</option>
-        <option value="gold">Gold</option>
-      </select>
+
+  <main id="main" class="zn-main">
+    <header class="zn-page-head">
+      <div>
+        <h1 id="page-title">Games</h1>
+        <p class="zn-page-meta"><span id="updated">Last updated 27 Nov 2026</span> · <span id="count" role="status">Loading games…</span></p>
+      </div>
+      <div class="zn-actions">
+        <button class="zn-btn" id="shuffle" type="button" title="Play a random game">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h3c5 0 7 12 12 12h3M18 4l3 2-3 2M3 18h3c2.2 0 3.7-2.3 5.1-5"/></svg>
+          <span>Shuffle</span>
+        </button>
+        </div>
     </header>
 
-    <div class="content">
-      <p id="discover-notice" class="site-visually-hidden" role="status"></p>
-      <section class="page-heading" id="discover-intro" aria-labelledby="page-title">
-        <h1 id="page-title">Discover</h1>
-        <p id="page-deck">Find your next favorite browser game.</p>
-        <nav id="discover-actions" class="discover-actions" aria-label="Discover shortcuts">
-          <a class="btn btn-solid" href="/?all=1"><span data-icon="gamepad"></span> Browse all games</a>
-          <a class="btn btn-ghost" href="/library/#later"><span data-icon="bookmark"></span> Play Later</a>
-        </nav>
-      </section>
+    <label class="zn-search">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg>
+      <input id="query" type="search" placeholder="Search all games" aria-label="Search games" autocomplete="off" spellcheck="false" aria-keyshortcuts="/">
+      <kbd aria-hidden="true">/</kbd>
+    </label>
 
-      <div id="spot">
-        <section class="spotlight" aria-label="Game spotlight">
-          <div class="hero" id="hero">
-            <img id="hero-image" class="hero-image" alt="" fetchpriority="high" src="/art/silksong-library_hero.jpg">
-            <div class="hero-copy">
-              <p class="feature"><span data-icon="spark"></span> Arcade spotlight</p>
-              <h2 id="heroTitle">Hollow Knight:<br>Silksong</h2>
-              <p id="heroText">Explore a haunted kingdom of silk and song.</p>
-              <a class="btn btn-solid play" id="heroPlay" href="/play/?id=lo-hollow-knight-silksong"><span data-icon="play"></span> Play now</a>
-            </div>
-            <div class="hero-controls">
-              <span id="slide-count" aria-live="polite">01 / 03</span>
-              <button id="prev" type="button" aria-label="Previous spotlight" data-icon="left"></button>
-              <button id="next" type="button" aria-label="Next spotlight" data-icon="right"></button>
-            </div>
-          </div>
-          <aside class="spotlight-list" aria-labelledby="spotlight-list-title">
-            <h2 id="spotlight-list-title">Featured games</h2>
-            <div id="spotlight-menu" class="spotlight-menu" role="group" aria-label="Choose a spotlight game"></div>
-          </aside>
-        </section>
+    <section class="zn-section" id="sites" aria-labelledby="sites-heading">
+      <div class="zn-section-head">
+        <span class="zn-side"></span>
+        <h2 id="sites-heading">Websites</h2>
+        <span class="zn-side"><a href="/web/">All websites</a></span>
+      </div>
+      <div id="siteRow" class="zn-sites"></div>
+    </section>
 
-        <section class="shelf" id="recent" hidden aria-labelledby="recent-heading">
-          <div class="heading"><h2 id="recent-heading">Recently played</h2><a href="/library/">My library <span data-icon="upRight"></span></a></div>
-          <div id="recent-grid" class="cards"></div>
-        </section>
+    <section class="zn-section" id="recentSection" hidden aria-labelledby="recent-heading">
+      <div class="zn-section-head">
+        <span class="zn-side"></span>
+        <h2 id="recent-heading">Recently played</h2>
+        <span class="zn-side"></span>
+      </div>
+      <div id="recentGrid" class="zn-games"></div>
+    </section>
 
-        <section class="shelf" aria-labelledby="picks-heading">
-          <div class="heading">
-            <h2 id="picks-heading"><span class="section-icon" data-icon="bolt"></span> Arcade picks</h2>
-            <a href="/?all=1">All games <span data-icon="upRight"></span></a>
-          </div>
-          <div id="pickGrid" class="cards"></div>
-        </section>
+    <section class="zn-section" id="catalog" aria-labelledby="sectionName">
+      <div class="zn-section-head">
+        <span class="zn-side"></span>
+        <h2 id="sectionName">Games</h2>
+        <span class="zn-side" id="pageInfo"></span>
       </div>
 
-      <section class="shelf catalog" id="catalog" aria-labelledby="sectionName">
-        <div class="heading"><h2 id="sectionName">Browse games</h2><span id="count" role="status"></span></div>
-        <div class="catalog-tools">
-          <div class="filters" id="filters" role="group" aria-label="Game genres"></div>
-          <label class="sort">Layout
-            <select id="gameLayout">
-              <option value="compact">Compact grid</option>
-              <option value="standard" selected>Standard grid</option>
-              <option value="large">Large grid</option>
-              <option value="list">List</option>
-            </select>
-          </label>
-          <label class="sort">Sort by
-            <select id="sort">
+      <div class="zn-tools">
+        <div id="filters" class="zn-chips" role="group" aria-label="Game categories"></div>
+        <div class="zn-tools-right">
+          <div class="zn-seg" id="layoutSwitch" role="group" aria-label="Game layout"></div>
+          <label>
+            <span class="site-visually-hidden">Sort games</span>
+            <select id="sort" class="zn-select" aria-label="Sort games">
               <option value="">Featured</option>
               <option value="new">Recently added</option>
-              <option value="recent">Recently played first</option>
+              <option value="recent">Recently played</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
             </select>
           </label>
         </div>
-        <section id="gameSites" hidden aria-labelledby="gameSitesHeading"><h3 id="gameSitesHeading">Game websites</h3><div id="portalLinks"></div></section>
-        <dialog id="gameDetails" aria-labelledby="detailsTitle"><h2 id="detailsTitle"></h2><p id="detailsCategory"></p><p id="detailsBody"></p><a class="btn btn-solid" id="detailsPlay">Open game</a> <form method="dialog"><button type="submit" autofocus>Close</button></form></dialog>
-        <div class="cards" id="grid"></div>
-        <div id="empty" class="empty" hidden>
-          <p id="empty-message"></p>
-          <button id="clear" type="button">Clear filters</button>
-        </div>
-        <button id="more" type="button" hidden>Load more games <span data-icon="down"></span></button>
-      </section>
-    </div>
-    <footer class="za-footer">
-      <a href="/">Zenou Arcade</a>
-      <nav aria-label="Site information">
-        <a href="/browse/#browse">Advanced catalog filters</a>
-        <a href="/legal/">Legal centre</a>
-        <a href="/legal/privacy/">Privacy</a>
-        <a href="/legal/contact/">Contact</a>
-        <a href="/legal/" data-consent-review>Use agreement</a>
-        <a href="https://github.com/zenou101">GitHub</a>
-      </nav>
-    </footer>
+      </div>
+
+      <p class="zn-status" id="catalogStatus" role="status"></p>
+      <div id="grid" class="zn-games"></div>
+
+      <div id="empty" class="zn-empty" hidden>
+        <p id="emptyMessage">No games match that search.</p>
+        <button class="zn-btn" id="emptyClear" type="button">Clear search and filters</button>
+      </div>
+
+      <div class="zn-more"><button id="more" class="zn-btn" type="button" hidden>Show more</button></div>
+    </section>
   </main>
+
+  <dialog id="gameDetails" class="zn-dialog" aria-labelledby="detailsTitle">
+    <div class="zn-viewer-bar">
+      <strong class="zn-viewer-title" id="detailsTitle">Game</strong>
+      <button class="zn-iconbtn" type="button" aria-label="Close" onclick="this.closest('dialog').close()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div style="padding:22px;max-width:640px">
+      <p class="zn-page-meta" id="detailsMeta"></p>
+      <p id="detailsBody" style="margin:12px 0 20px;color:var(--zn-muted);font-size:13.5px;line-height:1.7"></p>
+      <a class="zn-btn zn-btn-solid" id="detailsPlay" href="/">Play now</a>
+    </div>
+  </dialog>
+
+  <footer class="za-footer">
+    <a href="/">ZenouMath</a>
+    <nav aria-label="Site information">
+      <a href="/web/">Websites</a>
+      <a href="/browse/">Advanced catalogue</a>
+      <a href="/legal/">Legal centre</a>
+      <a href="/legal/privacy/">Privacy</a>
+      <a href="/legal/contact/">Contact</a>
+      <a href="/ui/">UI details</a>
+      <a href="/hero/">React homepage</a>
+      <a href="https://github.com/zenou101">GitHub</a>
+    </nav>
+  </footer>
 </body>
 </html>

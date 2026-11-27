@@ -1,20 +1,16 @@
-import { el, icon } from '/os/shared.js';
+import { el, icon } from './ui-kit.js';
 import { queueIds } from './play-later.js';
 
 const pages = [
   ['Discover', '/', 'discover', 'featured home'],
   ['All games', '/?all=1', 'gamepad', 'catalog browse'],
-  ['My library', '/library/', 'library', 'favorites ratings notes'],
-  ['Play Later', '/library/#later', 'bookmark', 'saved queue'],
+  ['Apps', '/web/?kind=app', 'spark', 'applications directory'],
+  ['Books & Manga', '/books/', 'book', 'read library classics manga'],
+  ['Websites', '/web/', 'globe', 'browser directory'],
+  ['Favourites', '/?fav=1', 'heart', 'saved games'],
   ['Math Games', '/math-games/', 'calculator', 'calculator practice'],
-  ['Books & Manga', '/books/', 'book', 'read'],
-  ['Web', '/web/', 'globe', 'browser'],
-  ['AI', '/ai/', 'spark', 'slate duckduckgo chat'],
-  ['Music', '/music/', 'music', 'listen'],
-  ['Social', '/social/', 'social', 'videos'],
   ['Account', '/account/', 'person', 'sign in login register'],
   ['Legal centre', '/legal/', 'info', 'terms privacy contact'],
-  ['ZenouOS Beta', '/os/', 'os-desktop', 'desktop apps'],
 ].map(([label, url, glyph, keywords]) => ({ label, url, glyph, keywords }));
 
 let catalog;
@@ -36,7 +32,7 @@ function gameLink(game) {
 
 function install() {
   const rail = document.querySelector('.site-masthead, .za-rail > .za-brand-row');
-  if (!rail || document.documentElement.hasAttribute('data-zenou-desktop') || document.querySelector('.quick-launch')) return;
+  if (!rail || document.querySelector('.quick-launch')) return;
 
   const shortcut = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘ K' : 'Ctrl K';
   const launcher = el('button', 'quick-launch');

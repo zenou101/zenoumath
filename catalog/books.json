@@ -1,0 +1,316 @@
+{
+  "v": "2026-11-27",
+  "updated": "2026-11-27",
+  "books": [
+    {
+      "id": "pride-and-prejudice",
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "year": 1813,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/1342",
+      "note": "Wit, manners and one of English literature's most enduring slow burns."
+    },
+    {
+      "id": "frankenstein",
+      "title": "Frankenstein",
+      "author": "Mary Shelley",
+      "year": 1818,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/84",
+      "note": "A creator, a creature and the cost of abandoning what we make."
+    },
+    {
+      "id": "dracula",
+      "title": "Dracula",
+      "author": "Bram Stoker",
+      "year": 1897,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/345",
+      "note": "Letters, diaries and a count arriving in London."
+    },
+    {
+      "id": "moby-dick",
+      "title": "Moby-Dick",
+      "author": "Herman Melville",
+      "year": 1851,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/2701",
+      "note": "Obsession, the open sea and a whale that refuses to be a symbol."
+    },
+    {
+      "id": "the-great-gatsby",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "year": 1925,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/64317",
+      "note": "A short, glittering novel about wanting the wrong version of the past."
+    },
+    {
+      "id": "jane-eyre",
+      "title": "Jane Eyre",
+      "author": "Charlotte Brontë",
+      "year": 1847,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/1260",
+      "note": "A governess, a locked room and a fiercely independent voice."
+    },
+    {
+      "id": "wuthering-heights",
+      "title": "Wuthering Heights",
+      "author": "Emily Brontë",
+      "year": 1847,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/768",
+      "note": "Love as weather: wild, corrosive and impossible to leave behind."
+    },
+    {
+      "id": "a-tale-of-two-cities",
+      "title": "A Tale of Two Cities",
+      "author": "Charles Dickens",
+      "year": 1859,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/98",
+      "note": "London, Paris and the private lives caught inside public history."
+    },
+    {
+      "id": "the-time-machine",
+      "title": "The Time Machine",
+      "author": "H. G. Wells",
+      "year": 1895,
+      "category": "Science fiction",
+      "format": "Novella",
+      "url": "https://www.gutenberg.org/ebooks/35",
+      "note": "A Victorian inventor travels forward and finds a stranger future."
+    },
+    {
+      "id": "the-war-of-the-worlds",
+      "title": "The War of the Worlds",
+      "author": "H. G. Wells",
+      "year": 1898,
+      "category": "Science fiction",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/36",
+      "note": "An invasion story told from the ground, one ordinary mile at a time."
+    },
+    {
+      "id": "the-metamorphosis",
+      "title": "The Metamorphosis",
+      "author": "Franz Kafka",
+      "year": 1915,
+      "category": "Classics",
+      "format": "Novella",
+      "url": "https://www.gutenberg.org/ebooks/5200",
+      "note": "A family discovers what happens when usefulness disappears overnight."
+    },
+    {
+      "id": "the-picture-of-dorian-gray",
+      "title": "The Picture of Dorian Gray",
+      "author": "Oscar Wilde",
+      "year": 1890,
+      "category": "Classics",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/174",
+      "note": "Beauty, influence and a portrait that keeps the receipts."
+    },
+    {
+      "id": "sherlock-holmes",
+      "title": "The Adventures of Sherlock Holmes",
+      "author": "Arthur Conan Doyle",
+      "year": 1892,
+      "category": "Mystery",
+      "format": "Stories",
+      "url": "https://www.gutenberg.org/ebooks/1661",
+      "note": "Twelve cases, one consulting detective and a very patient doctor."
+    },
+    {
+      "id": "hound-of-the-baskervilles",
+      "title": "The Hound of the Baskervilles",
+      "author": "Arthur Conan Doyle",
+      "year": 1902,
+      "category": "Mystery",
+      "format": "Novel",
+      "url": "https://www.gutenberg.org/ebooks/2852",
+      "note": "A family curse on the moor and a mystery built from atmosphere."
+    },
+    {
+      "id": "the-yellow-wallpaper",
+      "title": "The Yellow Wallpaper",
+      "author": "Charlotte Perkins Gilman",
+      "year": 1892,
+      "category": "Short fiction",
+      "format": "Short story",
+      "url": "https://www.gutenberg.org/ebooks/1952",
+      "note": "A room, a pattern and a voice beginning to come loose."
+    },
+    {
+      "id": "the-raven",
+      "title": "The Raven",
+      "author": "Edgar Allan Poe",
+      "year": 1845,
+      "category": "Poetry",
+      "format": "Poem",
+      "url": "https://www.gutenberg.org/ebooks/1065",
+      "note": "Grief, rhythm and a single word repeated until it means everything."
+    },
+    {
+      "id": "leaves-of-grass",
+      "title": "Leaves of Grass",
+      "author": "Walt Whitman",
+      "year": 1855,
+      "category": "Poetry",
+      "format": "Poetry",
+      "url": "https://www.gutenberg.org/ebooks/1322",
+      "note": "A sprawling, generous celebration of the self and the crowd."
+    },
+    {
+      "id": "the-prophet",
+      "title": "The Prophet",
+      "author": "Kahlil Gibran",
+      "year": 1923,
+      "category": "Poetry",
+      "format": "Prose poetry",
+      "url": "https://www.gutenberg.org/ebooks/58585",
+      "note": "Twenty-six short meditations on love, work, freedom and loss."
+    },
+    {
+      "id": "meditations",
+      "title": "Meditations",
+      "author": "Marcus Aurelius",
+      "year": 180,
+      "category": "Philosophy",
+      "format": "Notes",
+      "url": "https://www.gutenberg.org/ebooks/2680",
+      "note": "A ruler's private notes on attention, duty and staying steady."
+    },
+    {
+      "id": "the-art-of-war",
+      "title": "The Art of War",
+      "author": "Sun Tzu",
+      "year": -500,
+      "category": "Philosophy",
+      "format": "Treatise",
+      "url": "https://www.gutenberg.org/ebooks/132",
+      "note": "Thirteen compact chapters on strategy, deception and avoiding battle."
+    },
+    {
+      "id": "the-republic",
+      "title": "The Republic",
+      "author": "Plato",
+      "year": -375,
+      "category": "Philosophy",
+      "format": "Dialogue",
+      "url": "https://www.gutenberg.org/ebooks/1497",
+      "note": "Justice, education and the architecture of an ideal city."
+    },
+    {
+      "id": "the-prince",
+      "title": "The Prince",
+      "author": "Niccolò Machiavelli",
+      "year": 1532,
+      "category": "Philosophy",
+      "format": "Treatise",
+      "url": "https://www.gutenberg.org/ebooks/1232",
+      "note": "A practical, unsettling manual for holding on to power."
+    },
+    {
+      "id": "manga-plus",
+      "title": "MANGA Plus",
+      "author": "Shueisha",
+      "year": 2019,
+      "category": "Manga",
+      "format": "Official reader",
+      "url": "https://mangaplus.shueisha.co.jp/",
+      "note": "Official chapters from Weekly Shonen Jump and more, free to read."
+    },
+    {
+      "id": "webtoon",
+      "title": "WEBTOON",
+      "author": "Naver",
+      "year": 2004,
+      "category": "Manga",
+      "format": "Official reader",
+      "url": "https://www.webtoons.com/en/",
+      "note": "Vertical comics across romance, fantasy, action and drama."
+    },
+    {
+      "id": "tapas",
+      "title": "Tapas",
+      "author": "Tapas Media",
+      "year": 2012,
+      "category": "Manga",
+      "format": "Official reader",
+      "url": "https://tapas.io/",
+      "note": "Webcomics and serialised fiction from independent creators."
+    },
+    {
+      "id": "comic-walker",
+      "title": "Comic Walker",
+      "author": "KADOKAWA",
+      "year": 2014,
+      "category": "Manga",
+      "format": "Official reader",
+      "url": "https://comic-walker.com/",
+      "note": "Free official manga from KADOKAWA, including new chapters."
+    },
+    {
+      "id": "viz-manga",
+      "title": "VIZ Manga",
+      "author": "VIZ Media",
+      "year": 2012,
+      "category": "Manga",
+      "format": "Official reader",
+      "url": "https://www.viz.com/vizmanga",
+      "note": "A digital library of popular and classic manga series."
+    },
+    {
+      "id": "standard-ebooks",
+      "title": "Standard Ebooks",
+      "author": "Standard Ebooks",
+      "year": 2017,
+      "category": "Reference",
+      "format": "Curated library",
+      "url": "https://standardebooks.org/ebooks",
+      "note": "Carefully edited, beautifully typeset public-domain ebooks."
+    },
+    {
+      "id": "open-library",
+      "title": "Open Library",
+      "author": "Internet Archive",
+      "year": 2006,
+      "category": "Reference",
+      "format": "Catalogue",
+      "url": "https://openlibrary.org/",
+      "note": "A vast, editable catalogue of books and editions."
+    },
+    {
+      "id": "internet-archive",
+      "title": "Internet Archive",
+      "author": "Internet Archive",
+      "year": 1996,
+      "category": "Reference",
+      "format": "Archive",
+      "url": "https://archive.org/details/texts",
+      "note": "Scanned books, magazines and historical collections."
+    },
+    {
+      "id": "librivox",
+      "title": "LibriVox",
+      "author": "LibriVox volunteers",
+      "year": 2005,
+      "category": "Audiobooks",
+      "format": "Audiobooks",
+      "url": "https://librivox.org/",
+      "note": "Free public-domain audiobooks read by volunteers."
+    }
+  ]
+}

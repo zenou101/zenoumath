@@ -35,15 +35,17 @@
   const PREF_GROUPS = [
     ['gameLayout', 'Game layout', [['compact','Compact'], ['standard','Standard'], ['large','Large'], ['list','List']]],
     ['launchMode', 'Game launch', [['inline','In page'], ['fullscreen','Fullscreen'], ['tab','New tab']]],
+    ['webLaunch', 'Website launch', [['viewer','In viewer'], ['tab','New tab']]],
+    ['siteView', 'Website layout', [['grid','Grid'], ['list','List']]],
     ['gameSort', 'Default game order', [['featured','Featured'], ['az','A–Z'], ['za','Z–A'], ['new','Recently added'], ['recent','Recently played']]],
     ['glow', 'Glow strength', [['off', 'Off'], ['soft', 'Soft'], ['medium', 'Medium'], ['strong', 'Strong']]],
     ['radius', 'Corner style', [['sharp', 'Sharp'], ['soft', 'Soft'], ['round', 'Round']]],
     ['density', 'Card density', [['cozy', 'Cozy'], ['compact', 'Compact']]],
     ['bg', 'Background', [['white', 'White'],
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
-    ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
+    ['motion', 'Motion', [['full', 'Full'], ['calm', 'Reduced motion']]],
   ];
-  const DEFAULTS = { theme: 'white', launchMode: 'inline', gameLayout: 'standard', gameSort: 'featured', glow: 'off', radius: 'soft', density: 'cozy', bg: 'plain', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'white', launchMode: 'inline', gameLayout: 'standard', gameSort: 'featured', webLaunch: 'viewer', siteView: 'grid', glow: 'off', radius: 'soft', density: 'cozy', bg: 'plain', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
 
@@ -98,6 +100,7 @@
     const select = document.getElementById('gameLayout');
     if (select) select.value = p.gameLayout;
     window.ZenouAtmo?.applyPreferences(p);
+    window.dispatchEvent(new CustomEvent('zenou:prefs', { detail: p }));
   }
   function setPref(key, value) {
     const p = readPrefs();
@@ -214,6 +217,7 @@
         </header>
         <div class="settings-tabs" role="tablist" aria-label="Settings sections">
           <button type="button" role="tab" id="settingsTabAppearance" aria-controls="settingsAppearance" aria-selected="true">Appearance</button>
+          <button type="button" role="tab" id="settingsTabPlayback" aria-controls="settingsPlayback" aria-selected="false" tabindex="-1">Play</button>
           <button type="button" role="tab" id="settingsTabWallpaper" aria-controls="settingsWallpaper" aria-selected="false" tabindex="-1">Wallpaper</button>
           <button type="button" role="tab" id="settingsTabBrowser" aria-controls="settingsBrowser" aria-selected="false" tabindex="-1">Browser tab</button>
           <button type="button" role="tab" id="settingsTabShortcuts" aria-controls="settingsShortcuts" aria-selected="false" tabindex="-1">Shortcuts</button>
@@ -226,11 +230,6 @@
             <div id="seThemes" class="theme-chips"></div>
           </div>
           <div id="sePrefs"></div>
-          <div class="settings-field"><span>Storage</span>
-            <div class="play-tools"><a href="/library/#data">Export or import backup</a>
-            <a href="/library/#favourites">Manage favourites</a>
-            <button type="button" class="btn btn-ghost" id="clearRecent">Clear recent games</button></div>
-          </div>
 
           <div class="settings-field hue-field">
             <span><label for="seHue">Custom accent hue</label> <output id="seHueOut">off</output></span>
@@ -244,6 +243,22 @@
             <small id="seSupabaseStatus" role="status" aria-live="polite">Project configured. Check its availability here.</small>
           </div>
 
+        </section>
+
+        <section class="settings-section" role="tabpanel" id="settingsPlayback" aria-labelledby="settingsTabPlayback" hidden>
+          <div id="sePlayGroups"></div>
+          <div class="settings-field"><span>Library and data</span>
+            <div class="play-tools"><a class="btn btn-ghost" href="/?fav=1">Manage favourites</a>
+            <button type="button" class="btn btn-ghost" id="clearRecent">Clear recent games</button></div>
+            <small>Preferences and saved items stay in this browser.</small>
+          </div>
+          <div class="settings-field">
+            <span>Websites</span>
+            <div class="play-tools">
+              <a class="btn btn-ghost" href="/web/">Open the directory</a>
+              <button type="button" class="btn btn-ghost" id="clearSiteRecent">Clear recent websites</button>
+            </div>
+          </div>
         </section>
 
         <section class="settings-section" role="tabpanel" id="settingsWallpaper" aria-labelledby="settingsTabWallpaper" hidden>
@@ -321,21 +336,11 @@
             <button id="seKeysReset" class="btn btn-ghost" type="button" style="margin-top:10px">Reset shortcuts</button>
             <p id="seKeyNote" class="settings-note" role="status" aria-live="polite" style="margin:8px 0 0"></p>
           </div>
-          <div class="settings-field">
-            <span>Your library</span>
-            <div class="play-tools">
-              <a class="btn btn-ghost" href="/library#overview">Stats</a>
-              <a class="btn btn-ghost" href="/library#playlists">Playlists</a>
-              <a class="btn btn-ghost" href="/library#achievements">Achievements</a>
-              <a class="btn btn-ghost" href="/library#data">Backup</a>
-            </div>
-          </div>
         </div>
         </section>
         </div>
 
         <footer class="settings-actions">
-          <button class="btn btn-ghost" type="button" data-os-invitation>ZenouOS Beta</button>
           <button id="seReset" class="btn btn-ghost" type="button">Reset all</button>
           <button id="seSave" class="btn btn-solid" type="button">Done</button>
         </footer>
@@ -344,7 +349,17 @@
     $('#clearRecent', root).addEventListener('click', () => {
       if (!confirm('Clear recent games on this device?')) return;
       store.set('zenou_recent', []);
-      location.reload();
+      window.dispatchEvent(new Event('zenou:recent-cleared'));
+      const button = $('#clearRecent', root);
+      button.textContent = 'Recent games cleared';
+      button.disabled = true;
+    });
+    $('#clearSiteRecent', root).addEventListener('click', () => {
+      store.del('zenou_sites_recent');
+      store.del('zenou_web_recent');
+      const button = $('#clearSiteRecent', root);
+      button.textContent = 'Recent websites cleared';
+      button.disabled = true;
     });
     const titleInput = $('#seTitle', root);
     const connectionButton = $('#seSupabaseCheck', root);
@@ -366,6 +381,7 @@
     });
     const themeWrap = $('#seThemes', root);
     const prefsWrap = $('#sePrefs', root);
+    const playWrap = $('#sePlayGroups', root);
     const backgroundStyle = $('#seBackgroundStyle', root);
     const tabs = Array.from(root.querySelectorAll('.settings-tabs [role="tab"]'));
     const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
@@ -558,7 +574,7 @@
     const keyName = (k) => (k === ' ' ? 'Space' : k);
     const keyMatches = (a, b) => String(a || '').toLowerCase() === String(b || '').toLowerCase();
     const siteKeys = () => ({
-      search: '/', random: '4', games: '1', library: '2', settings: '3', shortcuts: '?',
+      search: '/', random: '4', games: '1', books: '2', settings: '3', shortcuts: '?',
       ...(store.get('zenou_keymap', {}) || {}),
     });
     const keyConflict = (key, list, except) => {
@@ -760,11 +776,11 @@
 
     /* rebindable global shortcuts */
     const KEYMAP_KEY = 'zenou_keymap';
-    const KEY_DEFAULTS = { search: '/', random: '4', games: '1', library: '2', settings: '3', shortcuts: '?' };
+    const KEY_DEFAULTS = { search: '/', random: '4', games: '1', books: '2', settings: '3', shortcuts: '?' };
     const KEY_ACTIONS = [
       ['random', 'Random game'],
       ['games', 'Games catalogue'],
-      ['library', 'My Library'],
+      ['books', 'Books & Manga'],
       ['settings', 'Settings'],
       ['search', 'Focus search'],
       ['shortcuts', 'Shortcut sheet'],
@@ -888,7 +904,8 @@
         seg.append(b);
       });
       field.append(span, seg);
-      (key === 'bg' ? backgroundStyle : prefsWrap).append(field);
+      const playGroup = ['gameLayout', 'launchMode', 'gameSort', 'webLaunch', 'siteView'].includes(key);
+      (key === 'bg' ? backgroundStyle : playGroup ? playWrap : prefsWrap).append(field);
     });
 
     /* icon presets */
@@ -1035,8 +1052,9 @@
 
   function mountPrimaryNavigation(rail, row, settings) {
     const primary = [
-      ['/', 'Discover', 'discover'], ['/?all=1', 'Games', 'gamepad'],
-      ['/library/#favourites', 'Favourites', 'heart'], ['/web/?kind=app', 'Apps', 'spark'], ['/web/', 'Websites', 'globe'],
+      ['/', 'Games', 'gamepad'], ['/web/?kind=app', 'Apps', 'spark'],
+      ['/books/', 'Books', 'book'], ['/web/', 'Websites', 'globe'],
+      ['/?fav=1', 'Favourites', 'heart'],
     ];
     const nav = document.createElement('nav');
     nav.className = 'masthead-links';
@@ -1055,12 +1073,16 @@
     const update = () => {
       const route = path(location.pathname);
       const params = new URLSearchParams(location.search);
-      const catalog = route === '/' && (params.has('all') || Boolean(params.get('c') || params.get('q')));
+      const kind = params.get('kind') || '';
       for (const link of nav.children) {
-        const games = link.search === '?all=1';
-        const directory = path(link.pathname) === '/web';
-        const active = directory ? route === '/web' && new URLSearchParams(link.search).get('kind') === params.get('kind') : games ? catalog || ['/play', '/browse', '/math-games'].includes(route)
-          : path(link.pathname) === route && !(link.pathname === '/' && catalog);
+        const linkPath = path(link.pathname);
+        const linkKind = new URLSearchParams(link.search).get('kind') || '';
+        const favouritesLink = new URLSearchParams(link.search).get('fav') === '1';
+        let active = false;
+        if (favouritesLink) active = route === '/' && params.get('fav') === '1';
+        else if (linkPath === '/') active = (route === '/' && params.get('fav') !== '1') || ['/play', '/browse', '/math-games'].includes(route);
+        else if (linkPath === '/web') active = route === '/web' && linkKind === kind;
+        else if (linkPath === '/books') active = route === '/books';
         if (active) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
       }
@@ -1089,19 +1111,14 @@
     b.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#settings"/></svg>';
     b.addEventListener('click', open);
     if (brand) {
-      const embedded = document.documentElement.hasAttribute('data-zenou-desktop');
-      const row = document.createElement(embedded ? 'div' : 'header');
-      row.className = 'za-brand-row';
+      const row = document.createElement('header');
+      row.className = 'za-brand-row site-masthead';
       const rail = brand.parentElement;
       brand.replaceWith(row);
       row.append(brand, b);
-      if (!embedded) {
-        row.classList.add('site-masthead');
-        rail.before(row);
-        document.documentElement.setAttribute('data-site-masthead', '');
-        mountPrimaryNavigation(rail, row, b);
-      }
-      mountSidebarToggle(rail, row, b);
+      rail.before(row);
+      document.documentElement.setAttribute('data-site-masthead', '');
+      mountPrimaryNavigation(rail, row, b);
       const main = document.querySelector('main');
       if (main) {
         main.id ||= 'main';
@@ -1121,12 +1138,11 @@
 
   import('/js/motion.js').catch(() => {});
   import('/js/site-tools.js?v=blue-shell').catch(() => {});
-  import('/js/os-switch.js').catch(() => {});
   import('/js/account-sync.js').catch(() => {});
 
   /* ---------- direct key shortcuts (Web shortcuts) ---------- */
   const WEB_TAB_KEY = 'zenou_webtabs';
-  const SITE_KEY_DEFAULTS = { search: '/', random: '4', games: '1', library: '2', settings: '3', shortcuts: '?' };
+  const SITE_KEY_DEFAULTS = { search: '/', random: '4', games: '1', books: '2', settings: '3', shortcuts: '?' };
   function directShortcutFor(e) {
     if (e.isComposing || e.repeat || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return null;
     if (!e.key || e.key.length !== 1 || e.key === ' ') return null;
@@ -1149,6 +1165,22 @@
     e.stopImmediatePropagation();
     location.href = hit.url;
   }, true);
+
+  /* Other modules need the same preference store the panel writes to. */
+  window.ZenouSettings = {
+    open,
+    close,
+    setPref,
+    readPrefs: () => readPrefs(),
+  };
+
+  /* Load the monochrome shell on pages that have not linked it yet. */
+  if (!document.querySelector('link[href*="/css/zenou.css"]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/css/zenou.css?v=9';
+    document.head.append(link);
+  }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectButton);
   else injectButton();

@@ -12,6 +12,27 @@
     "dev": "node --watch server/index.mjs",
     "test": "node scripts/test-api.mjs",
     "verify:ai": "node scripts/verify-ai.mjs",
-    "verify:movies": "node scripts/verify-movies.mjs"
+    "verify:movies": "node scripts/verify-movies.mjs",
+    "hero:dev": "vite",
+    "hero:build": "tsc --noEmit && vite build",
+    "hero:preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.82.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.11",
+    "@types/react": "^19.3.3",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.4.0"
   }
 }

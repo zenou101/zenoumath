@@ -125,6 +125,10 @@ function setupFrame(game, url) {
         return;
       }
       status.textContent = 'Trouble playing? Reload the game or open it in a new tab.';
+      try {
+        const frameTitle = next.contentDocument?.title?.trim();
+        document.title = frameTitle ? `${frameTitle} · ZenouMath` : `${game.t} · ZenouMath`;
+      } catch { document.title = `${game.t} · ZenouMath`; }
       applyMute();
     });
     next.addEventListener('error', () => fail('Could not open the game. Try reloading.'));

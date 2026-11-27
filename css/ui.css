@@ -1,0 +1,271 @@
+/* From Uiverse.io by kamehame-ha - https://uiverse.io/kamehame-ha/kind-otter-31
+   MIT License, Copyright (c) kamehame-ha (kameHame HA)
+
+   From Uiverse.io by Cornerstone-04 - https://uiverse.io/Cornerstone-04/moody-treefrog-55
+   MIT License, Copyright (c) Cornerstone-04 (Cornerstone Ephraim)
+
+   From Uiverse.io by JohnnyCSilva - https://uiverse.io/JohnnyCSilva/black-rabbit-68
+   MIT License, Copyright (c) JohnnyCSilva (João Silva)
+
+   Scoped with the uv- prefix so none of the generic Uiverse class names
+   collide with ZenouMath. Visual values and motion are preserved. */
+
+.ui-main {
+  --ui-border: rgba(255, 255, 255, .1);
+  --ui-border-hover: rgba(255, 255, 255, .24);
+  padding-top: 30px;
+}
+
+.ui-head {
+  max-width: 660px;
+  padding: 0 0 30px;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.ui-kicker {
+  margin: 0 0 12px;
+  color: var(--zn-dim);
+  font: 500 10px/1 var(--zn-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.ui-head h1 {
+  margin: 0;
+  color: var(--zn-text);
+  font: 500 clamp(30px, 4.4vw, 46px)/1 var(--zn-sans);
+  letter-spacing: -.045em;
+}
+
+.ui-intro {
+  max-width: 54ch;
+  margin: 15px 0 0;
+  color: var(--zn-muted);
+  font: 400 14px/1.65 var(--zn-sans);
+}
+.ui-intro a { color: var(--zn-text); text-underline-offset: 3px; }
+.ui-intro + .ui-intro { margin-top: 8px; }
+
+.ui-section {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 36px;
+  align-items: center;
+  padding: 38px 0;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.ui-copy { max-width: 360px; }
+
+.ui-index {
+  display: inline-block;
+  margin-bottom: 13px;
+  color: var(--zn-dim);
+  font: 500 10px/1 var(--zn-mono);
+  letter-spacing: .12em;
+}
+
+.ui-copy h2 {
+  margin: 0;
+  color: var(--zn-text);
+  font: 500 22px/1.15 var(--zn-sans);
+  letter-spacing: -.03em;
+}
+
+.ui-copy p {
+  margin: 12px 0 0;
+  color: var(--zn-muted);
+  font: 400 13px/1.65 var(--zn-sans);
+}
+
+.ui-source {
+  display: inline-block;
+  margin-top: 15px;
+  color: var(--zn-dim);
+  font: 400 10.5px/1 var(--zn-mono);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+.ui-source:hover { color: var(--zn-text); border-color: var(--zn-line-strong); }
+
+.ui-credit {
+  margin: 26px 0 0;
+  color: var(--zn-dim);
+  font: 400 10.5px/1.7 var(--zn-mono);
+}
+.ui-credit a { color: var(--zn-muted); text-underline-offset: 3px; }
+.ui-credit code { font: inherit; color: var(--zn-muted); }
+
+.ui-stage {
+  display: grid;
+  place-items: center;
+  min-height: 286px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: #0d0f10;
+  overflow: hidden;
+}
+
+.ui-stage--light {
+  background: #f2f2f0;
+  border-color: #d4d4cf;
+}
+
+.ui-stage--coin {
+  min-height: 350px;
+  background: #08090a;
+  overflow: hidden;
+}
+
+.ui-stage--card { min-height: 330px; }
+
+/* ------------------------------------------------------------------ button */
+/* From Uiverse.io by kamehame-ha - https://uiverse.io/kamehame-ha/kind-otter-31
+   MIT License, Copyright (c) kamehame-ha (kameHame HA) */
+.uv-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  background-color: #181717;
+  outline: 3px #181717 solid;
+  outline-offset: -3px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 400ms;
+}
+
+.uv-button .uv-button__text {
+  margin: 0;
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  transition: 400ms;
+}
+
+.uv-button svg path { transition: 400ms; }
+
+.uv-button:hover { background-color: transparent; }
+.uv-button:hover .uv-button__text { color: #181717; }
+.uv-button:hover svg path { fill: #181717; }
+
+.uv-button:focus-visible {
+  outline: 3px #181717 solid;
+  outline-offset: 4px;
+}
+
+/* -------------------------------------------------------------------- card */
+/* From Uiverse.io by Cornerstone-04 - https://uiverse.io/Cornerstone-04/moody-treefrog-55
+   MIT License, Copyright (c) Cornerstone-04 (Cornerstone Ephraim) */
+.uv-cards {
+  perspective: 500px;
+}
+
+.uv-card {
+  width: 200px;
+  height: 250px;
+  background: #16161d;
+  border: 2px solid #555555;
+  border-radius: 4px;
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform .5s;
+}
+
+.uv-card:hover {
+  transform: translateZ(10px) rotateX(20deg) rotateY(20deg);
+}
+
+.uv-card__title {
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  transition: transform .5s;
+  font: 700 1.5rem monospace;
+  text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+  margin: 0;
+}
+
+.uv-card:hover .uv-card__title {
+  transform: translateZ(50px);
+}
+
+/* -------------------------------------------------------------------- coin */
+/* From Uiverse.io by JohnnyCSilva - https://uiverse.io/JohnnyCSilva/black-rabbit-68
+   MIT License, Copyright (c) JohnnyCSilva (João Silva) */
+.uv-coin {
+  font-size: 200px;
+  width: .1em;
+  height: 1em;
+  background: linear-gradient(#faa504, #141001);
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  animation: uv-rotate-coin 7s infinite linear;
+  transform-style: preserve-3d;
+}
+
+.uv-coin__side,
+.uv-coin::before,
+.uv-coin::after {
+  content: "";
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  border-radius: 50%;
+  right: -.4em;
+  text-align: center;
+  line-height: 1;
+  transform: rotateY(-90deg);
+  backface-visibility: hidden;
+}
+
+.uv-coin__tails,
+.uv-coin::after {
+  left: -.4em;
+  transform: rotateY(90deg);
+}
+
+.uv-coin::before,
+.uv-coin::after {
+  background: linear-gradient(#faa504, #141001);
+  backface-visibility: hidden;
+  transform: rotateY(90deg);
+}
+
+.uv-coin::after { transform: rotateY(-90deg); }
+
+.uv-coin__svg-back { transform: scaleX(-1); }
+
+@keyframes uv-rotate-coin {
+  100% { transform: rotateY(360deg); }
+}
+
+.ui-coin-stage { position: relative; width: 100%; height: 350px; }
+
+@media (max-width: 760px) {
+  .ui-section { grid-template-columns: 1fr; gap: 20px; padding: 28px 0; }
+  .ui-copy { max-width: 58ch; }
+  .ui-stage { min-height: 240px; }
+  .ui-stage--coin, .ui-coin-stage { min-height: 285px; height: 285px; }
+  .uv-coin { font-size: 140px; }
+  .ui-stage--card { min-height: 300px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uv-coin { animation: none; }
+  .uv-button, .uv-button .uv-button__text, .uv-button svg path, .uv-card, .uv-card__title { transition: none; }
+}

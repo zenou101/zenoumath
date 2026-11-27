@@ -1,0 +1,160 @@
+{
+  "v": "2026-11-27b",
+  "updated": "2026-11-27",
+  "sites": [
+    {
+      "id": "poki",
+      "name": "Poki",
+      "url": "https://poki.com/",
+      "icon": "/assets/sites/poki.png",
+      "kind": "portal",
+      "note": "Thousands of browser games, curated by genre.",
+      "frame": "denied",
+      "featured": true,
+      "source": "ZenouMath + reference directory"
+    },
+    {
+      "id": "crazygames",
+      "name": "CrazyGames",
+      "url": "https://www.crazygames.com/",
+      "icon": "/assets/sites/crazygames.png",
+      "kind": "portal",
+      "note": "Single-player and multiplayer browser games.",
+      "frame": "denied",
+      "featured": true,
+      "source": "ZenouMath + reference directory"
+    },
+    {
+      "id": "coolmath",
+      "name": "Coolmath Games",
+      "url": "https://www.coolmathgames.com/",
+      "icon": "/assets/sites/coolmath.png",
+      "kind": "portal",
+      "note": "Logic, strategy and skill games.",
+      "frame": "unknown",
+      "featured": true,
+      "source": "ZenouMath + reference directory"
+    },
+    {
+      "id": "nealfun",
+      "name": "Neal.fun",
+      "url": "https://neal.fun/",
+      "icon": "/assets/sites/nealfun.png",
+      "kind": "app",
+      "note": "Playful, meticulously made interactive experiments.",
+      "frame": "denied",
+      "featured": true,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "wikipedia",
+      "name": "Wikipedia",
+      "url": "https://en.wikipedia.org/",
+      "icon": "/assets/sites/wikipedia.png",
+      "kind": "study",
+      "note": "The free encyclopaedia.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "url": "https://www.youtube.com/",
+      "icon": "/assets/sites/youtube.png",
+      "kind": "media",
+      "note": "Video. Opens in a normal tab.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "url": "https://discord.com/app",
+      "icon": "/assets/sites/discord.png",
+      "kind": "app",
+      "note": "Chat and communities. Opens in a normal tab.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "movy",
+      "name": "Movy",
+      "url": "https://www.movy.sx/",
+      "icon": "/assets/sites/movy.png",
+      "kind": "media",
+      "note": "Streaming portal. Its host refuses framing.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "instagram",
+      "name": "Instagram",
+      "url": "https://www.instagram.com/",
+      "icon": "/assets/sites/instagram.png",
+      "kind": "media",
+      "note": "Social feed. Opens in a normal tab.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "tiktok",
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/",
+      "icon": "/assets/sites/tiktok.png",
+      "kind": "media",
+      "note": "Short video. Opens in a normal tab.",
+      "frame": "denied",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "bouncingrabbits",
+      "name": "Bouncing Rabbits",
+      "url": "https://bouncingrabbits.cyou/",
+      "glyph": "B",
+      "kind": "tool",
+      "note": "A portal with its own search and links.",
+      "frame": "allowed",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "magma",
+      "name": "Magma",
+      "url": "https://magma-mantle.truegrid.cloud/",
+      "glyph": "M",
+      "kind": "tool",
+      "note": "A public web portal that allows framing.",
+      "frame": "allowed",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "slate",
+      "name": "Slate",
+      "url": "https://slate-mantle.truegrid.cloud/",
+      "glyph": "✦",
+      "kind": "tool",
+      "note": "Mantle's AI chat, framed in the viewer.",
+      "frame": "allowed",
+      "featured": false,
+      "source": "ZenouMath"
+    },
+    {
+      "id": "zenou-books",
+      "name": "Books & Manga",
+      "url": "/books/",
+      "glyph": "Bk",
+      "kind": "media",
+      "note": "A curated shelf of books, poetry and manga.",
+      "frame": "internal",
+      "featured": false,
+      "source": "ZenouMath"
+    }
+  ]
+}

@@ -1,98 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<script>try{if(!localStorage.getItem('zenoumath.consent'))document.documentElement.classList.add('consent-pending')}catch(e){document.documentElement.classList.add('consent-pending')}setTimeout(function(){document.documentElement.classList.remove('consent-pending')},3000)</script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script>try{var r=document.documentElement,p=JSON.parse(localStorage.getItem('zenou_prefs')||'{}'),m=JSON.parse(localStorage.getItem('zenou_mask')||'{}');var t=p.theme||m.theme;if(t)r.dataset.theme=t;['glow','radius','density','bg','motion'].forEach(function(k){if(p[k])r.dataset[k]=p[k]});if(p.bgDim!=null)r.style.setProperty('--bg-dim',Math.max(0,Math.min(85,+p.bgDim))/100);if(p.hue!=null&&p.hueRgb){r.style.setProperty('--accent','hsl('+p.hue+' 92% 64%)');r.style.setProperty('--accent-2','hsl('+(((+p.hue)+42)%360)+' 92% 68%)');r.style.setProperty('--accent-rgb',p.hueRgb);r.style.setProperty('--accent-2-rgb',p.hue2Rgb)}var g=localStorage.getItem('zenou_bgimg');if(g){r.style.setProperty('--custom-bg','url(\"'+g+'\")');r.classList.add('has-custom')}}catch(e){}</script>
-<title>Books &amp; Manga · ZenouMath</title>
-<meta name="description" content="Read books and manga from GN-Math in ZenouMath’s reader.">
-<meta name="theme-color" content="#07080e">
-<link rel="canonical" href="https://zenoumath.space/books/">
-<meta property="og:site_name" content="ZenouMath">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Books &amp; Manga | ZenouMath">
-<meta property="og:description" content="Explore books and manga from GN-Math in ZenouMath’s reader.">
-<meta property="og:url" content="https://zenoumath.space/books/">
-<meta property="og:image" content="https://zenoumath.space/assets/logo.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" href="/assets/favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="/assets/logo-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/plus.css">
-<link rel="stylesheet" href="/css/books.css">
-<link rel="stylesheet" href="/css/consent.css">
-<link rel="stylesheet" href="/css/arcade-shell.css"><link rel="stylesheet" href="/css/accent.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/css/interface.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090a">
+  <meta name="description" content="A curated shelf of public-domain books, poetry, philosophy and official manga readers, with search and a full reading view.">
+  <title>Books &amp; Manga · ZenouMath</title>
+  <link rel="canonical" href="https://zenoumath.space/books/">
+  <link rel="icon" href="/assets/favicon.svg">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/arcade-shell.css">
+  <link rel="stylesheet" href="/css/accent.css">
+  <link rel="stylesheet" href="/css/consent.css">
+  <link rel="stylesheet" href="/css/interface.css?v=21">
+  <link rel="stylesheet" href="/css/zenou.css?v=10">
+  <link rel="stylesheet" href="/css/books.css?v=3">
+  <script>
+    try {
+      if (!localStorage.getItem('zenoumath.consent')) document.documentElement.classList.add('consent-pending');
+      const prefs = JSON.parse(localStorage.getItem('zenou_prefs'));
+      if (prefs?.theme) document.documentElement.dataset.theme = prefs.theme;
+      if (prefs?.hue != null && prefs.hueRgb && prefs.hue2Rgb) {
+        for (const [name, rgb] of [['accent', prefs.hueRgb], ['accent-2', prefs.hue2Rgb]]) {
+          document.documentElement.style.setProperty('--' + name, 'rgb(' + rgb + ')');
+          document.documentElement.style.setProperty('--' + name + '-rgb', rgb);
+        }
+      }
+    } catch { document.documentElement.classList.add('consent-pending'); }
+  </script>
+  <script src="/js/consent.js" defer></script>
+  <script src="/js/settings.js?v=redesign-2" defer></script>
+  <script src="/js/books.js?v=3" defer></script>
 </head>
-<body data-arcade-page="books">
-<aside class="za-rail" aria-label="Arcade navigation">
+<body data-arcade-page="books" class="books-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <aside class="za-rail" aria-label="ZenouMath navigation">
     <a class="za-brand" href="/" aria-label="ZenouMath home"><img class="za-mark" src="/assets/favicon.svg" alt="" width="29" height="29"><span>ZenouMath</span></a>
     <div class="za-scroll">
       <div class="za-group">
-        <small>ARCADE</small>
-        <nav aria-label="Arcade">
-          <a href="/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#discover"/></svg>Discover</a>
-          <a href="/?all=1"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>All games</a>
-          <a href="/?c=gn-math"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>GN-Math</a>
-          <a href="/math-games/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#calculator"/></svg>Math Games</a>
-          <a href="/library/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#library"/></svg>My library</a>
-        </nav>
-      </div>
-      <div class="za-group">
-        <small>EXPLORE</small>
-        <nav aria-label="Explore">
-          <a href="/music/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#music"/></svg>Music</a>
-          <a href="/books/" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#book"/></svg>Books &amp; Manga</a>
-          <a href="/web/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#globe"/></svg>Web</a>
-          <a href="/ai/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#spark"/></svg>AI</a>
-          <a href="/social/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#social"/></svg>Social</a>
-          <a href="/search/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#search"/></svg>Search</a>
-        </nav>
-      </div>
-      <div class="za-group">
-        <small>GENRES</small>
-        <nav aria-label="Genres">
-          <a href="/?c=action"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#bolt"/></svg>Action</a>
-          <a href="/?c=racing"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#racing"/></svg>Racing</a>
-          <a href="/?c=sports"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#sports"/></svg>Sports</a>
-          <a href="/?c=puzzle"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#puzzle"/></svg>Puzzle</a>
-          <a href="/?c=adventure"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#adventure"/></svg>Adventure</a>
+        <nav aria-label="Main sections">
+          <a href="/">Games</a>
+          <a href="/web/?kind=app">Apps</a>
+          <a href="/books/" aria-current="page">Books</a>
+          <a href="/web/">Websites</a>
+          <a href="/?fav=1">Favourites</a>
         </nav>
       </div>
     </div>
-    <a class="za-foot" href="/legal/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#info"/></svg>About Zenou</a>
   </aside>
-<header class="topbar">
-  <div class="za-crumb"><a href="/">Arcade</a><i>/</i><strong>Books &amp; Manga</strong></div>
-</header>
-<main id="main" class="books-main">
-  <header class="page-head">
-    <h1>Books &amp; Manga</h1>
-    <p class="page-sub">Explore the GN-Math books collection.</p>
-  </header>
-  <section class="reader" id="readerHost" aria-label="GN-Math books and manga reader">
-    <div class="reader-toolbar">
-      <span class="reader-source"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#book"/></svg>GN-Math books</span>
-      <div class="reader-actions">
-        <button class="btn btn-ghost" id="readerReload" type="button" aria-label="Reload reader" title="Reload reader"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#reload"/></svg></button>
-        <button class="btn btn-ghost" id="readerFull" type="button" aria-label="Fullscreen reader" title="Fullscreen reader"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#fullscreen"/></svg></button>
-        <a class="btn btn-ghost" href="https://gn-math.dev/#books" target="_blank" rel="noopener" aria-label="Open GN-Math books in a new tab" title="Open in a new tab"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#external"/></svg></a>
+
+  <main id="main" class="zn-main books-main">
+    <header class="books-head">
+      <div class="books-head-copy">
+        <p class="books-eyebrow">The reading room</p>
+        <h1>Books &amp; Manga</h1>
+        <p class="books-intro">A considered shelf of novels, poetry, philosophy and official manga readers. Every title opens at its publisher or archive, so the text stays where it belongs.</p>
+      </div>
+      <div class="books-head-actions">
+        <button class="zn-btn zn-btn-solid" id="openReader" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Zm16 0A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Full reader
+        </button>
+      </div>
+    </header>
+
+    <div class="books-toolbar">
+      <label class="zn-search books-search">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg>
+        <input id="bookSearch" type="search" placeholder="Search titles, authors or subjects" aria-label="Search books and manga" autocomplete="off" spellcheck="false" aria-keyshortcuts="/">
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+      <p class="books-count" id="bookCount" role="status">Loading shelf…</p>
+    </div>
+
+    <div class="books-filters" id="bookFilters" role="group" aria-label="Filter by category"></div>
+
+    <section id="bookGrid" class="book-grid" aria-label="Books and manga"></section>
+
+    <div class="books-empty" id="bookEmpty" hidden>
+      <p>Nothing on the shelf matches that search.</p>
+      <button class="zn-btn" id="bookClear" type="button">Clear search</button>
+    </div>
+
+    <p class="books-note">Book links open Project Gutenberg, Internet Archive, Standard Ebooks or the publisher’s own reader. Manga entries link to official platforms only. The full reader embeds <a href="https://gn-math.dev/#books" target="_blank" rel="noopener">GN-Math</a>, an independent service.</p>
+  </main>
+
+  <dialog id="readerDialog" class="zn-reader books-reader" aria-labelledby="readerTitle">
+    <div class="zn-reader-bar">
+      <strong id="readerTitle"><span class="books-reader-mark">Bk</span> GN-Math reader</strong>
+      <div class="zn-reader-tools">
+        <button class="zn-iconbtn" id="readerReload" type="button" aria-label="Reload reader" title="Reload reader">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+        </button>
+        <button class="zn-iconbtn" id="readerFull" type="button" aria-label="Fullscreen reader" title="Fullscreen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v2H6v5H4V4zm9 0h7v7h-2V6h-5V4zM4 13h2v5h5v2H4v-7zm14 0h2v7h-7v-2h5v-5z"/></svg>
+        </button>
+        <a class="zn-iconbtn" href="https://gn-math.dev/#books" target="_blank" rel="noopener" aria-label="Open GN-Math in a new tab" title="Open in a new tab">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6h-2V7.4l-8.3 8.3-1.4-1.4L16.6 6H14V4zM5 6h5v2H7v9h9v-3h2v5H5V6z"/></svg>
+        </a>
+        <button class="zn-iconbtn" id="readerClose" type="button" aria-label="Close reader" title="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
       </div>
     </div>
-    <iframe id="booksFrame" src="https://gn-math.dev/#books" title="GN-Math books and manga" allowfullscreen allow="clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </section>
-  <p id="readerStatus" class="reader-status" role="status">If the reader stays blank, <a href="https://gn-math.dev/#books" target="_blank" rel="noopener">open GN-Math books directly</a>.</p>
-</main>
-<footer class="za-footer"><a href="/">Zenou Arcade</a><nav aria-label="Site information"><a href="/doorway/">Doorways</a><a href="/sources/">Movie sources</a><a href="/legal/">Legal centre</a><a href="/legal/privacy/">Privacy</a><a href="/legal/contact/">Contact</a><a href="/legal/" data-consent-review>Use agreement</a><a href="https://github.com/zenou101">GitHub</a></nav></footer>
-<script src="/js/atmosphere.js?v=blue-shell" defer></script>
-<script src="/js/settings.js?v=blue-shell" defer></script>
-<script src="/js/consent.js" defer></script>
-<script src="/js/books.js" defer></script>
+    <div class="books-reader-stage">
+      <div class="books-reader-loading" id="readerLoading"><span class="zn-spinner" aria-hidden="true"></span><p>Opening GN-Math…</p></div>
+      <iframe id="booksFrame" title="GN-Math books and manga reader" allowfullscreen allow="clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div class="zn-reader-foot">
+      <span id="readerStatus" role="status">Ready when you are.</span>
+      <span class="books-reader-hint">Press Escape to close</span>
+    </div>
+  </dialog>
+
+  <footer class="za-footer">
+    <a href="/">ZenouMath</a>
+    <nav aria-label="Site information">
+      <a href="/books/">Books</a>
+      <a href="/web/">Websites</a>
+      <a href="/legal/">Legal centre</a>
+      <a href="/legal/privacy/">Privacy</a>
+      <a href="/legal/contact/">Contact</a>
+      <a href="/ui/">UI details</a>
+    </nav>
+  </footer>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { icon } from '/os/shared.js';
+import { icon } from './ui-kit.js';
 
 const key = 'zenou_play_later';
 const eventName = 'zenou:play-later';
