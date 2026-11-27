@@ -49,7 +49,7 @@ function showUnavailable(game) {
   if (source) {
     const link = $('#sourceGame');
     link.href = source.href;
-    link.textContent = 'Play ' + game.t + ' on ' + source.hostname.replace(/^www\./, '');
+    link.textContent = (game.s === 'official-link' ? 'View ' : 'Play ') + game.t + ' on ' + source.hostname.replace(/^www\./, '');
     link.hidden = false;
   }
 }
@@ -165,7 +165,43 @@ function setupFrame(game, url) {
     }
   });
   $('#retryBtn').addEventListener('click', load);
-  load();
+  const keys = { f: full, r: $('#retryBtn'), p: $('#startGame') };
+  for (const [key, button] of Object.entries(keys)) {
+    button.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + key.toUpperCase());
+    button.title = button.textContent.trim() + ' (Alt+Shift+' + key.toUpperCase() + ')';
+  }
+  $('#playerStage').addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.isComposing || event.repeat || !event.altKey || !event.shiftKey || event.ctrlKey || event.metaKey) return;
+    const button = keys[event.key.toLowerCase()];
+    if (!button || button.hidden || button.disabled) return;
+    event.preventDefault();
+    button.click();
+  });
+  window.addEventListener('pagehide', () => {
+    clearTimers();
+    frame.removeAttribute('src');
+  });
+  const start = $('#startGame');
+  const mode = store.get('zenou_prefs', {})?.launchMode || 'inline';
+  if (mode === 'tab') start.textContent = 'Play in new tab';
+  if (mode === 'fullscreen') start.textContent = 'Play fullscreen';
+  full.disabled = true;
+  $('#retryBtn').hidden = true;
+  start.addEventListener('click', () => {
+    touchRecent(game.id);
+    if (mode === 'tab') {
+      open.click();
+      status.textContent = 'If the tab did not open, use Open game in new tab.';
+      return;
+    }
+    start.hidden = true;
+    $('#retryBtn').hidden = false;
+    load();
+    document.dispatchEvent(new Event('zenou:play-start'));
+    if (mode === 'fullscreen') full.click();
+  });
+  open.addEventListener('click', () => touchRecent(game.id));
+  window.addEventListener('pageshow', event => { if (event.persisted && start.hidden) load(); });
 }
 
 async function boot() {
@@ -197,10 +233,10 @@ async function boot() {
   document.title = window.zenouMaskedTitle
     ? window.zenouMaskedTitle(`${g.t} · ZenouMath`)
     : `${g.t} · ZenouMath`;
-  if (!g.availability) touchRecent(g.id);
+  if (g.availability === 'external') $('#sourceGame').addEventListener('click', () => touchRecent(g.id));
   if (g.wrap || g.direct) {
     const target = safePage(g.wrap ? g.u : g.direct);
-    if (target) { location.replace(target.href); return; }
+    if (target) { touchRecent(g.id); location.replace(target.href); return; }
   }
   $('#playerView').hidden = false;
 
@@ -276,39 +312,42 @@ function setupTools(g) {
   host.hidden = false;
 
   if (!g.availability) {
-    /* local playtime, flushed on hide/unload so a quick tab close still counts */
-    const playtime = Z ? Z.store.playtime : store.get('zenou_playtime', {});
-    const started = Date.now();
-    let banked = 0;
-    const flush = () => {
-      const now = Date.now();
-      const add = now - started - banked;
-      if (add < 1000) return;
-      banked += add;
-      playtime[g.id] = (playtime[g.id] || 0) + add;
-      if (Z) { Z.store.playtime = playtime; Z.store.savePlaytime(); }
-      else store.set('zenou_playtime', playtime);
-    };
-    document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
-    window.addEventListener('pagehide', flush);
+    $('#sessionTimer').hidden = true;
+    document.addEventListener('zenou:play-start', () => {
+      $('#sessionTimer').hidden = false;
+      /* local playtime, flushed on hide/unload so a quick tab close still counts */
+      const playtime = Z ? Z.store.playtime : store.get('zenou_playtime', {});
+      const started = Date.now();
+      let banked = 0;
+      const flush = () => {
+        const now = Date.now();
+        const add = now - started - banked;
+        if (add < 1000) return;
+        banked += add;
+        playtime[g.id] = (playtime[g.id] || 0) + add;
+        if (Z) { Z.store.playtime = playtime; Z.store.savePlaytime(); }
+        else store.set('zenou_playtime', playtime);
+      };
+      document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+      window.addEventListener('pagehide', flush);
 
-    const timer = $('#sessionTimer');
-    let tick = 0;
-    const paintTimer = () => {
-      const secs = Math.floor((Date.now() - started) / 1000);
-      timer.textContent = `Session ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
-    };
-    paintTimer();
-    tick = setInterval(paintTimer, 1000);
-    window.addEventListener('pagehide', () => clearInterval(tick));
+      const timer = $('#sessionTimer');
+      let tick = 0;
+      const paintTimer = () => {
+        const secs = Math.floor((Date.now() - started) / 1000);
+        timer.textContent = `Session ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+      };
+      paintTimer();
+      tick = setInterval(paintTimer, 1000);
+      window.addEventListener('pagehide', () => clearInterval(tick));
 
-    /* award xp + streak once per visit */
-    if (Z) {
-      Z.markDay();
-      Z.addXp(5);
-      setTimeout(() => Z.checkAchievements(), 1200);
-    }
-
+      /* award xp + streak once per visit */
+      if (Z) {
+        Z.markDay();
+        Z.addXp(5);
+        setTimeout(() => Z.checkAchievements(), 1200);
+      }
+    }, { once: true });
   } else {
     $('#sessionTimer').hidden = true;
   }

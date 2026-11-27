@@ -169,12 +169,12 @@ function renderCatalog() {
   const query = input.trim().toLowerCase();
   const words = query ? query.split(/\s+/) : [];
   const genre = params.get('c') || '';
-  const sort = params.get('sort') || '';
+  const sort = params.get('sort') ?? document.documentElement.dataset.gameSort ?? '';
   const browsing = !!(query || genre || params.has('all'));
   const pageTitle = query ? 'Search results' : genre ? titleCase(genre) : browsing ? 'All games' : 'Discover';
 
   if ($('query').value !== input) $('query').value = input;
-  $('sort').value = ['az', 'za'].includes(sort) ? sort : '';
+  $('sort').value = ['az', 'za', 'new'].includes(sort) ? sort : '';
   $('spot').hidden = browsing;
   $('discover-actions').hidden = browsing;
   $('discover-intro').classList.toggle('discover-home', !browsing);
@@ -220,6 +220,7 @@ function renderCatalog() {
     return (!genre || categories.includes(genre))
       && words.every(word => game.searchText.includes(word));
   });
+  if (sort === 'new') matched.sort((a, b) => (b.added || '').localeCompare(a.added || ''));
   if (sort === 'az') matched.sort((a, b) => collator.compare(a.t, b.t));
   if (sort === 'za') matched.sort((a, b) => collator.compare(b.t, a.t));
 
@@ -243,7 +244,10 @@ $('query').addEventListener('input', event => {
 $('query').addEventListener('blur', () => {
   if (history.state?.typing) history.replaceState(null, '');
 });
-$('sort').addEventListener('change', event => updateUrl({ sort: event.target.value }));
+new MutationObserver(renderCatalog).observe(document.documentElement, {
+  attributes: true, attributeFilter: ['data-game-sort'],
+});
+$('sort').addEventListener('change', event => updateUrl({ sort: event.target.value || 'featured' }));
 $('clear').addEventListener('click', () => {
   updateUrl({ q: '', c: '', sort: '', all: '1' }, { scroll: true });
   $('query').focus();

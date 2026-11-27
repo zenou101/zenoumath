@@ -33,6 +33,9 @@
   const THEME_IDS = new Set(THEMES.map(([id]) => id));
 
   const PREF_GROUPS = [
+    ['gameLayout', 'Game layout', [['compact','Compact'], ['standard','Standard'], ['large','Large'], ['list','List']]],
+    ['launchMode', 'Game launch', [['inline','In page'], ['fullscreen','Fullscreen'], ['tab','New tab']]],
+    ['gameSort', 'Default game order', [['featured','Featured'], ['az','A–Z'], ['za','Z–A']]],
     ['glow', 'Glow strength', [['off', 'Off'], ['soft', 'Soft'], ['medium', 'Medium'], ['strong', 'Strong']]],
     ['radius', 'Corner style', [['sharp', 'Sharp'], ['soft', 'Soft'], ['round', 'Round']]],
     ['density', 'Card density', [['cozy', 'Cozy'], ['compact', 'Compact']]],
@@ -40,7 +43,7 @@
     ['aurora', 'Aurora'], ['stars', 'Stars'], ['snow', 'Snow'], ['night', 'Stars + snow'], ['grid', 'Grid'], ['plain', 'Plain'], ['custom', 'Custom image']]],
     ['motion', 'Motion', [['full', 'Full'], ['calm', 'Calm']]],
   ];
-  const DEFAULTS = { theme: 'white', glow: 'medium', radius: 'soft', density: 'cozy', bg: 'aurora', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
+  const DEFAULTS = { theme: 'white', launchMode: 'inline', gameLayout: 'standard', gameSort: 'featured', glow: 'off', radius: 'soft', density: 'cozy', bg: 'plain', bgEffects: 'none', motion: 'full', bgDim: 45, hue: null };
   const PREF_KEY = 'zenou_prefs';
   const BG_KEY = 'zenou_bgimg';
 
@@ -90,6 +93,10 @@
     r.dataset.glow = p.glow;
     r.dataset.radius = p.radius;
     r.dataset.density = p.density;
+    r.dataset.gameLayout = p.gameLayout;
+    if (r.dataset.gameSort !== p.gameSort) r.dataset.gameSort = p.gameSort;
+    const select = document.getElementById('gameLayout');
+    if (select) select.value = p.gameLayout;
     window.ZenouAtmo?.applyPreferences(p);
   }
   function setPref(key, value) {
@@ -219,6 +226,11 @@
             <div id="seThemes" class="theme-chips"></div>
           </div>
           <div id="sePrefs"></div>
+          <div class="settings-field"><span>Storage</span>
+            <div class="play-tools"><a href="/library/#data">Export or import backup</a>
+            <a href="/library/#favourites">Manage favourites</a>
+            <button type="button" class="btn btn-ghost" id="clearRecent">Clear recent games</button></div>
+          </div>
 
           <div class="settings-field hue-field">
             <span><label for="seHue">Custom accent hue</label> <output id="seHueOut">off</output></span>
@@ -329,6 +341,11 @@
         </footer>
       </div>`;
 
+    $('#clearRecent', root).addEventListener('click', () => {
+      if (!confirm('Clear recent games on this device?')) return;
+      store.set('zenou_recent', []);
+      location.reload();
+    });
     const titleInput = $('#seTitle', root);
     const connectionButton = $('#seSupabaseCheck', root);
     const connectionStatus = $('#seSupabaseStatus', root);
@@ -920,6 +937,7 @@
     });
 
     $('#seReset', root).addEventListener('click', () => {
+      if (!window.confirm('Reset appearance, catalogue and tab settings on this device?')) return;
       store.del('zenou_mask');
       store.del(PREF_KEY);
       try { store.del('zenou_view'); } catch { /* ignore */ }
@@ -1007,7 +1025,7 @@
       store.set(layoutKey(), true);
     });
 
-    const restoreSidebar = () => render(store.get(layoutKey(), mobile.matches) === true);
+    const restoreSidebar = () => render(store.get(layoutKey(), true) === true);
     restoreSidebar();
     mobile.addEventListener('change', restoreSidebar);
     window.addEventListener('pageshow', event => {
@@ -1018,7 +1036,7 @@
   function mountPrimaryNavigation(rail, row, settings) {
     const primary = [
       ['/', 'Discover', 'discover'], ['/?all=1', 'Games', 'gamepad'],
-      ['/library/', 'Library', 'library'], ['/web/', 'Web', 'globe'],
+      ['/library/#favourites', 'Favourites', 'heart'], ['/web/?kind=app', 'Apps', 'spark'], ['/web/', 'Websites', 'globe'],
     ];
     const nav = document.createElement('nav');
     nav.className = 'masthead-links';
@@ -1040,7 +1058,8 @@
       const catalog = route === '/' && (params.has('all') || Boolean(params.get('c') || params.get('q')));
       for (const link of nav.children) {
         const games = link.search === '?all=1';
-        const active = games ? catalog || ['/play', '/browse', '/math-games'].includes(route)
+        const directory = path(link.pathname) === '/web';
+        const active = directory ? route === '/web' && new URLSearchParams(link.search).get('kind') === params.get('kind') : games ? catalog || ['/play', '/browse', '/math-games'].includes(route)
           : path(link.pathname) === route && !(link.pathname === '/' && catalog);
         if (active) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
@@ -1049,6 +1068,10 @@
     update();
     new MutationObserver(update).observe(rail, { attributes: true, subtree: true, attributeFilter: ['aria-current'] });
   }
+
+  document.addEventListener('change', event => {
+    if (event.target.id === 'gameLayout') setPref('gameLayout', event.target.value);
+  });
 
   function injectButton() {
     if (document.getElementById('settingsBtn')) return;
@@ -1105,10 +1128,10 @@
   const WEB_TAB_KEY = 'zenou_webtabs';
   const SITE_KEY_DEFAULTS = { search: '/', random: '4', games: '1', library: '2', settings: '3', shortcuts: '?' };
   function directShortcutFor(e) {
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return null;
+    if (e.isComposing || e.repeat || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return null;
     if (!e.key || e.key.length !== 1 || e.key === ' ') return null;
     const target = e.target;
-    if (target && target.matches && target.matches('input, textarea, select, [contenteditable]')) return null;
+    if (target && target.closest?.('input, textarea, select, [contenteditable], [role=textbox]')) return null;
     if (document.querySelector('dialog[open], .sheet-overlay, .web-pin-overlay')) return null;
     let list;
     try { list = JSON.parse(localStorage.getItem(WEB_TAB_KEY) || '[]'); } catch { return null; }
