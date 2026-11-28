@@ -151,7 +151,40 @@ body[data-arcade-page=play] .frame-wrap {
   border-radius: 0;
   box-shadow: none;
 }
+.play-main .frame-wrap.frame-portrait {
+  aspect-ratio: 9 / 16;
+  max-width: calc(76vh * 9 / 16);
+  margin-inline: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.player-grip {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #ffffff33;
+  border-radius: 8px;
+  background: #0b0d0ee6;
+  color: #d6d9db;
+  cursor: nwse-resize;
+  touch-action: none;
+  opacity: .8;
+  transition: opacity .16s ease, border-color .16s ease, color .16s ease;
+}
+.player-grip:hover, .player-grip:focus-visible { opacity: 1; border-color: var(--accent); color: #fff; }
+.player-grip svg { width: 15px; height: 15px; }
+.player-stage.is-resizing { user-select: none; }
+.player-stage.is-resizing iframe { pointer-events: none; }
 .play-main .frame-wrap:fullscreen { max-height: none; }
+.play-main .frame-wrap:fullscreen .player-grip { display: none; }
+@media (max-width: 780px) { .player-grip { display: none; } }
 .play-main .loading {
   background: radial-gradient(ellipse at center, rgb(var(--accent-rgb) / .08), transparent 65%), #101014;
   padding: 16px;

@@ -58,6 +58,9 @@ function showUnavailable(game) {
 function setupFrame(game, url) {
   const frameWrap = $('#frameWrap');
   frameWrap.classList.toggle('frame-tall', game.id === 'lo-2048');
+  /* Portrait builds look wrong in a 16:9 letterbox; the frame follows the game
+     and the grip can still override it. */
+  frameWrap.classList.toggle('frame-portrait', game.id === 'gn-70');
   const loading = $('#loading');
   const status = $('#stageStatus');
   const loadMessage = loading.querySelector('p');
@@ -426,5 +429,106 @@ function relatedCard(g) {
   return a;
 }
 
-if (window.ZenouConsent?.accepted()) boot();
+/* ---------------------------------------------------------------- resize
+   The grip under the frame lets a desktop visitor shape the player to the
+   game (portrait builds on a wide screen, wide builds on a laptop). The size
+   is remembered per browser; double-click, Home or Escape restores the
+   default 16:9.4 stage. Touch layouts keep the full-width stage. */
+function setupResize() {
+  const stage = $('#playerStage');
+  const wrap = $('#frameWrap');
+  const grip = $('#resizeGrip');
+  if (!stage || !wrap || !grip) return;
+  const KEY = 'zenou_player_size';
+  const MIN_W = 320;
+  const MIN_H = 220;
+  const wide = () => matchMedia('(min-width: 781px)').matches;
+  const bounds = () => {
+    const parent = stage.parentElement?.getBoundingClientRect();
+    return {
+      maxW: Math.max(MIN_W, Math.floor((parent?.width || innerWidth) - 1)),
+      maxH: Math.max(MIN_H, Math.floor(innerHeight * 0.9)),
+    };
+  };
+  const apply = (width, height) => {
+    wrap.style.aspectRatio = 'auto';
+    wrap.style.maxHeight = 'none';
+    wrap.style.maxWidth = 'none';
+    wrap.style.height = height + 'px';
+    stage.style.width = width + 'px';
+    stage.style.maxWidth = '100%';
+  };
+  const clearInline = () => {
+    for (const prop of ['aspect-ratio', 'max-height', 'max-width', 'height']) wrap.style.removeProperty(prop);
+    stage.style.removeProperty('width');
+    stage.style.removeProperty('max-width');
+  };
+  const restore = () => {
+    const saved = store.get(KEY, null);
+    if (!wide() || !saved || saved.w < MIN_W || saved.h < MIN_H) return false;
+    const { maxW, maxH } = bounds();
+    apply(Math.min(saved.w, maxW), Math.min(saved.h, maxH));
+    return true;
+  };
+  const save = () => {
+    if (!wide()) return;
+    const rect = wrap.getBoundingClientRect();
+    store.set(KEY, { w: Math.round(rect.width), h: Math.round(rect.height) });
+  };
+  const reset = () => {
+    clearInline();
+    store.set(KEY, null);
+  };
+
+  restore();
+
+  let drag = null;
+  grip.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || !wide()) return;
+    const rect = wrap.getBoundingClientRect();
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, w: rect.width, h: rect.height };
+    grip.setPointerCapture(event.pointerId);
+    stage.classList.add('is-resizing');
+    event.preventDefault();
+  });
+  grip.addEventListener('pointermove', (event) => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const { maxW, maxH } = bounds();
+    const width = Math.min(maxW, Math.max(MIN_W, drag.w + (event.clientX - drag.x)));
+    const height = Math.min(maxH, Math.max(MIN_H, drag.h + (event.clientY - drag.y)));
+    apply(Math.round(width), Math.round(height));
+  });
+  const end = (event) => {
+    if (!drag) return;
+    drag = null;
+    stage.classList.remove('is-resizing');
+    if (grip.hasPointerCapture?.(event.pointerId)) grip.releasePointerCapture(event.pointerId);
+    save();
+  };
+  grip.addEventListener('pointerup', end);
+  grip.addEventListener('pointercancel', end);
+  grip.addEventListener('dblclick', reset);
+  grip.addEventListener('keydown', (event) => {
+    if (event.key === 'Home' || event.key === 'Escape') { event.preventDefault(); reset(); return; }
+    const step = event.shiftKey ? 80 : 20;
+    const rect = wrap.getBoundingClientRect();
+    let width = rect.width;
+    let height = rect.height;
+    if (event.key === 'ArrowRight') width += step;
+    else if (event.key === 'ArrowLeft') width -= step;
+    else if (event.key === 'ArrowDown') height += step;
+    else if (event.key === 'ArrowUp') height -= step;
+    else return;
+    event.preventDefault();
+    const { maxW, maxH } = bounds();
+    apply(Math.round(Math.min(maxW, Math.max(MIN_W, width))), Math.round(Math.min(maxH, Math.max(MIN_H, height))));
+    save();
+  });
+  addEventListener('resize', () => {
+    if (!wide()) { clearInline(); return; }
+    restore();
+  });
+}
+
+if (window.ZenouConsent?.accepted()) { setupResize(); boot(); }
 else document.addEventListener('zenoumath:consent', boot, { once: true });

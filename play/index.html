@@ -26,9 +26,9 @@
 <link rel="stylesheet" href="/css/style.css?v=2">
 <link rel="stylesheet" href="/css/plus.css">
 <link rel="stylesheet" href="/css/consent.css?v=3">
-<link rel="stylesheet" href="/css/arcade-shell.css"><link rel="stylesheet" href="/css/accent.css">
+<link rel="stylesheet" href="/css/arcade-shell.css?v=2026-11-28c"><link rel="stylesheet" href="/css/accent.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/css/interface.css?v=24">
+<link rel="stylesheet" href="/css/interface.css?v=25">
 <link rel="stylesheet" href="/css/zenou.css?v=16">
 <script>if (window.top !== window && new URLSearchParams(location.search).get('desktop') === '1') document.documentElement.dataset.zenouDesktop = '';</script>
 </head>
@@ -67,6 +67,9 @@
           <p>Loading game…</p>
         </div>
         <iframe id="gameFrame" title="Game" allowfullscreen allow="autoplay; gamepad" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-pointer-lock allow-downloads allow-presentation" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+        <button id="resizeGrip" class="player-grip" type="button" aria-label="Resize player" title="Drag to resize · double-click to reset">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 20h-5M20 20v-5M20 20 9 9M14 20h-3M20 14v-3"/></svg>
+        </button>
       </div>
       <div class="stage-toolbar">
         <p id="stageStatus" role="status"></p>
@@ -144,6 +147,6 @@
 <script src="/js/settings.js?v=2026-11-28" defer></script>
 <script src="/js/zenou-plus.js?v=2026-11-28" defer></script>
 <script src="/js/consent.js" defer></script>
-<script type="module" src="/js/play.js?v=player-9"></script>
+<script type="module" src="/js/play.js?v=player-11"></script>
 </body>
 </html>
