@@ -18,7 +18,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 
-const DOMAIN = 'https://zenoumath.space';
+const DOMAIN = 'https://stop-smoking-campaign.pages.dev';
 
 /** file -> { slug, nav, title, desc } */
 const PAGES = [
@@ -142,7 +142,7 @@ const FOOTER = `<footer class="sitefoot">
     <div>
       <span class="foot-mark">Zenou <b>Math</b></span>
       <p>Practice sets, a reference desk, a lecture library and audio for focus, in one tab. Free, no account, no install.</p>
-      <p class="foot-small">Published at <a href="https://zenoumath.space/" rel="noopener">zenoumath.space</a></p>
+      <p class="foot-small">Published at <a href="https://stop-smoking-campaign.pages.dev/" rel="noopener">zenoumath.space</a></p>
     </div>
     <div>
       <h3>Where it comes from</h3>

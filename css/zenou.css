@@ -1575,6 +1575,10 @@ body[data-arcade-page] :is(.page-head, .web-hero, .ai-hero, .social-hero, .movie
   letter-spacing: -.035em;
 }
 
+/* Doorways is reached from /web and should read like it, not like the old
+   terminal-style heads. */
+body[data-arcade-page] :is(.dw-head) h1 { font-family: var(--zn-sans); }
+
 body[data-arcade-page] :is(.page-sub, .ai-deck, .web-deck, .social-deck, .movies-deck) {
   color: var(--zn-dim);
   font: 400 12.5px/1.6 var(--zn-mono);

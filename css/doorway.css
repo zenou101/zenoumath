@@ -45,7 +45,7 @@
   background: rgb(var(--accent-rgb) / .06);
   font-size: 13px;
   line-height: 1.65;
-  color: #c8cfdd;
+  color: var(--muted);
   max-width: 72ch;
 }
 
@@ -99,7 +99,7 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.6;
-  color: #b9c1d1;
+  color: var(--muted);
   flex: 1;
 }
 

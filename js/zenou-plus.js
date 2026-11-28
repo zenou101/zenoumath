@@ -842,14 +842,6 @@
     installPrompt = null;
   }
 
-  function registerWorker() {
-    if (!('serviceWorker' in navigator)) return;
-    if (location.protocol === 'file:') return;
-    // Keep local development honest: a cached shell would hide edits.
-    if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return;
-    navigator.serviceWorker.register('/sw.js').catch(() => { /* offline shell is optional */ });
-  }
-
   /* ================================================================
      global keys
      ================================================================ */
@@ -901,7 +893,9 @@
     mountKeys();
     mountScroll();
     mountGamepad();
-    registerWorker();
+    /* No service worker is registered any more: /sw.js is a migration worker
+       that clears the old offline shell and unregisters itself, so the
+       redirect to the new host is never intercepted. */
     const isHome = location.pathname === '/' || location.pathname === '/index.html';
     if (isHome && !LS.get(K.tour, false) && !store.recent.length) setTimeout(tour, 900);
     loadCatalog().then(() => checkAchievements({ quiet: true }));

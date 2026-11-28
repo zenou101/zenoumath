@@ -8,11 +8,11 @@
 
 Browse games by genre, shuffle the catalogue when you can't pick, or save a title for later. Switch to the optional ZenouOS desktop to open your games and tools in their own windows.
 
-[![Website](https://img.shields.io/badge/site-zenoumath.space-365781)](https://zenoumath.space/)
+[![Website](https://img.shields.io/badge/site-zenoumath.space-365781)](https://stop-smoking-campaign.pages.dev/)
 [![Local server](https://img.shields.io/badge/local%20server-Node.js%2020%2B-39724a)](package.json)
 [![Licence](https://img.shields.io/badge/licence-all%20rights%20reserved-545968)](LICENSE)
 
-[**Open the arcade**](https://zenoumath.space/) · [Try ZenouOS Beta](https://zenoumath.space/os/) · [Explore](#explore) · [Run locally](#run-locally)
+[**Open the arcade**](https://stop-smoking-campaign.pages.dev/) · [Try ZenouOS Beta](https://stop-smoking-campaign.pages.dev/os/) · [Explore](#explore) · [Run locally](#run-locally)
 
 </div>
 
@@ -24,11 +24,11 @@ Browse games by genre, shuffle the catalogue when you can't pick, or save a titl
 
 | Where to go | What you can do |
 | --- | --- |
-| [**All games**](https://zenoumath.space/?all=1) | Search for a title, browse a genre or use **Shuffle** to pick your next game. |
-| [**My library**](https://zenoumath.space/library/) | Reopen recently played games, keep a **Play Later** queue, and organise favourites, playlists, ratings and notes. An optional username account syncs favourites, ratings and notes across browsers. |
-| [**ZenouOS Beta**](https://zenoumath.space/os/) | Launch games from **Zteam**, change the wallpaper in **ZenouPaper Engine**, or keep **ZNotes** open alongside another app. Choose **Classic website** to switch back. |
-| **Media** | Browse [books and manga](https://zenoumath.space/books/), open the [music player](https://zenoumath.space/music/), or look up [films and TV shows](https://zenoumath.space/movies/). Playback depends on the external provider. |
-| **Tools** | Open the [web tools](https://zenoumath.space/web/) or explore the [AI assistant and tool directory](https://zenoumath.space/ai/). |
+| [**All games**](https://stop-smoking-campaign.pages.dev/?all=1) | Search for a title, browse a genre or use **Shuffle** to pick your next game. |
+| [**My library**](https://stop-smoking-campaign.pages.dev/library/) | Reopen recently played games, keep a **Play Later** queue, and organise favourites, playlists, ratings and notes. An optional username account syncs favourites, ratings and notes across browsers. |
+| [**ZenouOS Beta**](https://stop-smoking-campaign.pages.dev/os/) | Launch games from **Zteam**, change the wallpaper in **ZenouPaper Engine**, or keep **ZNotes** open alongside another app. Choose **Classic website** to switch back. |
+| **Media** | Browse [books and manga](https://stop-smoking-campaign.pages.dev/books/), open the [music player](https://stop-smoking-campaign.pages.dev/music/), or look up [films and TV shows](https://stop-smoking-campaign.pages.dev/movies/). Playback depends on the external provider. |
+| **Tools** | Open the [web tools](https://stop-smoking-campaign.pages.dev/web/) or explore the [AI assistant and tool directory](https://stop-smoking-campaign.pages.dev/ai/). |
 
 ## Run locally
 
@@ -63,4 +63,4 @@ Open **http://127.0.0.1:8123**. You can browse the arcade and launch ZenouOS wit
 
 **© 2026 ZenouMath / zenou101. All rights reserved.** The original code and assets are published for viewing and reference. Reuse, modification and redistribution require prior written permission, subject to applicable law and GitHub's Terms of Service. Third-party games, embeds, logos and trademarks retain their respective owners' rights. See the [licence](LICENSE).
 
-ZenouMath is independent of schools and education authorities. [Site terms and privacy](https://zenoumath.space/legal/) · [Report an issue](https://github.com/zenou101/zenoumath/issues).
+ZenouMath is independent of schools and education authorities. [Site terms and privacy](https://stop-smoking-campaign.pages.dev/legal/) · [Report an issue](https://github.com/zenou101/zenoumath/issues).

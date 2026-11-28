@@ -10,7 +10,7 @@
   flex-wrap: wrap;
   padding: 10px clamp(12px, 2.5vw, 22px);
   border-bottom: 1px solid var(--line);
-  background: rgba(8, 10, 18, .82);
+  background: rgb(16 18 20 / .82);
   backdrop-filter: blur(14px);
   z-index: 3;
 }
@@ -32,14 +32,14 @@
   background:
     linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 15px) 52% / 5px 5px no-repeat,
     linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 10px) 52% / 5px 5px no-repeat,
-    rgba(5, 6, 12, .7);
+    rgb(10 11 12 / .7);
   color: var(--text);
   font: 600 12px/1 var(--font-body);
   cursor: pointer;
   outline: none;
 }
 .min-select:focus { border-color: rgb(var(--accent-rgb) / .6); }
-.min-select option { background: #11141f; color: #eef1f8; }
+.min-select option { background: #15181a; color: #eef1f8; }
 
 .min-note {
   margin: 0;
@@ -61,7 +61,7 @@
   max-width: none;
   margin: 0;
   padding: 0;
-  background: #05060b;
+  background: var(--za-canvas, #08090a);
 }
 .min-stage iframe {
   position: absolute;
@@ -84,7 +84,7 @@
   text-align: center;
   background:
     radial-gradient(50% 55% at 50% 0%, rgb(var(--accent-rgb) / .14), transparent 70%),
-    #06070d;
+    var(--za-canvas, #08090a);
   z-index: 2;
   transition: opacity .4s var(--ease);
 }
@@ -120,7 +120,7 @@
   flex-wrap: wrap;
   padding: 8px clamp(12px, 2.5vw, 22px);
   border-top: 1px solid var(--line);
-  background: rgba(8, 10, 18, .8);
+  background: rgb(16 18 20 / .8);
   color: var(--muted-2);
   font-size: 11px;
 }
@@ -129,5 +129,7 @@
 @media (max-width: 720px) {
   .min-title small { display: none; }
   .min-bar .wordmark-text { display: none; }
-  .min-controls .min-select { max-width: 160px; }
+  .min-controls { flex: 1 0 100%; }
+  .min-select-wrap { flex: 1; min-width: 0; }
+  .min-controls .min-select { width: 100%; max-width: none; }
 }

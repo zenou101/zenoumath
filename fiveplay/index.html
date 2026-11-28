@@ -7,54 +7,62 @@
 <meta name="theme-color" content="#07080e">
 <link rel="icon" href="../assets/favicon.png" type="image/png">
 <style>
-  :root { color-scheme: dark; --ink:#eef1f8; --muted:#99a2b4; --line:rgba(255,255,255,.12); --accent:#ff4fb0; }
+  :root { color-scheme: dark; --ink:#f1f2f3; --muted:#a3a8ad; --line:rgba(255,255,255,.10); }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #05060b; color: var(--ink); }
+  html, body { margin: 0; height: 100%; background: #08090a; color: var(--ink); }
   body { display: flex; flex-direction: column; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; }
   .bar {
     flex: none; height: 54px; display: flex; align-items: center; gap: 14px;
     padding: 0 16px; border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, #10131f, #0a0c14);
+    background: linear-gradient(180deg, #14171a, #0c0e0f);
   }
   .bar a { color: var(--muted); text-decoration: none; font-weight: 600; }
   .bar a:hover { color: #fff; }
   .title { display: flex; flex-direction: column; line-height: 1.15; margin-right: auto; }
   .title b { font-size: 14px; letter-spacing: -.01em; }
   .title small { color: var(--muted); font-size: 10.5px; letter-spacing: .04em; }
+  .actions { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: none; }
   .btn {
     border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--ink);
     border-radius: 999px; padding: 7px 13px; font: 700 11.5px/1 system-ui, sans-serif; cursor: pointer;
   }
-  .btn:hover { border-color: rgba(255,79,176,.55); color: #fff; }
+  .btn:hover { border-color: rgb(var(--accent-rgb, 255 255 255) / .55); color: #fff; }
   .stage { position: relative; flex: 1; min-height: 0; background: #000; }
   .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
   .boot {
     position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
-    background: radial-gradient(55% 55% at 50% 0%, rgba(255,79,176,.14), transparent 70%), #07080e;
+    background: radial-gradient(55% 55% at 50% 0%, rgb(var(--accent-rgb, 255 255 255) / .10), transparent 70%), #08090a;
   }
   .boot-card { max-width: 470px; }
   .boot-mark {
     width: 54px; height: 54px; margin: 0 auto 16px; display: grid; place-items: center;
-    border: 1px solid rgba(255,79,176,.35); border-radius: 14px; background: rgba(255,79,176,.1);
+    border: 1px solid rgb(var(--accent-rgb, 255 255 255) / .32); border-radius: 14px;
+    background: rgb(var(--accent-rgb, 255 255 255) / .08);
     color: var(--accent); font: 800 20px/1 system-ui, sans-serif;
-    box-shadow: 0 0 40px rgba(255,79,176,.18);
+    box-shadow: 0 0 40px rgb(var(--accent-rgb, 255 255 255) / .18);
   }
   .boot h1 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.03em; }
   .boot p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.65; }
   .boot .err { color: #ff8a9d; }
   .boot .btn {
     display: inline-flex; margin-top: 16px; padding: 11px 18px; text-decoration: none;
-    background: var(--accent); border-color: transparent; color: #0a0a14; font-weight: 800;
+    background: var(--accent); border-color: transparent; color: var(--accent-ink, #111114); font-weight: 800;
   }
   .boot .btn:hover { filter: brightness(1.08); }
   .boot .url { display: block; margin-top: 10px; color: var(--accent); font: 600 12px/1.4 ui-monospace, monospace; }
   .compat {
     flex: none; padding: 8px 16px; text-align: center; font-size: 11.5px; line-height: 1.5;
-    color: #ffd9a6; background: rgba(255, 176, 76, .10); border-bottom: 1px solid rgba(255, 176, 76, .24);
+    color: #e6c98f; background: rgb(213 178 92 / .10); border-bottom: 1px solid rgb(213 178 92 / .26);
   }
   .noscript { padding: 24px; color: var(--muted); }
+  /* The player bar wraps instead of pushing its buttons under the stage. */
+  @media (max-width: 640px) {
+    .bar { height: auto; min-height: 54px; padding: 8px 16px; row-gap: 8px; }
+    .title small { display: none; }
+  }
 </style>
 <link rel="stylesheet" href="/css/arcade-shell.css"><script>try{if(!localStorage.getItem('zenoumath.consent'))document.documentElement.classList.add('consent-pending')}catch(e){document.documentElement.classList.add('consent-pending')}setTimeout(function(){document.documentElement.classList.remove('consent-pending')},3000)</script><link rel="stylesheet" href="/css/accent.css"><link rel="stylesheet" href="/css/interface.css?v=24">
+<link rel="stylesheet" href="/css/zenou.css?v=16">
 </head>
 <body data-arcade-page="fiveplay"><aside class="za-rail" aria-label="Arcade navigation"><a class="za-brand" href="/" aria-label="ZenouMath home"><img class="za-mark" src="/assets/favicon.svg" alt="" width="29" height="29"><span>ZenouMath</span></a><div class="za-scroll"><div class="za-group"><small>ARCADE</small><nav aria-label="Arcade"><a href="/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#discover"/></svg>Discover</a><a href="/?all=1" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>All games</a><a href="/?c=gn-math"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#gamepad"/></svg>GN-Math</a><a href="/math-games/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#calculator"/></svg>Math Games</a></nav></div><div class="za-group"><small>EXPLORE</small><nav aria-label="Explore"><a href="/books/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#book"/></svg>Books &amp; Manga</a><a href="/web/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#globe"/></svg>Web</a><a href="/search/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#search"/></svg>Search</a></nav></div><div class="za-group"><small>GENRES</small><nav aria-label="Genres"><a href="/?c=action"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#bolt"/></svg>Action</a><a href="/?c=racing"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#racing"/></svg>Racing</a><a href="/?c=sports"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#sports"/></svg>Sports</a><a href="/?c=puzzle"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#puzzle"/></svg>Puzzle</a><a href="/?c=adventure"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#adventure"/></svg>Adventure</a></nav></div></div><a class="za-foot" href="/legal/"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="/assets/ui-icons.svg#info"/></svg>About Zenou</a></aside>
 <header class="bar">
@@ -63,8 +71,10 @@
     <b>FivePlay</b>
     <small>gta-style open world · isolated player</small>
   </div>
-  <a class="btn" href="https://fiveplay.lol/" target="_blank" rel="noopener noreferrer">Open in new tab</a>
-  <button id="fs" class="btn" type="button">Fullscreen</button>
+  <div class="actions">
+    <a class="btn" href="https://fiveplay.lol/" target="_blank" rel="noopener noreferrer">Open in new tab</a>
+    <button id="fs" class="btn" type="button">Fullscreen</button>
+  </div>
 </header>
 <div id="compat" class="compat" hidden></div>
 <main id="stage" class="stage">

@@ -1,101 +1,39 @@
-/* ZenouMath, service worker.
+/* ZenouMath, migration worker.
  *
- * Deliberately small: a stale shell beats a blank page when the network drops,
- * but nobody wants yesterday's catalogue forever. So:
- *   · HTML / CSS / JSON  -> network first, cache as a fallback
- *   · Other assets       -> cache first, refreshed in the background
+ * ZenouMath now lives at https://stop-smoking-campaign.pages.dev/ and this
+ * origin answers with a permanent redirect. Any worker left registered here
+ * would stand in front of that redirect: it could serve the cached arcade, or
+ * follow the 301 internally and return the new page while the address bar
+ * still showed the old host. So this version retires the offline shell
+ * instead of maintaining it.
  *
- * Clean URLs matter here: with no .html on any public path, "is this a page?"
- * is answered by a request with no file extension, not by a filename match.
- * That is the `extensionless` test below.
+ *   · It registers no fetch handler, so every request goes to the network and
+ *     the browser sees the redirect as a real navigation.
+ *   · On activation it claims the open pages, deletes every Cache Storage
+ *     entry the old shell created, and unregisters itself, so the browser
+ *     forgets the registration.
  *
- * Bump CACHE_VERSION when the shell changes shape. v3 dropped the .html
- * redirect stubs: they shadowed their own directory index on GitHub Pages,
- * so any cached copy of one has to go.
+ * Browsers check the worker script for updates on the next visit to the
+ * origin, so shipping this before the DNS switch is what lets returning
+ * visitors clear the old shell.
  */
-const CACHE_VERSION = 'zenou-arcade-v22-portals';
-const SHELL = [
-  '/catalog/portals.js',
-  '/',
-  '/css/style.css',
-  '/css/arcade-shell.css',
-  '/css/arcade-discover.css?v=20',
-  '/css/settings.css',
-  '/css/plus.css',
-  '/css/consent.css',
-  '/js/zenou-plus.js',
-  '/js/settings.js',
-  '/js/supabase.js',
-  '/js/account-sync.js',
-  '/js/username-auth.js',
-  '/css/interface.css',
-  '/css/interface.css?v=20',
-  '/js/motion.js',
-  '/js/atmosphere.js',
-  '/js/consent.js',
-  '/assets/favicon.png',
-  '/assets/favicon.svg',
-  '/assets/ui-icons.svg',
-  '/assets/logo-192.png',
-];
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then(c => c.addAll(SHELL).catch(() => {}))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k.startsWith('zenou-arcade-') && k !== CACHE_VERSION).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
+  event.waitUntil((async () => {
+    try {
+      await self.clients.claim();
+    } catch (e) { /* no window clients to claim */ }
 
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    } catch (e) { /* storage blocked: nothing else can be cleared */ }
 
-  const url = new URL(req.url);
-  if (url.origin !== location.origin) return; // never touch other origins
-  if (url.pathname.startsWith('/api/')) return; // never cache API responses
-
-  const extensionless = !/\.[a-z0-9]+$/i.test(url.pathname);
-  const networkFirst = req.mode === 'navigate'
-    || extensionless
-    || /\.(css|json|webmanifest)$/i.test(url.pathname)
-    || url.pathname.endsWith('/');
-
-  if (networkFirst) {
-    event.respondWith(
-      fetch(req)
-        .then(res => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE_VERSION).then(c => c.put(req, copy)).catch(() => {});
-          }
-          return res;
-        })
-        .catch(async () => await caches.match(req)
-          || (req.mode === 'navigate' && await caches.match('/'))
-          || Response.error())
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(req).then(hit => {
-      const fresh = fetch(req).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then(c => c.put(req, copy)).catch(() => {});
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || fresh;
-    })
-  );
+    try {
+      await self.registration.unregister();
+    } catch (e) { /* already unregistered */ }
+  })());
 });

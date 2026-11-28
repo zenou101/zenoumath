@@ -7,4 +7,4 @@ Allow: /
 Disallow: /legal/*.html$
 Disallow: /*.html$
 
-Sitemap: https://zenoumath.space/sitemap.xml
+Sitemap: https://stop-smoking-campaign.pages.dev/sitemap.xml

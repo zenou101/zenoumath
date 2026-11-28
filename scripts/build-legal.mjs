@@ -21,7 +21,7 @@ import path from 'node:path';
 import { DOCS } from './legal-docs.mjs';
 
 const ROOT = process.cwd();
-const DOMAIN = 'https://zenoumath.space';
+const DOMAIN = 'https://stop-smoking-campaign.pages.dev';
 const UPDATED = '7 November 2026';
 const VERSION = '2026-11-07';
 

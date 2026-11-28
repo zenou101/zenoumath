@@ -1178,7 +1178,7 @@
   if (!document.querySelector('link[href*="/css/zenou.css"]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/zenou.css?v=9';
+    link.href = '/css/zenou.css?v=16';
     document.head.append(link);
   }
 
