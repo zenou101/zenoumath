@@ -61,6 +61,10 @@ function setupFrame(game, url) {
   /* Portrait builds look wrong in a 16:9 letterbox; the frame follows the game
      and the grip can still override it. */
   frameWrap.classList.toggle('frame-portrait', game.id === 'gn-70');
+  /* The stage narrows to a portrait frame so the game does not sit in a wide empty box.
+     A size restored from the grip is left alone. */
+  const stage = $('#playerStage');
+  if (stage && stage.dataset.custom !== '1') stage.classList.toggle('is-portrait', game.id === 'gn-70');
   const loading = $('#loading');
   const status = $('#stageStatus');
   const loadMessage = loading.querySelector('p');
@@ -457,11 +461,15 @@ function setupResize() {
     wrap.style.height = height + 'px';
     stage.style.width = width + 'px';
     stage.style.maxWidth = '100%';
+    stage.dataset.custom = '1';
+    stage.classList.remove('is-portrait');
   };
   const clearInline = () => {
     for (const prop of ['aspect-ratio', 'max-height', 'max-width', 'height']) wrap.style.removeProperty(prop);
     stage.style.removeProperty('width');
     stage.style.removeProperty('max-width');
+    delete stage.dataset.custom;
+    stage.classList.toggle('is-portrait', wrap.classList.contains('frame-portrait'));
   };
   const restore = () => {
     const saved = store.get(KEY, null);

@@ -2,21 +2,21 @@
   "build": "2026-11-28",
   "totals": {
     "entries": 6843,
-    "embeddedEntries": 6565,
+    "embeddedEntries": 6563,
     "external": 278,
     "lo": 13,
     "pf": 343,
     "sc": 2026,
     "pg": 2667,
     "hm": 661,
-    "gn-math": 854,
+    "gn-math": 853,
     "selfhosted": 13,
     "publisher": 1,
     "scratch": 2026,
     "gamedistribution": 1,
     "hoodamath": 661,
     "crazygames-official": 3008,
-    "externalOnly": 277,
+    "externalOnly": 278,
     "official-link": 121,
     "brogames": 156,
     "bg": 156
@@ -37,7 +37,7 @@
       "html": "63c1608976000f23e4466c6d3b58f283149eeff5",
       "covers": "67baf382659b6b386371fdb2f5c56bcc9b5174eb"
     },
-    "entries": 854,
+    "entries": 853,
     "imported": "2026-11-21",
     "verification": "All imported HTML filenames were matched against the source repository tree. Full gameplay and external embed availability require browser verification."
   }

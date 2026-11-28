@@ -487,6 +487,10 @@ body[data-arcade-page=play] .game-info { min-width: 0; }
   html:not([data-zenou-desktop]) #playerView:not([hidden]) { display: grid; grid-template-columns: minmax(0,1fr) minmax(240px,27%); align-items: start; gap: 16px; }
   #playerView > :is(.za-player-title,.related) { grid-column: 1/-1; }
   #playerView > .player-stage { grid-column: 1; grid-row: 2; margin: 0; }
+  /* A portrait build gets a compact player: the stage hugs the frame and the
+     stage + info pair is centred, so the game doesn't sit in a wide empty box.
+     A custom (dragged) size drops .is-portrait and the normal grid returns. */
+  html:not([data-zenou-desktop]) #playerView:has(> .player-stage.is-portrait) { grid-template-columns: auto minmax(240px,290px); justify-content: center; }
   /* The card is wrapped in .zn-info, so that wrapper takes the sidebar column.
      Without this the wrapper was auto-placed into the 240px column and the
      290px inner grid overflowed back over the player. */
