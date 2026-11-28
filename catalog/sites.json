@@ -1,6 +1,6 @@
 {
-  "v": "2026-11-27c",
-  "updated": "2026-11-27",
+  "v": "2026-11-28a",
+  "updated": "2026-11-28",
   "sites": [
     {
       "id": "poki",
@@ -117,7 +117,8 @@
       "name": "Bouncing Rabbits",
       "url": "https://bouncingrabbits.cyou/",
       "glyph": "B",
-      "kind": "tool",
+      "kind": "proxy",
+      "label": "Proxy",
       "note": "A portal with its own search and links.",
       "frame": "allowed",
       "featured": false,
@@ -128,7 +129,8 @@
       "name": "Magma",
       "url": "https://magma-mantle.truegrid.cloud/",
       "glyph": "M",
-      "kind": "tool",
+      "kind": "proxy",
+      "label": "Proxy",
       "note": "A public web portal that allows framing.",
       "frame": "allowed",
       "featured": false,
