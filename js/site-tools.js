@@ -15,7 +15,7 @@ const pages = [
 
 let catalog;
 function getGames() {
-  catalog ||= fetch('/catalog/games.json?v=polytrack-embed').then(async response => {
+  catalog ||= fetch('/catalog/games.json?v=2026-11-28').then(async response => {
     if (!response.ok) throw new Error('The catalog is unavailable.');
     const data = await response.json();
     if (!Array.isArray(data.games)) throw new Error('The catalog is unavailable.');

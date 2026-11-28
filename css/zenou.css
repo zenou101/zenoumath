@@ -1732,3 +1732,191 @@ body[data-arcade-page] .section-title {
   .zn-page-head { flex-wrap: wrap; }
   .zn-page-head .zn-actions { width: 100%; }
 }
+
+/* ---------------------------------------------------------------- landing */
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+#catalog { scroll-margin-top: 18px; }
+
+.zn-landing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 0 0 30px;
+  padding: clamp(34px, 6vw, 68px) clamp(24px, 5vw, 54px) clamp(24px, 4vw, 38px);
+  border: 1px solid var(--zn-line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #101214 0%, #0a0b0c 100%);
+  animation: zn-landing-in .55s var(--zn-ease) both;
+}
+
+.zn-landing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(#ffffff07 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff07 1px, transparent 1px);
+  background-size: 54px 54px;
+  -webkit-mask-image: radial-gradient(72% 90% at 72% 0%, #000 10%, transparent 76%);
+  mask-image: radial-gradient(72% 90% at 72% 0%, #000 10%, transparent 76%);
+}
+
+.zn-landing::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -2;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / .35), transparent);
+}
+
+.zn-landing-glow {
+  position: absolute;
+  z-index: -1;
+  top: -260px;
+  right: -160px;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--accent-rgb) / .16), transparent 64%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.zn-landing-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 20px;
+  color: var(--zn-muted);
+  font: 500 10.5px/1 var(--zn-mono);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.zn-landing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent, #fff);
+  box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / .12);
+}
+
+.zn-landing-title {
+  margin: 0;
+  color: var(--zn-text);
+  font: 700 clamp(38px, 7vw, 66px)/1.02 var(--zn-mono);
+  letter-spacing: -.055em;
+}
+
+.zn-landing-title span { color: var(--zn-dim); }
+
+.zn-landing-lede {
+  max-width: 53ch;
+  margin: 20px 0 0;
+  color: var(--zn-muted);
+  font: 400 clamp(13.5px, 1.4vw, 15px)/1.65 var(--zn-sans);
+}
+
+.zn-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 28px 0 0;
+}
+
+.zn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--zn-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--zn-text);
+  font: 600 12.5px/1 var(--zn-mono);
+  text-decoration: none;
+  transition: background-color .18s var(--zn-ease), border-color .18s var(--zn-ease), color .18s var(--zn-ease), transform .18s var(--zn-ease);
+}
+
+.zn-cta:hover { border-color: #ffffff45; background: #ffffff0a; transform: translateY(-1px); }
+
+.zn-landing a.zn-cta-solid {
+  border-color: transparent;
+  background: var(--zn-text);
+  color: #0a0b0c;
+}
+
+.zn-landing a.zn-cta-solid:hover { background: #fff; color: #0a0b0c; }
+
+.zn-landing-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 5vw, 44px);
+  margin: clamp(30px, 5vw, 50px) 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--zn-line);
+}
+
+.zn-landing-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 5px;
+  min-width: 68px;
+}
+
+.zn-landing-stats dt {
+  color: var(--zn-dim);
+  font: 500 10px/1 var(--zn-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.zn-landing-stats dd {
+  margin: 0;
+  color: var(--zn-text);
+  font: 700 clamp(19px, 2.6vw, 24px)/1 var(--zn-mono);
+  letter-spacing: -.03em;
+}
+
+@keyframes zn-landing-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zn-landing { animation: none; }
+  .zn-cta { transition: none; }
+}
+
+@media (max-width: 560px) {
+  .zn-landing { padding: 28px 20px 24px; border-radius: 16px; }
+  .zn-landing-title { font-size: clamp(34px, 11vw, 46px); }
+  .zn-landing-actions { gap: 8px; }
+  .zn-cta { flex: 1 1 auto; padding: 0 16px; }
+  .zn-landing-stats { gap: 18px; }
+}
+
+/* Labels travel with the card, in the top-left slot the status badges use. */
+.zn-game-badge[data-kind=label] {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--zn-text);
+  border-color: rgb(var(--accent-rgb) / .28);
+}
+
+.zn-game-badge[data-kind=label]::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent, #fff);
+}

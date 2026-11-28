@@ -18,7 +18,7 @@
   }
 
   const catalogs = Promise.all([
-    readJson('/catalog/games.json?v=2026-10-31b', {}),
+    readJson('/catalog/games.json?v=2026-11-28', {}),
     readJson('/catalog/movies.json?v=2026-11-07', {}),
     readJson('/catalog/ai.json?v=2026-11-07', {}),
     readJson('/api/config', {}),

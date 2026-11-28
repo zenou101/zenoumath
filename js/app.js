@@ -144,7 +144,7 @@ const CATEGORY_META = [
 ];
 const CAT_NAMES = new Map(CATEGORY_META);
 const CAT_ORDER = CATEGORY_META.map(c => c[0]);
-const SOURCE_BADGES = { 'gn-math': 'GN-Math', 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher', external: 'External host' };
+const SOURCE_BADGES = { 'gn-math': 'GN-Math', 'crazygames-official': 'CrazyGames', hoodamath: 'HoodaMath', scratch: 'Scratch', selfhosted: 'Hosted here', gamedistribution: 'GameDistribution', publisher: 'Publisher', external: 'External host', brogames: 'Bro Games' };
 
 const RAILS = [
   { title: 'Instant start, no pre-roll', filter: g => g.p !== 'pg', max: 24 },
@@ -848,7 +848,7 @@ async function boot() {
   window.addEventListener('popstate', render);
 
   try {
-    const res = await fetch('/catalog/games.json?v=2026-10-31b');
+    const res = await fetch('/catalog/games.json?v=2026-11-28');
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
     GAMES = data.games;

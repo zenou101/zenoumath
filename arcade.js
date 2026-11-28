@@ -9,7 +9,7 @@ import { paintQueue, queueButton, watchQueue } from '/js/play-later.js';
 const $ = id => document.getElementById(id);
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 const PAGE_SIZE = 48;
-const GENRES = ['Action', 'Racing', 'Puzzle', 'Sports', 'Adventure', 'Arcade', 'GN-Math'];
+const GENRES = ['Action', 'Racing', 'Puzzle', 'Sports', 'Adventure', 'Arcade', 'GN-Math', 'Bro Games'];
 const LAYOUTS = [
   ['compact', 'Compact grid', '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="10" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="4" height="5" rx="1"/><rect x="3" y="10" width="5" height="5" rx="1"/><rect x="10" y="10" width="5" height="5" rx="1"/><rect x="17" y="10" width="4" height="5" rx="1"/><rect x="3" y="17" width="5" height="4" rx="1"/><rect x="10" y="17" width="5" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/>'],
   ['standard', 'Standard grid', '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'],
@@ -61,7 +61,12 @@ const state = {
 function titleCase(value) {
   if (!value) return '';
   if (value.toLowerCase() === 'gn-math') return 'GN-Math';
+  if (value.toLowerCase() === 'brogames') return 'Bro Games';
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function chipGenre(label) {
+  return label === 'Bro Games' ? 'brogames' : label.toLowerCase();
 }
 
 function gameUrl(game) {
@@ -196,6 +201,8 @@ async function loadSites() {
     const data = await response.json();
     state.sites = Array.isArray(data.sites) ? data.sites : [];
     renderSites();
+    const landingSites = $('landingSites');
+    if (landingSites) landingSites.textContent = state.sites.length.toLocaleString();
   } catch { /* The games catalogue still works without the website row. */ }
 }
 
@@ -234,7 +241,13 @@ function makeCard(game) {
     art.append(glyph);
   }
 
-  if (game.availability === 'external') {
+  if (game.label) {
+    const label = document.createElement('span');
+    label.className = 'zn-game-badge';
+    label.dataset.kind = 'label';
+    label.textContent = game.label;
+    art.append(label);
+  } else if (game.availability === 'external') {
     const badge = document.createElement('span');
     badge.className = 'zn-game-badge';
     badge.dataset.kind = 'external';
@@ -359,11 +372,15 @@ function updateHeading() {
     : state.load === 'error' ? 'Catalogue unavailable'
       : count.toLocaleString() + (count === 1 ? ' game' : ' games');
   $('pageInfo').textContent = count == null ? '' : count.toLocaleString() + (count === 1 ? ' game' : ' games');
+  const landing = $('landing');
+  if (landing) landing.hidden = browsing;
+  const landingGames = $('landingGames');
+  if (landingGames) landingGames.textContent = state.load === 'ready' ? state.games.length.toLocaleString() : '—';
   document.title = title === 'Games' ? 'Games · ZenouMath' : title + ' · ZenouMath';
 }
 
 function renderControls() {
-  const chips = [{ label: 'All', genre: '', fav: false }, ...GENRES.map(label => ({ label, genre: label.toLowerCase(), fav: false })), { label: 'Favourites', genre: '', fav: true }];
+  const chips = [{ label: 'All', genre: '', fav: false }, ...GENRES.map(label => ({ label, genre: chipGenre(label), fav: false })), { label: 'Favourites', genre: '', fav: true }];
   const host = $('filters');
   const signature = chips.map(c => c.label).join('|');
   if (host.dataset.signature !== signature) {
@@ -435,7 +452,7 @@ function render() {
   if (input.value !== state.query) input.value = state.query;
 
   // A category may arrive from a game page that is not in the short chip list.
-  if (state.genre && !GENRES.some(label => label.toLowerCase() === state.genre)) {
+  if (state.genre && !GENRES.some(label => chipGenre(label) === state.genre)) {
     GENRES.push(titleCase(state.genre));
   }
   paint(true);
@@ -534,7 +551,7 @@ async function boot() {
   paintQueue();
 
   try {
-    const response = await fetch('/catalog/games.json?v=2026-11-27', { cache: 'no-cache' });
+    const response = await fetch('/catalog/games.json?v=2026-11-28', { cache: 'no-cache' });
     if (!response.ok) throw new Error('catalogue');
     const data = await response.json();
     if (!Array.isArray(data.games)) throw new Error('catalogue');

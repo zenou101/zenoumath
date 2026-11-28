@@ -27,6 +27,7 @@ const sources = {
   sc: 'Scratch',
   hm: 'HoodaMath',
   gamedistribution: 'GameDistribution',
+  bg: 'Bro Games',
 };
 
 function safePage(value) {
@@ -213,7 +214,7 @@ async function boot() {
   const id = p.get('id') || '';
   let GAMES;
   try {
-    const res = await fetch('/catalog/games.json?v=skate-embed');
+    const res = await fetch('/catalog/games.json?v=2026-11-28');
     if (!res.ok) throw new Error(res.status);
     GAMES = (await res.json()).games;
   } catch {

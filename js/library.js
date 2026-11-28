@@ -452,7 +452,7 @@ import { queueIds, queueButton, watchQueue } from './play-later.js';
     Z = window.Zenou;
     if (!Z) { console.warn('library: shared layer missing'); return; }
     try {
-      const res = await fetch('/catalog/games.json?v=2026-10-31b');
+      const res = await fetch('/catalog/games.json?v=2026-11-28');
       const data = await res.json();
       GAMES = data.games;
       byId = new Map(GAMES.map(g => [g.id, g]));

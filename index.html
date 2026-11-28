@@ -10,10 +10,10 @@
   <link rel="icon" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/arcade-shell.css">
   <link rel="stylesheet" href="/css/accent.css">
-  <link rel="stylesheet" href="/css/consent.css">
+  <link rel="stylesheet" href="/css/consent.css?v=3">
   <link rel="stylesheet" href="/css/arcade-discover.css?v=21">
-  <link rel="stylesheet" href="/css/interface.css?v=20">
-  <link rel="stylesheet" href="/css/zenou.css?v=9">
+  <link rel="stylesheet" href="/css/interface.css?v=24">
+  <link rel="stylesheet" href="/css/zenou.css?v=15">
   <script>
     try {
       if (window.top === window && new URLSearchParams(location.search).get('interface') === 'classic') {
@@ -36,9 +36,9 @@
     }
   </script>
   <script src="/js/consent.js" defer></script>
-  <script type="module" src="/arcade.js?v=redesign-5"></script>
+  <script type="module" src="/arcade.js?v=redesign-8"></script>
   <script src="/js/atmosphere.js?v=blue-shell" defer></script>
-  <script src="/js/settings.js?v=redesign-1" defer></script>
+  <script src="/js/settings.js?v=2026-11-28" defer></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6508074092345504" crossorigin="anonymous"></script>
 </head>
 <body class="arcade-discover">
@@ -58,6 +58,22 @@
   </aside>
 
   <main id="main" class="zn-main">
+    <section class="zn-landing" id="landing" aria-labelledby="landingTitle">
+      <div class="zn-landing-glow" aria-hidden="true"></div>
+      <p class="zn-landing-kicker"><span class="zn-landing-dot" aria-hidden="true"></span>ZenouMath arcade</p>
+      <h1 class="zn-landing-title" id="landingTitle">A quieter place<br><span>to play.</span></h1>
+      <p class="zn-landing-lede">Browser games, a working website index and a small shelf of books — all one click from here. No installs, no sign-up, no noise.</p>
+      <div class="zn-landing-actions">
+        <a class="zn-cta zn-cta-solid" href="#catalog">Browse the catalogue</a>
+        <a class="zn-cta" href="/web/">Website index</a>
+      </div>
+      <dl class="zn-landing-stats">
+        <div><dt>Games</dt><dd id="landingGames">—</dd></div>
+        <div><dt>Sites</dt><dd id="landingSites">—</dd></div>
+        <div><dt>Installs</dt><dd>None</dd></div>
+      </dl>
+    </section>
+
     <header class="zn-page-head">
       <div>
         <h1 id="page-title">Games</h1>

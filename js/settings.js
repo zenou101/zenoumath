@@ -1137,7 +1137,7 @@
   }
 
   import('/js/motion.js').catch(() => {});
-  import('/js/site-tools.js?v=blue-shell').catch(() => {});
+  import('/js/site-tools.js?v=2026-11-28').catch(() => {});
   import('/js/account-sync.js').catch(() => {});
 
   /* ---------- direct key shortcuts (Web shortcuts) ---------- */

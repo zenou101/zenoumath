@@ -1,23 +1,25 @@
 {
-  "build": "2026-11-27",
+  "build": "2026-11-28",
   "totals": {
-    "entries": 6686,
-    "embeddedEntries": 6562,
-    "external": 123,
+    "entries": 6843,
+    "embeddedEntries": 6565,
+    "external": 278,
     "lo": 13,
     "pf": 343,
-    "sc": 2025,
+    "sc": 2026,
     "pg": 2667,
     "hm": 661,
     "gn-math": 854,
     "selfhosted": 13,
     "publisher": 1,
-    "scratch": 2025,
+    "scratch": 2026,
     "gamedistribution": 1,
     "hoodamath": 661,
     "crazygames-official": 3008,
-    "externalOnly": 122,
-    "official-link": 121
+    "externalOnly": 277,
+    "official-link": 121,
+    "brogames": 156,
+    "bg": 156
   },
   "verification": {
     "method": "Catalog entries provide embedded player launch URLs. External hosts control availability. The GN-Math source file audit is recorded separately.",
@@ -25,7 +27,8 @@
     "scratch": "Every Scratch ID probed against the official Scratch API · official /embed player",
     "crazygames": "Titles served from games.crazygames.com are embedded through that file host; publisher builds are embedded from their own domain.",
     "providerNote": "pf games load from the publisher's own hosting with no portal shell.",
-    "officialLinks": "New source-page listings are direct links. They make no embedding or redistribution claim."
+    "officialLinks": "New source-page listings are direct links. They make no embedding or redistribution claim.",
+    "broGames": "All 156 titles indexed from the public brogames.io sitemap and metadata. Bro Games hosts and updates the builds; these listings open on their page, so the catalogue makes no rehosting claim."
   },
   "gnMath": {
     "source": "https://raw.githubusercontent.com/gn-math/assets/6bacc0f4e61e95e6a4e4309a63b189e179d91e34/zones.json",

@@ -451,13 +451,13 @@
       if (cached && Array.isArray(cached.games) && cached.games.length) {
         window.__zenouGames = cached.games;
         // refresh in the background for next time
-        fetch('/catalog/games.json?v=2026-10-31b').then(r => r.ok ? r.json() : null).then(d => {
+        fetch('/catalog/games.json?v=2026-11-28').then(r => r.ok ? r.json() : null).then(d => {
           if (d && d.games) { LS.set(K.catalog, { ts: Date.now(), games: d.games }); window.__zenouGames = d.games; }
         }).catch(() => {});
         return window.__zenouGames;
       }
       try {
-        const r = await fetch('/catalog/games.json?v=2026-10-31b');
+        const r = await fetch('/catalog/games.json?v=2026-11-28');
         if (!r.ok) throw new Error(r.status);
         const d = await r.json();
         window.__zenouGames = d.games;
