@@ -160,14 +160,14 @@ body[data-arcade-page=play] .frame-wrap {
 }
 /* A portrait build gets a portrait stage instead of a wide box with dark sides.
    The grip's inline width still overrides this once the visitor resizes. */
-.play-main .player-stage.is-portrait {
+#playerView.is-portrait > .player-stage {
   width: min(100%, calc(76vh * 9 / 16 + 2px));
   margin-inline: auto;
 }
-.play-main .player-stage.is-portrait .stage-toolbar {
+#playerView.is-portrait > .player-stage .stage-toolbar {
   padding: 10px;
 }
-.play-main .player-stage.is-portrait #stageStatus {
+#playerView.is-portrait > .player-stage #stageStatus {
   flex-basis: 100%;
 }
 

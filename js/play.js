@@ -64,7 +64,11 @@ function setupFrame(game, url) {
   /* The stage narrows to a portrait frame so the game does not sit in a wide empty box.
      A size restored from the grip is left alone. */
   const stage = $('#playerStage');
-  if (stage && stage.dataset.custom !== '1') stage.classList.toggle('is-portrait', game.id === 'gn-70');
+  if (stage && stage.dataset.custom !== '1') {
+    const portrait = game.id === 'gn-70';
+    stage.classList.toggle('is-portrait', portrait);
+    document.querySelector('#playerView')?.classList.toggle('is-portrait', portrait);
+  }
   const loading = $('#loading');
   const status = $('#stageStatus');
   const loadMessage = loading.querySelector('p');
@@ -463,13 +467,16 @@ function setupResize() {
     stage.style.maxWidth = '100%';
     stage.dataset.custom = '1';
     stage.classList.remove('is-portrait');
+    stage.closest('#playerView')?.classList.remove('is-portrait');
   };
   const clearInline = () => {
     for (const prop of ['aspect-ratio', 'max-height', 'max-width', 'height']) wrap.style.removeProperty(prop);
     stage.style.removeProperty('width');
     stage.style.removeProperty('max-width');
     delete stage.dataset.custom;
-    stage.classList.toggle('is-portrait', wrap.classList.contains('frame-portrait'));
+    const portrait = wrap.classList.contains('frame-portrait');
+    stage.classList.toggle('is-portrait', portrait);
+    stage.closest('#playerView')?.classList.toggle('is-portrait', portrait);
   };
   const restore = () => {
     const saved = store.get(KEY, null);
