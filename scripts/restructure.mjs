@@ -151,20 +151,20 @@ const FOOTER = `<footer class="sitefoot">
     </div>
     <div>
       <h3>Contact</h3>
-      <p>Corrections, takedown notices and privacy requests: <a href="/legal/contact">the contact page</a>.</p>
+      <p>Corrections, takedown notices and privacy requests: <a href="/legal/contact/">the contact page</a>.</p>
       <p class="foot-small">ZenouMath is an independent study site. It is not a school and is not affiliated with one.</p>
     </div>
     <div>
       <h3>Legal</h3>
       <p class="foot-small">
-        <a href="/legal">Legal centre</a> ·
-        <a href="/legal/terms">Terms</a> ·
-        <a href="/legal/privacy">Privacy</a> ·
-        <a href="/legal/acceptable-use">Acceptable use</a> ·
-        <a href="/legal/copyright">Copyright</a> ·
-        <a href="/legal/takedown">Takedown</a> ·
-        <a href="/legal/disclaimer">Disclaimer</a> ·
-        <a href="/legal/contact">Contact</a>
+        <a href="/legal/">Legal centre</a> ·
+        <a href="/legal/terms/">Terms</a> ·
+        <a href="/legal/privacy/">Privacy</a> ·
+        <a href="/legal/acceptable-use/">Acceptable use</a> ·
+        <a href="/legal/copyright/">Copyright</a> ·
+        <a href="/legal/takedown/">Takedown</a> ·
+        <a href="/legal/disclaimer/">Disclaimer</a> ·
+        <a href="/legal/contact/">Contact</a>
       </p>
       <p class="foot-small"><a href="#" data-consent-review>Review the use agreement</a></p>
     </div>
@@ -198,7 +198,9 @@ function rewriteRefs(html) {
 }
 
 function head(html, page) {
-  const url = page.slug ? `${DOMAIN}/${page.slug}` : `${DOMAIN}/`;
+  /* Trailing slash matches the URL Cloudflare Pages actually serves (200)
+     rather than the 308 it returns for the unslashed directory. */
+  const url = page.slug ? `${DOMAIN}/${page.slug}/` : `${DOMAIN}/`;
   let out = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${page.title}</title>`);
   const descMeta = `<meta name="description" content="${page.desc.replace(/"/g, '&quot;')}">`;
   if (/<meta name="description" content="[^"]*">/i.test(out)) {
@@ -270,7 +272,9 @@ function build(page) {
 
 function stub(page) {
   const target = page.slug ? `/${page.slug}` : '/';
-  const url = page.slug ? `${DOMAIN}/${page.slug}` : `${DOMAIN}/`;
+  /* Trailing slash matches the URL Cloudflare Pages actually serves (200)
+     rather than the 308 it returns for the unslashed directory. */
+  const url = page.slug ? `${DOMAIN}/${page.slug}/` : `${DOMAIN}/`;
   // No JavaScript-only hop: a meta refresh works with scripting off, and the
   // canonical tells a crawler which URL is the real one.
   return `<!DOCTYPE html>

@@ -4,31 +4,28 @@
 
 # ZenouMath
 
-**A browser arcade with a desktop of its own.**
+**A browser arcade for games, films and books.**
 
-Browse games by genre, shuffle the catalogue when you can't pick, or save a title for later. Switch to the optional ZenouOS desktop to open your games and tools in their own windows.
+Browse 6,843 games by genre, shuffle the catalogue when you can't pick, or save a title for later. The same page also hosts the film and TV catalogue, books and web tools.
 
-[![Website](https://img.shields.io/badge/site-zenoumath.space-365781)](https://stop-smoking-campaign.pages.dev/)
+[![Website](https://img.shields.io/badge/site-stop--smoking--campaign.pages.dev-365781)](https://stop-smoking-campaign.pages.dev/)
 [![Local server](https://img.shields.io/badge/local%20server-Node.js%2020%2B-39724a)](package.json)
 [![Licence](https://img.shields.io/badge/licence-all%20rights%20reserved-545968)](LICENSE)
 
-[**Open the arcade**](https://stop-smoking-campaign.pages.dev/) · [Try ZenouOS Beta](https://stop-smoking-campaign.pages.dev/os/) · [Explore](#explore) · [Run locally](#run-locally)
+[**Open the arcade**](https://stop-smoking-campaign.pages.dev/) · [Explore](#explore) · [Run locally](#run-locally)
 
 </div>
 
-| Arcade · Discover | ZenouOS Beta · App launcher |
-| :---: | :---: |
-| [![Arcade Discover with the game spotlight, featured games and genre navigation](docs/screenshots/arcade.webp)](docs/screenshots/arcade.webp) | [![ZenouOS desktop with the app launcher open above the taskbar](docs/screenshots/zenouos.webp)](docs/screenshots/zenouos.webp) |
+[![Arcade Discover with the game spotlight, featured games and genre navigation](docs/screenshots/arcade.webp)](docs/screenshots/arcade.webp)
 
 ## Explore
 
 | Where to go | What you can do |
 | --- | --- |
 | [**All games**](https://stop-smoking-campaign.pages.dev/?all=1) | Search for a title, browse a genre or use **Shuffle** to pick your next game. |
-| [**My library**](https://stop-smoking-campaign.pages.dev/library/) | Reopen recently played games, keep a **Play Later** queue, and organise favourites, playlists, ratings and notes. An optional username account syncs favourites, ratings and notes across browsers. |
-| [**ZenouOS Beta**](https://stop-smoking-campaign.pages.dev/os/) | Launch games from **Zteam**, change the wallpaper in **ZenouPaper Engine**, or keep **ZNotes** open alongside another app. Choose **Classic website** to switch back. |
-| **Media** | Browse [books and manga](https://stop-smoking-campaign.pages.dev/books/), open the [music player](https://stop-smoking-campaign.pages.dev/music/), or look up [films and TV shows](https://stop-smoking-campaign.pages.dev/movies/). Playback depends on the external provider. |
-| **Tools** | Open the [web tools](https://stop-smoking-campaign.pages.dev/web/) or explore the [AI assistant and tool directory](https://stop-smoking-campaign.pages.dev/ai/). |
+| [**Play Later and favourites**](https://stop-smoking-campaign.pages.dev/) | Keep a **Play Later** queue, reopen recently played games, and organise favourites, playlists, ratings and notes. An optional username account syncs them across browsers. |
+| **Media** | Browse [books and manga](https://stop-smoking-campaign.pages.dev/books/) or look up [films and TV shows](https://stop-smoking-campaign.pages.dev/movies/). Playback depends on the external provider. |
+| **Tools** | Open the [web tools](https://stop-smoking-campaign.pages.dev/web/), run a [site search](https://stop-smoking-campaign.pages.dev/search/) or check where content comes from on the [sources page](https://stop-smoking-campaign.pages.dev/sources/). |
 
 ## Run locally
 
@@ -40,7 +37,7 @@ cd zenoumath
 npm start
 ```
 
-Open **http://127.0.0.1:8123**. You can browse the arcade and launch ZenouOS without an API key. For live TMDB movie and TV metadata, copy [.env.example](.env.example) to `.env`, set `TMDB_READ_TOKEN` or `TMDB_API_KEY`, and restart the server.
+Open **http://127.0.0.1:8123**. You can browse the arcade without an API key. For live TMDB movie and TV metadata, copy [.env.example](.env.example) to `.env`, set `TMDB_READ_TOKEN` or `TMDB_API_KEY`, and restart the server.
 
 ### Development
 
@@ -55,7 +52,6 @@ Open **http://127.0.0.1:8123**. You can browse the arcade and launch ZenouOS wit
 | Path | Contents |
 | --- | --- |
 | [`arcade.js`](arcade.js) and [`catalog/`](catalog/) | Discover page behaviour and the catalogues used across the site |
-| [`os/`](os/) | ZenouOS desktop, window manager, Zteam and wallpaper gallery |
 | [`js/`](js/) and [`css/`](css/) | Shared browser features, account sync and styles |
 | [`server/`](server/) and [`scripts/`](scripts/) | Local HTTP server, media API and project checks |
 

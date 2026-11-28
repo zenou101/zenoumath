@@ -31,8 +31,10 @@ const sidebar = homePage.match(/<aside class="za-rail"[\s\S]*?<\/aside>/)?.[0]
 if (!sidebar) throw new Error('The homepage sidebar is missing.');
 
 function shell(doc) {
-  const crossNav = DOCS.map(d => `<a href="/legal/${d.slug}">${d.label}</a>`).join('\n      ');
-  const canonical = doc.slug ? `${DOMAIN}/legal/${doc.slug}` : `${DOMAIN}/legal`;
+  const crossNav = DOCS.map(d => `<a href="/legal/${d.slug}/">${d.label}</a>`).join('\n      ');
+  /* Cloudflare Pages serves a directory at its trailing-slash URL and 308s the
+     unslashed form, so canonicals are written the way the page is served. */
+  const canonical = doc.slug ? `${DOMAIN}/legal/${doc.slug}/` : `${DOMAIN}/legal/`;
 
   const toc = doc.toc
     ? `  <nav class="legal-toc" aria-label="On this page">
@@ -84,7 +86,7 @@ ${doc.toc.map(([id, label]) => `      <li><a href="#${id}">${label}</a></li>`).j
 ${sidebar}
 
 <header class="topbar">
-  <div class="za-crumb"><a href="/">Arcade</a><i aria-hidden="true">/</i><a href="/legal">Legal</a></div>
+  <div class="za-crumb"><a href="/">Arcade</a><i aria-hidden="true">/</i><a href="/legal/">Legal</a></div>
   <div class="bar-tools">
     <form class="searchbox" role="search" action="/search" method="get">
       <svg class="icon ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/ui-icons.svg#search"/></svg>
